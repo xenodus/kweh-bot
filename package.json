@@ -1,0 +1,35 @@
+{
+  "name": "kweh-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "kweh-bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xenodus/kweh-bot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xenodus/kweh-bot/issues"
+  },
+  "homepage": "https://github.com/xenodus/kweh-bot#readme",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "bufferutil": "^4.0.1",
+    "dbl-api": "^1.2.1",
+    "discord.js": "^12.3.1",
+    "erlpack": "github:discord/erlpack",
+    "hashids": "^2.2.1",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.0",
+    "node-html-to-image": "^3.1.0",
+    "promise-mysql": "^3.3.2",
+    "rss-parser": "^3.9.0",
+    "sodium": "^3.0.2",
+    "utf-8-validate": "^5.0.2",
+    "zlib-sync": "^0.1.7"
+  }
+}
