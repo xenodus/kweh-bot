@@ -1,5 +1,9 @@
 <?php
 
+if (extension_loaded ('newrelic')) {
+  newrelic_set_appname ("kwehbot.xyz");
+}
+
 /**
  * Laravel - A PHP Framework For Web Artisans
  *

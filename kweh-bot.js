@@ -42,6 +42,9 @@ else {
   // Top.gg
   const dbl = new DBL(config.topGGtoken, client);
 
+  // New Relic
+  require('newrelic');
+
   dbl.on('posted', () => {
     helper.printStatus('Server count posted to top.gg!');
   });
@@ -73,31 +76,9 @@ client.on("ready", async function() {
 
   client.user.setPresence({ activity: { name: '!kweh help', type: "PLAYING"}, status: 'online'});
 
-  let statuses = [
-    '!kweh prefix',
-    '!kweh language',
-    '!kweh autodelete',
-    '!kweh channel',
-    '!register',
-    '!me',
-    '!profile',
-    '!glam',
-    '!fflogs',
-    '!mb',
-    '!tt',
-    '!news',
-    '!fashion',
-    '!item',
-    '!maint',
-    '!timers',
-    '!ec',
-    '!donate',
-    '!help'
-  ];
-
   // random status message every 10s
   client.setInterval(function(){
-    client.user.setPresence({ activity: { name: statuses[Math.floor(Math.random() * statuses.length)], type: "PLAYING"}, status: 'online'});
+    client.user.setPresence({ activity: { name: config.statuses[Math.floor(Math.random() * config.statuses.length)], type: "PLAYING"}, status: 'online'});
   }, 10000);
 
   // Check Lodestone periodically
