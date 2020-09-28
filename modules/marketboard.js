@@ -19,6 +19,8 @@ const getMarketboardListings = async function(itemID, dcOrServer) {
   let mbListings = {};
   let apiUrl = config.universalisApiBaseURL + dcOrServer.charAt(0).toUpperCase() + dcOrServer.slice(1) + "/" + itemID;
 
+  helper.printStatus("Marketboard API: " + apiUrl);
+
   await axios.get(apiUrl).then(async function(response){
     if( response.status === 200 ) {
       if( response.data ) {

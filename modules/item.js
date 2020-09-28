@@ -3,6 +3,7 @@
 *******************************/
 
 const config = require('../config').production;
+const helper = require('../helper');
 const axios = require('axios');
 const Discord = require("discord.js");
 const lodash = require('lodash');
@@ -23,6 +24,8 @@ async function searchItemByName(itemName) {
   apiUrl += "&indexes=Item";
   apiUrl += "&limit=" + config.itemSearchLimit;
   apiUrl += "&private_key=" + config.xivApiToken;
+
+  helper.printStatus("Item API: " + apiUrl);
 
   await axios.get(apiUrl).then(async function(response){
     if( response.status === 200 ) {
