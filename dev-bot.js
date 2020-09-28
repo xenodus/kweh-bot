@@ -100,11 +100,17 @@ client.on('messageReactionAdd', async function(reaction, user) {
     // Eorzea Collection
     if( reaction.message.embeds.length > 0 ) {
       if( reaction.message.embeds[0].author.name && reaction.message.embeds[0].author.name.includes("Eorzea Collection") ) {
+
+        let numberOptions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
+
         if(reaction.emoji.name === "⬅️") {
           await eorzea_collection.loadNextImg(reaction, "desc");
         }
         if(reaction.emoji.name === "➡️") {
           await eorzea_collection.loadNextImg(reaction, "asc");
+        }
+        if(numberOptions.includes(reaction.emoji.name)) {
+          await eorzea_collection.loadGlamNo(reaction, reaction.emoji.name);
         }
       }
     }

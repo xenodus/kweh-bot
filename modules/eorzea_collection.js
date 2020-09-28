@@ -67,6 +67,67 @@ const loadNextImg = async function(reaction, direction="asc") {
   }
 }
 
+const loadGlamNo = async function(reaction, emoji_name) {
+
+  let no = null;
+
+  switch(emoji_name) {
+    case '1️⃣':
+      no = 1;
+      break;
+    case '2️⃣':
+      no = 2;
+      break;
+    case '3️⃣':
+      no = 3;
+      break;
+    case '4️⃣':
+      no = 4;
+      break;
+    case '5️⃣':
+      no = 5;
+      break;
+  }
+
+  // Determine current slide with footer text
+  if( no &&
+      reaction.message.embeds[0].footer &&
+      reaction.message.embeds[0].fields.length > 2 &&
+      reaction.message.embeds[0].footer.text &&
+      reaction.message.embeds[0].footer.text.includes(".") ) {
+
+    let currFooter = reaction.message.embeds[0].footer.text;
+    let currSlide = currFooter.split(".").length > 0 ? currFooter.split(".")[0] : null;
+    let nextIndex = no - 1;
+
+    if( no <= (reaction.message.embeds[0].fields.length - 1) ) {
+      // Get Next Slide's URL + Image
+      let nextSlideURLMatch = reaction.message.embeds[0].fields[nextIndex].value.match(/\(.*?\)/g);
+      let nextSlideURL = null;
+      let nextSlideImg = null;
+
+      if( nextSlideURLMatch.length == 2 ) {
+        nextSlideURL = nextSlideURLMatch[0].slice(1, nextSlideURLMatch[0].length-1);
+        nextSlideImg = nextSlideURLMatch[1].slice(1, nextSlideURLMatch[1].length-1);
+      }
+
+      // Update Img + Footer
+      reaction.message.embeds[0].footer.text = reaction.message.embeds[0].fields[nextIndex].name;
+
+      // Remove "Showing" from currSlide
+      reaction.message.embeds[0].fields[currSlide-1].name = reaction.message.embeds[0].fields[currSlide-1].name.slice(0, -10);
+      reaction.message.embeds[0].fields[nextIndex].name += " (Showing)";
+
+      if( nextSlideImg ) {
+        let itemInfo = await getGlamDetails(nextSlideURL, reaction.message);
+        await updateEquipmentInfo(itemInfo, reaction.message, nextSlideImg);
+        await reaction.message.reactions.removeAll();
+        await resetReactions(reaction.message);
+      }
+    }
+  }
+}
+
 const getGlamDetails = async function(url, message) {
 
   let item = {};
@@ -113,7 +174,7 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
     }
 
     if( eorzeaCollectionGlams.length > 1 ) {
-      description += "\nUse the :arrow_left: :arrow_right: reaction buttons below to select glamour image & details to display.";
+      description += "\nUse the :arrow_left: :arrow_right: reaction buttons below to select which glamour details to be displayed.";
     }
 
     embed.setDescription(description);
@@ -167,14 +228,14 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
     // Send Message
     channel.send( embed )
     .then(async function(m){
-      if( eorzeaCollectionGlams.length > 1 ) {
-        await resetReactions(m);
-      }
-
       // Equipment Listing
       if( randomItem ) {
         let itemInfo = await getGlamDetails(randomItem.link, m);
         await updateEquipmentInfo(itemInfo, m);
+      }
+
+      if( eorzeaCollectionGlams.length > 1 ) {
+        await resetReactions(m);
       }
     })
     .catch(function(err){
@@ -262,6 +323,32 @@ const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
 const resetReactions = async function(message) {
   await message.react('⬅️');
   await message.react('➡️');
+
+  if( message.embeds[0].fields.length > 1 ) {
+    let x = 0;
+    while( x < message.embeds[0].fields.length ) {
+
+      switch(x) {
+        case 1:
+          await message.react('1️⃣');
+          break;
+        case 2:
+          await message.react('2️⃣');
+          break;
+        case 3:
+          await message.react('3️⃣');
+          break;
+        case 4:
+          await message.react('4️⃣');
+          break;
+        case 5:
+          await message.react('5️⃣');
+          break;
+      }
+
+      x++;
+    }
+  }
 }
 
 const getEorzeaCollection = async function(type="", searchStr="", author="") {
@@ -316,6 +403,7 @@ const getEorzeaCollection = async function(type="", searchStr="", author="") {
 
 module.exports = {
   loadNextImg,
+  loadGlamNo,
   getEorzeaCollection,
   printEorzeaCollection,
   resetReactions

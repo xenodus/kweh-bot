@@ -125,6 +125,7 @@ const logCommands = async function(message, isAdmin, post2logs=false) {
 const sendHelpMsg = function(message, prefix) {
   // Embed
   let embed = new Discord.MessageEmbed()
+    .setDescription("You can also edit your server settings on the official website.")
     .setColor( config.defaultEmbedColor )
     .setAuthor( "Kweh! - Help" )
     .setThumbnail( config.appErrorImg );
@@ -168,7 +169,7 @@ const sendHelpMsg = function(message, prefix) {
   // !ec
   let ecCommands = [
     "`" + prefix + "ec`",
-    "`" + prefix + "ec featured / latest / loved`",
+    "`" + prefix + "ec featured/latest/loved`",
     "`" + prefix + "ec author author_name`",
     "`" + prefix + "ec search search_string`",
   ];
