@@ -127,7 +127,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
           let lowestHQAllServer = [];
 
           for(var i=0; i<servers.length; i++) {
-            let currentServerListings = mbData.listings.filter(l => l.worldName == servers[i]);
+            let currentServerListings = mbData.listings.filter(l => (l.worldName == servers[i] && l.onMannequin == false));
 
             if( currentServerListings.length > 0 ) {
               let lowestNQPrice = getLowestListing(currentServerListings, false);
@@ -179,7 +179,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
     // Display server specific results
     else {
       // Sort ascending
-      let listings = mbData.listings;
+      let listings = mbData.listings.filter(l => l.onMannequin == false);
       listings = lodash.sortBy(listings, ['pricePerUnit']);
 
       let lowestNQPrice = getLowestListing(listings, false);
