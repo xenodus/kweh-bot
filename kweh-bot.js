@@ -36,14 +36,14 @@ if( scriptName == 'dev-bot.js' ) {
   console.log("----- DEVELOPMENT BOT -----");
 }
 else {
+  // New Relic
+  require('newrelic');
+
   client.login(config.discordBotToken);
   console.log("----- PRODUCTION BOT -----");
 
   // Top.gg
   const dbl = new DBL(config.topGGtoken, client);
-
-  // New Relic
-  require('newrelic');
 
   dbl.on('posted', () => {
     helper.printStatus('Server count posted to top.gg!');
