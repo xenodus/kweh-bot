@@ -20,9 +20,13 @@ const config = require('./config').production;
 const lodash = require('lodash');
 const moment = require("moment");
 const Discord = require("discord.js");
-const client = new Discord.Client();
 const DBL = require("dblapi.js");
 const scriptName = __filename.slice(__dirname.length + 1);
+const client = new Discord.Client({
+  messageCacheMaxSize: 20,
+  messageCacheLifetime: 1800,
+  messageSweepInterval: 3600
+});
 
 let checkIntervals = 300 * 1000;
 
