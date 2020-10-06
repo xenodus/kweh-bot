@@ -131,7 +131,6 @@ client.on("message", async function(message) {
   if ( !message.channel.guild ) return; // Ignore dm
 
   const args = message.content.slice(config.prefix.length).trim().split(/ +/g).map(args => args.toLowerCase());
-  const argsNormalCase = message.content.slice(config.prefix.length).trim().split(/ +/g);
   const command = args.shift().toLowerCase();
 
   if( config.commands.includes(command) == false ) return; // Ignore commands not in "commands" array

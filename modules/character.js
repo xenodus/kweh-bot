@@ -249,12 +249,21 @@ const printGlamInfo = async function(characterInfo, message) {
       glam = await item.getItemByID( characterInfo.Character.GearSet.Gear[ glam_slots[i] ].ID );
     }
 
+    let dyeName = '';
+
+    if( characterInfo.Character.GearSet.Gear[ glam_slots[i] ] && characterInfo.Character.GearSet.Gear[ glam_slots[i] ].Dye ) {
+      if( characterInfo.Character.GearSet.Gear[ glam_slots[i] ].Dye != null ) {
+        let dye = await item.getItemByID( characterInfo.Character.GearSet.Gear[ glam_slots[i] ].Dye );
+        dyeName = "\n+ [" + dye["Name"] + "](" + config.teamcraftBaseURL + "en/item/" + dye["ID"] + ")";
+      }
+    }
+
     if( lodash.isEmpty(glam) ) {
       embed.addField(glam_name_map[glam_slots[i]], "None", true);
     }
     else {
       let glamName = "[" + glam.Name + "](" + config.teamcraftBaseURL + "en/item/" + glam.ID + ")";
-      embed.addField(glam_name_map[glam_slots[i]], glamName, true);
+      embed.addField(glam_name_map[glam_slots[i]], glamName + dyeName, true);
     }
   }
 
@@ -422,9 +431,11 @@ const generateUserProfile = async function(characterInfo, client) {
     let charHtml = getUserProfileHTML(characterInfo);
 
     await nodeHtmlToImage({
+      /*
       puppeteerArgs: {
         executablePath: '/usr/bin/google-chrome-stable'
       },
+      */
       output: outputPath,
       transparent: true,
       html: charHtml

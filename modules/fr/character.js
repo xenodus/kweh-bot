@@ -250,12 +250,21 @@ const printGlamInfo = async function(characterInfo, message) {
       glam = await item.getItemByID( characterInfo.Character.GearSet.Gear[ glam_slots[i] ].ID );
     }
 
+    let dyeName = '';
+
+    if( characterInfo.Character.GearSet.Gear[ glam_slots[i] ] && characterInfo.Character.GearSet.Gear[ glam_slots[i] ].Dye ) {
+      if( characterInfo.Character.GearSet.Gear[ glam_slots[i] ].Dye != null ) {
+        let dye = await item.getItemByID( characterInfo.Character.GearSet.Gear[ glam_slots[i] ].Dye );
+        dyeName = "\n+ [" + dye["Name_fr"] + "](" + config.teamcraftBaseURL + "fr/item/" + dye["ID"] + ")";
+      }
+    }
+
     if( lodash.isEmpty(glam) ) {
       embed.addField(glam_name_map[glam_slots[i]], "-", true);
     }
     else {
       let glamName = "[" + glam.Name_fr + "](" + config.teamcraftBaseURL + "fr/item/" + glam.ID + ")";
-      embed.addField(glam_name_map[glam_slots[i]], glamName, true);
+      embed.addField(glam_name_map[glam_slots[i]], glamName + dyeName, true);
     }
   }
 
