@@ -14,6 +14,7 @@
       <li>Marketboard prices from <a href="https://universalis.app/" target="_blank">Universalis</a></li>
       <li>Integrated with <a href="https://www.fflogs.com/" target="_blank">FFLogs</a></li>
       <li>Item and recipe information from <a href="https://ffxivteamcraft.com/" target="_blank">Teamcraft</a> & <a href="https://xivapi.com/" target="_blank">XIVAPI</a></li>
+      <li>Mount, Minion, Barding, Emote and Title information from <a href="https://ffxivcollect.com/" target="_blank">FFXIV Collect</a>
       <li>Triple Triad Tracker from <a href="https://triad.raelys.com/" target="_blank">Raely's Triple Triad Tracker</a></li>
       <li>Lodestone news from <a href="https://github.com/mattantonelli/lodestone/wiki" target="_blank">Raelys' Lodestone API</a></li>
       <li>Fashion report results from <a href="https://twitter.com/KaiyokoStar" target="_blank">Miss Kaiyoko Star</a></li>

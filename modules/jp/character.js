@@ -338,6 +338,9 @@ const printCharacterInfo = async function(characterInfo, message) {
   // Lodestone
   links += "\n[Lodestone]("+config.lodestoneURL_JP+characterInfo.ID+")";
 
+  // FFXIV Collect
+  links += "\n[FFXIV Collect](https://ffxivcollect.com/characters/"+characterInfo.ID+")";
+
   // FFLogs
   let region = dcserver.getDCregion(data_center);
   links+= "\n[FFLogs]("+config.fflogsBaseURL+"character/"+region+"/"+characterInfo.server+"/"+name.replace(" ","%20")+")";
