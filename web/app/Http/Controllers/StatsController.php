@@ -90,6 +90,16 @@ class StatsController extends Controller
 
             $data['help_command_count'] = App\Models\CommandLog::whereRaw( "SUBSTRING(command, 2, 4) LIKE 'help'" )->count();
 
+            $data['mount_command_count'] = App\Models\CommandLog::whereRaw( "SUBSTRING(command, 2, 5) LIKE 'mount'" )->count();
+
+            $data['minion_command_count'] = App\Models\CommandLog::whereRaw( "SUBSTRING(command, 2, 6) LIKE 'minion'" )->count();
+
+            $data['emote_command_count'] = App\Models\CommandLog::whereRaw( "SUBSTRING(command, 2, 5) LIKE 'emote'" )->count();
+
+            $data['title_command_count'] = App\Models\CommandLog::whereRaw( "SUBSTRING(command, 2, 5) LIKE 'title'" )->count();
+
+            $data['barding_command_count'] = App\Models\CommandLog::whereRaw( "SUBSTRING(command, 2, 7) LIKE 'barding'" )->count();
+
             $data['commands_sum'] =
                 $data['register_command_count'] +
                 $data['me_command_count'] +
@@ -109,7 +119,12 @@ class StatsController extends Controller
                 $data['channel_command_count'] +
                 $data['autodelete_command_count'] +
                 $data['prefix_command_count'] +
-                $data['help_command_count'];
+                $data['help_command_count'] +
+                $data['mount_command_count'] +
+                $data['minion_command_count'] +
+                $data['emote_command_count'] +
+                $data['title_command_count'] +
+                $data['barding_command_count'];
 
             return $data;
         });

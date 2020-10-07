@@ -131,7 +131,7 @@
     <div class="command-structure">!item itemname</div>
     <div class="command-example mt-3">e.g. !item ethereal silk</div>
 
-    <div class="mt-3 command-description">Look up information about an item. If it's a crafted item, the result will list the crafting materials needed. If it is a crafting material, the result will list what can be crafted with it.</div>
+    <div class="mt-3 command-description">Look up basic information about an item. If it's a crafted item, the result will list the crafting materials needed. If it is a crafting material, the result will list what can be crafted with it.</div>
   </div>
 </div>
 
@@ -148,7 +148,7 @@
 
     <div class="command-example mt-3">e.g. !mount ozma</div>
 
-    <div class="mt-3 command-description">Look up FFXIV Collect for mount, minion, title, emote or barding's information.</div>
+    <div class="mt-3 command-description">Look up detailed information for mounts, minions, titles, emotes and bardings from FFXIV Collect.</div>
   </div>
 </div>
 

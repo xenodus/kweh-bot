@@ -435,9 +435,6 @@ const generateUserProfile = async function(characterInfo, client) {
     let charHtml = getUserProfileHTML(characterInfo);
 
     await nodeHtmlToImage({
-      puppeteerArgs: {
-        executablePath: '/usr/bin/google-chrome-stable'
-      },
       output: outputPath,
       transparent: true,
       html: charHtml

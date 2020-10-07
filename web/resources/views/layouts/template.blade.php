@@ -206,7 +206,7 @@
             <a href="https://discord.gg/epaBYeW" target="_blank" class="text-secondary"><i class="fab fa-discord fa-2x px-1"></i></a>
           </div>
           <div>&copy; 2020 kwehbot.xyz</div>
-          <div><small>ALL FINAL FANTASY XIV CONTENT IS PROPERTY OF SQUARE ENIX CO., LTD</small></div>
+          <div class="text-uppercase"><small>FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.</small></div>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" async></script>
         <script src="{{ mix('/js/compiled/common.js') }}"></script>

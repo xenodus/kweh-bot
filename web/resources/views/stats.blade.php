@@ -10,7 +10,7 @@ $(document).ready(function(){
     $("#servers").html("Servers: " + data.server_count.toLocaleString());
     $("#users").html("Registered Users: " + data.user_count.toLocaleString());
     $("#commandsIssued").html("Commands Processed: " + data.commands_sum.toLocaleString());
-    $('canvas').removeClass('spinner');
+    $('div.spinner').removeClass('spinner').addClass('w-100');
 
     var color = Chart.helpers.color;
 
@@ -84,15 +84,14 @@ $(document).ready(function(){
       data.fflogs_command_count,
       data.mb_command_count,
       data.item_command_count,
+      data.mount_command_count,
+      data.minion_command_count,
+      data.title_command_count,
+      data.emote_command_count,
+      data.barding_command_count,
       data.timers_command_count,
       data.maint_command_count,
       data.tt_command_count,
-      data.news_command_count,
-      data.fr_command_count,
-      data.language_command_count,
-      data.channel_command_count,
-      data.autodelete_command_count,
-      data.prefix_command_count,
       data.donate_command_count,
       data.help_command_count
     ];
@@ -110,12 +109,81 @@ $(document).ready(function(){
           data: commands,
           backgroundColor: colors,
         }],
-        labels: ['register', 'me', 'profile', 'glam', 'ec', 'logs', 'mb', 'item', 'timers', 'maint', 'tt', 'news', 'fashion', 'language', 'channel', 'autodelete', 'prefix', 'donate', 'help']
+        labels: [
+          'register', 'me', 'profile', 'glam', 'ec', 'logs', 'mb',
+          'item', 'mount', 'minion', 'title', 'emote', 'barding',
+          'timers', 'maint', 'tt', 'donate', 'help'
+        ]
       },
       options: {
         title: {
           display: true,
-          text: 'Commands Processed',
+          text: 'Game Related Commands Processed',
+          fontColor: '#FFF'
+        },
+        legend: {
+          display: false
+        },
+        layout: {
+          padding: {
+            left: 10,
+            right: 30,
+            top: 0,
+            bottom: 15
+          }
+        },
+        scales: {
+          xAxes: [{
+            ticks: {
+              fontColor: "#FFF"
+            },
+            gridLines: {
+              color: "#777"
+            }
+          }],
+          yAxes: [{
+            type: 'linear',
+            ticks: {
+              fontColor: "#FFF",
+            },
+            gridLines: {
+              color: "#777"
+            }
+          }],
+        },
+      }
+    });
+
+    // SERVER SETTINGS COMMANDS
+
+    var ssCommands = [
+      data.news_command_count,
+      data.fr_command_count,
+      data.language_command_count,
+      data.channel_command_count,
+      data.autodelete_command_count,
+      data.prefix_command_count
+    ];
+
+    var colors = [];
+    for(var i=0; i<commands.length; i++) {
+      colors.push( randomColor() );
+    }
+
+    var ssCommandsIssuedCanvas = document.getElementById('server-settings-commands').getContext('2d');
+    var ssCommandsIssuedChart = new Chart(ssCommandsIssuedCanvas, {
+      type: 'bar',
+      data: {
+        datasets: [{
+          data: ssCommands,
+          backgroundColor: colors,
+        }],
+        labels: ['news', 'fashion', 'language', 'channel', 'autodelete', 'prefix']
+      },
+      options: {
+        title: {
+          display: true,
+          text: 'Server Setting Commands Processed',
           fontColor: '#FFF'
         },
         legend: {
@@ -242,16 +310,24 @@ function randomColor(){
     <div id="commandsIssued"></div>
   </div>
 
-  <div class="mb-3 col-12 text-center">
-    <canvas id="commands" class="spinner"></canvas>
-  </div>
+  <div class="spinner">
 
-  <div class="mb-3 col-12 text-center">
-    <canvas id="prefixes" class="spinner"></canvas>
-  </div>
+    <div class="mb-3 col-12 text-center">
+      <canvas id="commands"></canvas>
+    </div>
 
-  <div class="mb-3 col-12 text-center">
-    <canvas id="servers_added_date" class="spinner"></canvas>
+    <div class="mb-3 col-12 text-center">
+      <canvas id="server-settings-commands"></canvas>
+    </div>
+
+    <div class="mb-3 col-12 text-center">
+      <canvas id="prefixes"></canvas>
+    </div>
+
+    <div class="mb-3 col-12 text-center">
+      <canvas id="servers_added_date"></canvas>
+    </div>
+
   </div>
 
 </div>

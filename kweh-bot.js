@@ -735,6 +735,8 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "mount" ) {
+    message.response_channel.startTyping();
+
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getMountData(message, searchedItem);
@@ -749,6 +751,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Mount "+searchedItem+" not found", message);
       }
     }
+    else {
+      helper.sendErrorMsg("Error", "Lookup mounts with \n`"+prefix+command+" search_string`", message);
+    }
+
+    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -756,6 +763,8 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "minion" ) {
+    message.response_channel.startTyping();
+
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getMinionData(message, searchedItem);
@@ -770,6 +779,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Minion "+searchedItem+" not found", message);
       }
     }
+    else {
+      helper.sendErrorMsg("Error", "Lookup minions with \n`"+prefix+command+" search_string`", message);
+    }
+
+    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -777,6 +791,8 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "title" ) {
+    message.response_channel.startTyping();
+
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getTitleData(message, searchedItem);
@@ -791,6 +807,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Title "+searchedItem+" not found", message);
       }
     }
+    else {
+      helper.sendErrorMsg("Error", "Lookup titles with \n`"+prefix+command+" search_string`", message);
+    }
+
+    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -798,6 +819,8 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "emote" ) {
+    message.response_channel.startTyping();
+
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getEmoteData(message, searchedItem);
@@ -812,6 +835,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Emote "+searchedItem+" not found", message);
       }
     }
+    else {
+      helper.sendErrorMsg("Error", "Lookup emotes with \n`"+prefix+command+" search_string`", message);
+    }
+
+    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -819,6 +847,8 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "barding" ) {
+    message.response_channel.startTyping();
+
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getBardingData(message, searchedItem);
@@ -833,6 +863,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Barding "+searchedItem+" not found", message);
       }
     }
+    else {
+      helper.sendErrorMsg("Error", "Lookup bardings with \n`"+prefix+command+" search_string`", message);
+    }
+
+    message.response_channel.stopTyping();
   }
 
   /*************************************************
