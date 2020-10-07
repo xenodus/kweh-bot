@@ -226,6 +226,40 @@ async function displayUsedFor(message, item) {
 }
 
 /******************************
+  Multiple Matched Item
+*******************************/
+
+const handleMultipleItems = async function(itemMatchResult, searchedItem, message) {
+  // multiple matching results
+  let options = await sendMultipleItemsMatchedMsg(itemMatchResult, searchedItem, message);
+
+  // Ensure text entered is one of the options in above array
+  let multipleItemsfilter = function response(m){
+    return options.includes( parseInt(m.content) );
+  };
+
+  // Await Reply
+  message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+    let specificItem = itemMatchResult[ collected.first().content - 1 ];
+    let specificItemInfo = await getItemByID( specificItem.ID );
+    // print result
+    displayItem(specificItemInfo, message);
+
+    // Auto Delete
+    if( message.serverSettings["auto_delete"] ) {
+      collected.first().delete().catch(function(err){
+        if( err.code == 50013 ) {
+          console.log(err.message);
+        }
+      });
+    }
+
+  }).catch(function(collected){
+    helper.sendErrorMsg("Error", "No item was specified", message);
+  });
+}
+
+/******************************
   Multiple Matched Item Prompt
 *******************************/
 const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, message){
@@ -267,5 +301,7 @@ module.exports = {
   searchItemByName,
   getItemByID,
   displayItem,
-  sendMultipleItemsMatchedMsg
+  sendMultipleItemsMatchedMsg,
+  handleMultipleItems,
+  displayUsedFor
 }

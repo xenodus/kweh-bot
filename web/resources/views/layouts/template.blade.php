@@ -127,6 +127,7 @@
                       <li><a href="#fflogs">FFlogs</a></li>
                       <li><a href="#marketboard">Marketboard</a></li>
                       <li><a href="#item">Item</a></li>
+                      <li><a href="#ffxivcollect">FFXIV Collect</a></li>
                       <li><a href="#timers">Timers</a></li>
                       <li><a href="#maintenance">Maintenance</a></li>
                       <li><a href="#tt">Triple Triad</a></li>

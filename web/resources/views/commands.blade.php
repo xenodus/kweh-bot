@@ -136,6 +136,23 @@
 </div>
 
 <div class="d-flex align-items-start p-3 command-item">
+  <a name="ffxivcollect"></a>
+  <div class="text-center command-no">{{ $i++ }}</div>
+  <div class="command-content ml-3 mb-2">
+    <div class="bot-command">FFXIV Collect</div>
+    <div class="command-structure">!mount search_string</div>
+    <div class="command-structure">!minion search_string</div>
+    <div class="command-structure">!title search_string</div>
+    <div class="command-structure">!emote search_string</div>
+    <div class="command-structure">!barding search_string</div>
+
+    <div class="command-example mt-3">e.g. !mount ozma</div>
+
+    <div class="mt-3 command-description">Look up FFXIV Collect for mount, minion, title, emote or barding's information.</div>
+  </div>
+</div>
+
+<div class="d-flex align-items-start p-3 command-item">
   <a name="timers"></a>
   <div class="text-center command-no">{{ $i++ }}</div>
   <div class="command-content ml-3 mb-2">

@@ -65,6 +65,7 @@ const lodestone_news = require("./modules/lodestone_news.js");
 const fashion_report = require("./modules/fashion_report.js");
 const eorzea_time = require("./modules/eorzea_time.js");
 const eorzea_collection = require("./modules/eorzea_collection.js");
+const xivcollect = require("./modules/xivcollect.js");
 
 let character, marketboard, item;
 
@@ -685,31 +686,7 @@ client.on("message", async function(message) {
           await marketboard.printMarketboardResult(itemInfo, dcOrServer, isDCSupplied, message);
         }
         else if( itemMatchResult.length > 1 ) {
-          // multiple matching results
-          let options = await marketboard.sendMultipleItemsMatchedMsg(itemMatchResult, searchedItem, message);
-
-          // Ensure text entered is one of the options in above array
-          let multipleItemsfilter = function response(m){
-            return options.includes( parseInt(m.content) );
-          };
-
-          // Await Reply
-          message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
-            let itemInfo = itemMatchResult[ collected.first().content - 1 ];
-            await marketboard.printMarketboardResult(itemInfo, dcOrServer, isDCSupplied, message);
-
-            // Auto Delete
-            if( auto_delete ) {
-              collected.first().delete().catch(function(err){
-                if( err.code == 50013 ) {
-                  console.log(err.message);
-                }
-              });
-            }
-
-          }).catch(function(collected){
-            helper.sendErrorMsg("Error", "No item was specified", message);
-          });
+          await marketboard.handleMultipleItems(itemMatchResult, searchedItem, dcOrServer, isDCSupplied, message);
         }
       }
       else {
@@ -743,33 +720,7 @@ client.on("message", async function(message) {
         item.displayItem(specificItemInfo, message);
       }
       else if( itemMatchResult.length > 1 ) {
-        // multiple matching results
-        let options = await item.sendMultipleItemsMatchedMsg(itemMatchResult, searchedItem, message);
-
-        // Ensure text entered is one of the options in above array
-        let multipleItemsfilter = function response(m){
-          return options.includes( parseInt(m.content) );
-        };
-
-        // Await Reply
-        message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
-          let specificItem = itemMatchResult[ collected.first().content - 1 ];
-          let specificItemInfo = await item.getItemByID( specificItem.ID );
-          // print result
-          item.displayItem(specificItemInfo, message);
-
-          // Auto Delete
-          if( auto_delete ) {
-            collected.first().delete().catch(function(err){
-              if( err.code == 50013 ) {
-                console.log(err.message);
-              }
-            });
-          }
-
-        }).catch(function(collected){
-          helper.sendErrorMsg("Error", "No item was specified", message);
-        });
+        await item.handleMultipleItems(itemMatchResult, searchedItem, message);
       }
     }
     else {
@@ -777,6 +728,111 @@ client.on("message", async function(message) {
     }
 
     message.response_channel.stopTyping();
+  }
+
+  /*************************************************
+  **** MOUNT SEARCH ON XIVCOLLECT
+  *************************************************/
+
+  else if ( command === "mount" ) {
+    if( args.length > 0 ) {
+      let searchedItem = args.join(' ');
+      let itemMatchResult = await xivcollect.getMountData(message, searchedItem);
+
+      if( itemMatchResult.results.length == 1 ) {
+        await xivcollect.printItemInfo(itemMatchResult.results[0], message);
+      }
+      else if( itemMatchResult.results.length > 1 ) {
+        await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
+      }
+      else {
+        helper.sendErrorMsg("Error", "Mount "+searchedItem+" not found", message);
+      }
+    }
+  }
+
+  /*************************************************
+  **** MINION SEARCH ON XIVCOLLECT
+  *************************************************/
+
+  else if ( command === "minion" ) {
+    if( args.length > 0 ) {
+      let searchedItem = args.join(' ');
+      let itemMatchResult = await xivcollect.getMinionData(message, searchedItem);
+
+      if( itemMatchResult.results.length == 1 ) {
+        await xivcollect.printItemInfo(itemMatchResult.results[0], message);
+      }
+      else if( itemMatchResult.results.length > 1 ) {
+        await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
+      }
+      else {
+        helper.sendErrorMsg("Error", "Minion "+searchedItem+" not found", message);
+      }
+    }
+  }
+
+  /*************************************************
+  **** TITLE SEARCH ON XIVCOLLECT
+  *************************************************/
+
+  else if ( command === "title" ) {
+    if( args.length > 0 ) {
+      let searchedItem = args.join(' ');
+      let itemMatchResult = await xivcollect.getTitleData(message, searchedItem);
+
+      if( itemMatchResult.results.length == 1 ) {
+        await xivcollect.printItemInfo(itemMatchResult.results[0], message);
+      }
+      else if( itemMatchResult.results.length > 1 ) {
+        await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
+      }
+      else {
+        helper.sendErrorMsg("Error", "Title "+searchedItem+" not found", message);
+      }
+    }
+  }
+
+  /*************************************************
+  **** EMOTE SEARCH ON XIVCOLLECT
+  *************************************************/
+
+  else if ( command === "emote" ) {
+    if( args.length > 0 ) {
+      let searchedItem = args.join(' ');
+      let itemMatchResult = await xivcollect.getEmoteData(message, searchedItem);
+
+      if( itemMatchResult.results.length == 1 ) {
+        await xivcollect.printItemInfo(itemMatchResult.results[0], message);
+      }
+      else if( itemMatchResult.results.length > 1 ) {
+        await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
+      }
+      else {
+        helper.sendErrorMsg("Error", "Emote "+searchedItem+" not found", message);
+      }
+    }
+  }
+
+  /*************************************************
+  **** BARDING SEARCH ON XIVCOLLECT
+  *************************************************/
+
+  else if ( command === "barding" ) {
+    if( args.length > 0 ) {
+      let searchedItem = args.join(' ');
+      let itemMatchResult = await xivcollect.getBardingData(message, searchedItem);
+
+      if( itemMatchResult.results.length == 1 ) {
+        await xivcollect.printItemInfo(itemMatchResult.results[0], message);
+      }
+      else if( itemMatchResult.results.length > 1 ) {
+        await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
+      }
+      else {
+        helper.sendErrorMsg("Error", "Barding "+searchedItem+" not found", message);
+      }
+    }
   }
 
   /*************************************************

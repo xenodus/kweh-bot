@@ -185,15 +185,25 @@ const sendHelpMsg = function(message, prefix) {
 
   // !mb
   let mbCommands = [
-    "`" + prefix + "mb datacenter/server itemname`",
+    "`" + prefix + "mb datacenter/server item_name`",
   ];
   embed.addField((i++)+". Marketboard", mbCommands.join("\n"));
 
-  // !item
+  // !item / mount / minion / emote / title / barding
   let itemCommands = [
-    "`" + prefix + "item itemname`",
+    "`" + prefix + "item item_name`",
   ];
   embed.addField((i++)+". Item Search", itemCommands.join("\n"));
+
+  // !mount / minion / emote / title / barding
+  let xivCollectCommands = [
+    "`" + prefix + "mount search_string`",
+    "`" + prefix + "minion search_string`",
+    "`" + prefix + "emote search_string`",
+    "`" + prefix + "title search_string`",
+    "`" + prefix + "barding search_string`",
+  ];
+  embed.addField((i++)+". FFXIV Collect Search", xivCollectCommands.join("\n"));
 
   // !timers
   let timersCommands = [
