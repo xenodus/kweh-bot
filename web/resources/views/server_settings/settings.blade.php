@@ -11,7 +11,7 @@
 </div>
 
 <div id="settings-placeholder" class="d-flex flex-column py-5">
-  <div><div class="loader"></div></div>
+  <div><div class="choco-loader"></div></div>
   <div class="text-center"><strong>Fetching server settings...</strong></div>
 </div>
 
@@ -166,14 +166,6 @@
   padding: 30px 10px;
   border-radius: 5px;
   background: rgba(0,0,0,0.4);
-}
-.loader {
-  width: 100px;
-  height: 100px;
-  background-image: url(/images/choco_walk.gif);
-  background-repeat: no-repeat;
-  background-size: contain;
-  margin: 0 auto;
 }
 .alert ul {
   margin-bottom: 0;

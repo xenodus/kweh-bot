@@ -10,7 +10,7 @@ $(document).ready(function(){
     $("#servers").html("Servers: " + data.server_count.toLocaleString());
     $("#users").html("Registered Users: " + data.user_count.toLocaleString());
     $("#commandsIssued").html("Commands Processed: " + data.commands_sum.toLocaleString());
-    $('div.spinner').removeClass('spinner').addClass('w-100');
+    $('div.loader').hide();
 
     var color = Chart.helpers.color;
 
@@ -310,24 +310,25 @@ function randomColor(){
     <div id="commandsIssued"></div>
   </div>
 
-  <div class="spinner">
+  <div class="loader w-100 text-center">
+    <div class="choco-loader"></div>
+    <div>Fetching stats...</div>
+  </div>
 
-    <div class="mb-3 col-12 text-center">
-      <canvas id="commands"></canvas>
-    </div>
+  <div class="mb-3 col-12 text-center">
+    <canvas id="commands"></canvas>
+  </div>
 
-    <div class="mb-3 col-12 text-center">
-      <canvas id="server-settings-commands"></canvas>
-    </div>
+  <div class="mb-3 col-12 text-center">
+    <canvas id="server-settings-commands"></canvas>
+  </div>
 
-    <div class="mb-3 col-12 text-center">
-      <canvas id="prefixes"></canvas>
-    </div>
+  <div class="mb-3 col-12 text-center">
+    <canvas id="prefixes"></canvas>
+  </div>
 
-    <div class="mb-3 col-12 text-center">
-      <canvas id="servers_added_date"></canvas>
-    </div>
-
+  <div class="mb-3 col-12 text-center">
+    <canvas id="servers_added_date"></canvas>
   </div>
 
 </div>

@@ -240,6 +240,15 @@ footer {
   }
 }
 
+.choco-loader {
+  width: 100px;
+  height: 100px;
+  background-image: url(/images/choco_walk.gif);
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin: 0 auto;
+}
+
 /* Small devices (landscape phones, less than 768px) */
 @media (max-width: 767.98px) {
   .site-title h1 {

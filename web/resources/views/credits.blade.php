@@ -14,6 +14,9 @@
   	<li>
   	  <a href="https://universalis.app/" target="_blank">Universalis</a>
   	</li>
+    <li>
+      <a href="https://ffxivteamcraft.com/" target="_blank">FFXIV Teamcraft</a>
+    </li>
   	<li>
   	  <a href="https://github.com/mattantonelli/lodestone" target="_blank">Raelys's Lodestone News API</a>
   	</li>
