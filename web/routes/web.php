@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/test', 'StatsController@test')->name('test');
+
 // Auth
 Route::get('/login', 'ServerSettingsController@login')->name('login');
 Route::get('/logout', 'ServerSettingsController@logout')->name('logout');

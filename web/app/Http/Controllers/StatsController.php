@@ -10,7 +10,10 @@ use Cache;
 class StatsController extends Controller
 {
     public function test() {
-        dd("hello");
+        $data['site_title'] = 'Test Page | '.env('SITE_NAME');
+        $data['active_page'] = 'test';
+
+        return view('test', $data);
     }
 
     public function printStats() {

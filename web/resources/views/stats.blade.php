@@ -4,8 +4,11 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" integrity="sha256-Uv9BNBucvCPipKQ2NS9wYpJmi8DTOEfTA/nH2aoJALw=" crossorigin="anonymous"></script>
 <script>
-$(document).ready(function(){
-  $.get('/api/stats', function(data){
+axios.get('/api/stats').then(function(response){
+
+  if( response.status === 200 ) {
+
+    let data = response.data;
 
     $("#servers").html("Servers: " + data.server_count.toLocaleString());
     $("#users").html("Registered Users: " + data.user_count.toLocaleString());
@@ -273,8 +276,7 @@ $(document).ready(function(){
         },
       }
     });
-
-  });
+  }
 });
 
 function randomColor(){

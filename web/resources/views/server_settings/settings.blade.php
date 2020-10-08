@@ -175,119 +175,129 @@
 
 @section('footer')
 <script>
-$(function(){
-  $.post(
-    '/api/serverSettings',
-    {
-      'server_id': '<?=$server_id?>',
-      'uuid': '<?=$user->discord_id?>',
-      'token': '<?=$user->token?>',
-    }
-  )
-  .done(function(data){
+axios.post('/api/serverSettings', {
+  'server_id': '<?=$server_id?>',
+  'uuid': '<?=$user->discord_id?>',
+  'token': '<?=$user->token?>',
+})
+.then(function(response){
 
-    $("#settings-placeholder").removeClass("d-flex").hide();
+  document.querySelector("#settings-placeholder").classList.remove("d-flex");
+  document.querySelector("#settings-placeholder").style.display = 'none';
+
+  if( response.status === 200 && response.data ) {
+
+    let data = response.data;
+
+    document.querySelector("#settings-form").classList.remove("d-none");
 
     if( data.server ) {
+      document.querySelector("#server_name").textContent = " - " + data.server.name;
+    }
 
-      $("#settings-form").removeClass("d-none");
-
-      if( data.server ) {
-        $("#server_name").text(" - " + data.server.name);
+    if( data.serverSettings ) {
+      // Prefix
+      if( data.serverSettings.prefix ) {
+        document.querySelector("#server_prefix").value = data.serverSettings.prefix;
       }
 
-      if( data.serverSettings ) {
-        // Prefix
-        if( data.serverSettings.prefix ) {
-          $("#server_prefix").val( data.serverSettings.prefix );
-        }
-
-        // Language
-        if( data.serverSettings.language ) {
-          switch(data.serverSettings.language) {
-            case "jp":
-              $("#server_language option[value=jp]").attr('selected','selected');
-              break;
-            case "fr":
-              $("#server_language option[value=fr]").attr('selected','selected');
-              break;
-            case "de":
-              $("#server_language option[value=de]").attr('selected','selected');
-              break;
-            default:
-              $("#server_language option[value=en]").attr('selected','selected');
-          }
-        }
-
-        // News + FR + Default Channel
-        if( data.channels ) {
-          // News
-          if( data.serverSettings.news_channel_id || data.serverSettings.news_channel_id == null ) {
-            for(i in data.channels) {
-              if( data.channels[i].id == data.serverSettings.news_channel_id ) {
-                $("#server_news_channel").append('<option value="'+data.channels[i].id+'" selected="selected">'+data.channels[i].name+'</option>');
-              }
-              else {
-                $("#server_news_channel").append('<option value="'+data.channels[i].id+'">'+data.channels[i].name+'</option>');
-              }
-            }
-          }
-
-          // FR
-          if( data.serverSettings.fr_channel_id || data.serverSettings.fr_channel_id == null ) {
-            for(i in data.channels) {
-              if( data.channels[i].id == data.serverSettings.fr_channel_id ) {
-                $("#server_fr_channel").append('<option value="'+data.channels[i].id+'" selected="selected">'+data.channels[i].name+'</option>');
-              }
-              else {
-                $("#server_fr_channel").append('<option value="'+data.channels[i].id+'">'+data.channels[i].name+'</option>');
-              }
-            }
-          }
-
-          // Default Channel
-          if( data.serverSettings.default_reply_channel_id || data.serverSettings.default_reply_channel_id == null ) {
-            for(i in data.channels) {
-              if( data.channels[i].id == data.serverSettings.default_reply_channel_id ) {
-                $("#server_default_channel").append('<option value="'+data.channels[i].id+'" selected="selected">'+data.channels[i].name+'</option>');
-              }
-              else {
-                $("#server_default_channel").append('<option value="'+data.channels[i].id+'">'+data.channels[i].name+'</option>');
-              }
-            }
-          }
-        }
-
-        // News Locale
-        if( data.serverSettings.news_channel_locale ) {
-          switch(data.serverSettings.news_channel_locale) {
-            case "jp":
-              $("#server_news_locale option[value=jp]").attr('selected','selected');
-              break;
-            case "fr":
-              $("#server_news_locale option[value=fr]").attr('selected','selected');
-              break;
-            case "de":
-              $("#server_news_locale option[value=de]").attr('selected','selected');
-              break;
-            case "eu":
-              $("#server_news_locale option[value=eu]").attr('selected','selected');
-              break;
-            default:
-              $("#server_news_locale option[value=na]").attr('selected','selected');
-          }
-        }
-
-        // Auto delete
-        if( data.serverSettings.auto_delete > 0 ) {
-          $("#server_auto_delete option[value=1]").attr('selected','selected');
+      // Language
+      if( data.serverSettings.language ) {
+        switch(data.serverSettings.language) {
+          case "jp":
+            document.querySelector("#server_language option[value=jp]").setAttribute('selected','selected');
+            break;
+          case "fr":
+            document.querySelector("#server_language option[value=fr]").setAttribute('selected','selected');
+            break;
+          case "de":
+            document.querySelector("#server_language option[value=de]").setAttribute('selected','selected');
+            break;
+          default:
+            document.querySelector("#server_language option[value=en]").setAttribute('selected','selected');
         }
       }
+
+      // News + FR + Default Channel
+      if( data.channels ) {
+        // News
+        if( data.serverSettings.news_channel_id || data.serverSettings.news_channel_id == null ) {
+          for(i in data.channels) {
+
+            var option = document.createElement("option");
+            option.text = data.channels[i].name;
+            option.value = data.channels[i].id;
+
+            if( data.channels[i].id == data.serverSettings.news_channel_id ) {
+              option.setAttribute('selected','selected');
+            }
+
+            document.querySelector("#server_news_channel").appendChild(option);
+          }
+        }
+
+        // FR
+        if( data.serverSettings.fr_channel_id || data.serverSettings.fr_channel_id == null ) {
+          for(i in data.channels) {
+
+            var option = document.createElement("option");
+            option.text = data.channels[i].name;
+            option.value = data.channels[i].id;
+
+            if( data.channels[i].id == data.serverSettings.fr_channel_id ) {
+              option.setAttribute('selected','selected');
+            }
+
+            document.querySelector("#server_fr_channel").appendChild(option);
+          }
+        }
+
+        // Default Channel
+        if( data.serverSettings.default_reply_channel_id || data.serverSettings.default_reply_channel_id == null ) {
+          for(i in data.channels) {
+
+            var option = document.createElement("option");
+            option.text = data.channels[i].name;
+            option.value = data.channels[i].id;
+
+            if( data.channels[i].id == data.serverSettings.default_reply_channel_id ) {
+              option.setAttribute('selected','selected');
+            }
+
+            document.querySelector("#server_default_channel").appendChild(option);
+          }
+        }
+      }
+
+      // News Locale
+      if( data.serverSettings.news_channel_locale ) {
+        switch(data.serverSettings.news_channel_locale) {
+          case "jp":
+            document.querySelector("#server_news_locale option[value=jp]").setAttribute('selected','selected');
+            break;
+          case "fr":
+            document.querySelector("#server_news_locale option[value=fr]").setAttribute('selected','selected');
+            break;
+          case "de":
+            document.querySelector("#server_news_locale option[value=de]").setAttribute('selected','selected');
+            break;
+          case "eu":
+            document.querySelector("#server_news_locale option[value=eu]").setAttribute('selected','selected');
+            break;
+          default:
+            document.querySelector("#server_news_locale option[value=na]").setAttribute('selected','selected');
+        }
+      }
+
+      // Auto delete
+      if( data.serverSettings.auto_delete > 0 ) {
+        document.querySelector('#server_auto_delete option[value="1"]').setAttribute('selected','selected');
+      }
     }
-    else {
-      $("#settings-err").removeClass("d-none");
-    }
-  });
-})
+  }
+  else {
+    document.querySelector("#settings-err").classList.remove("d-none");
+  }
+});
 </script>
 @endsection

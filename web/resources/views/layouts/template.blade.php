@@ -10,6 +10,8 @@
       gtag('config', 'UA-35918300-7');
     </script>
 
+    <script data-ad-client="ca-pub-2393161407259792" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
  	  <link as="style" rel="stylesheet preload prefetch" href="https://fonts.googleapis.com/css?family=PT+Sans:400,400i,700,700i&display=swap" type="text/css" crossorigin>
 
     <meta charset="UTF-8">
@@ -33,7 +35,7 @@
     <!--link rel="stylesheet" href="/css/style.css?<?=time()?>"/-->
   </head>
   <body class="bg-grey text-white">
-    <div class="container" style="margin-top: 25px;">
+    <div id="app" class="container" style="margin-top: 25px;">
       <header>
         <div class="mb-md-3 mb-1">
           <div class="d-md-flex d-block align-items-end justify-content-between">
