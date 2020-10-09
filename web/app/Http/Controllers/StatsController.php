@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App;
 use DB;
 use Cache;
+use Illuminate\Http\Request;
 
 class StatsController extends Controller
 {
-    public function test() {
+    public function test(Request $request) {
+
         $data['site_title'] = 'Test Page | '.env('SITE_NAME');
         $data['active_page'] = 'test';
 

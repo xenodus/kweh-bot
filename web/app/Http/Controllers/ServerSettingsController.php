@@ -50,14 +50,16 @@ class ServerSettingsController extends Controller
                     $news_subscription->delete();
                 }
                 else {
+                    $news_subscription->locale = $validatedData['server_news_locale'];
                     $news_subscription->channel_id = $validatedData['server_news_channel'];
+                    $news_subscription->updated_by_user_id = $request->authUser->discord_id;
                     $news_subscription->last_updated = Carbon::now()->timezone('Asia/Singapore')->format('Y-m-d H:i:s');
                     $news_subscription->save();
                 }
             }
             else {
                 // New Record
-                if( $validatedData['server_news_channel'] ) {
+                if( isset($validatedData['server_news_channel']) ) {
                     $news_subscription = new App\Models\NewsSubscription();
                     $news_subscription->server_id = $server_id;
                     $news_subscription->channel_id = $validatedData['server_news_channel'];
@@ -83,7 +85,7 @@ class ServerSettingsController extends Controller
             }
             else {
                 // New Record
-                if( $validatedData['server_fr_channel'] ) {
+                if( isset($validatedData['server_fr_channel']) ) {
                     $fr_subscription = new App\Models\FRSubscription();
                     $fr_subscription->server_id = $server_id;
                     $fr_subscription->channel_id = $validatedData['server_fr_channel'];
@@ -107,7 +109,7 @@ class ServerSettingsController extends Controller
             }
             else {
                 // New Record
-                if( $validatedData['server_default_channel'] ) {
+                if( isset($validatedData['server_default_channel']) ) {
                     $default_channel = new App\Models\DefaultChannel();
                     $default_channel->server_id = $server_id;
                     $default_channel->channel_id = $validatedData['server_default_channel'];
@@ -147,8 +149,6 @@ class ServerSettingsController extends Controller
         $data['user'] = $request->authUser;
         $data['servers'] = $request->authUser->getServers(true);
         $data['server_id'] = $server_id;
-
-        // dd($data['servers']);
 
         return view('server_settings.settings', $data);
     }

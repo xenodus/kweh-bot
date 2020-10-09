@@ -60,11 +60,11 @@ class DiscordUserOauth extends Model
 
         $valid_channels = $results->filter(function($channel){
           return $channel->type == 0;
-        });
+        })->values()->all();
 
       }
 
-      return collect($valid_channels);
+      return $valid_channels;
   }
 
   public static function getServer($server_id) {

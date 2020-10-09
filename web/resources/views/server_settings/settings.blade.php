@@ -2,7 +2,7 @@
 
 @section('body')
 <h1 class="page-header mb-4">
-  Servers Settings <span id="server_name"></span>
+  Servers Settings <span id="server_name" v-text="server_name"></span>
 </h1>
 
 <div id="settings-err" class="d-none">
@@ -41,7 +41,7 @@
         <label for="server_prefix">Prefix</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <input type="text" class="form-control" name="server_prefix" id="server_prefix" value="" maxlength="1">
+        <input type="text" class="form-control" name="server_prefix" id="server_prefix" value="" maxlength="1" v-model="server_prefix">
 
         <div class="mt-2 settings-description">
           Set the server's default prefix from exclaimation point to something else. Only 1 character is allowed.
@@ -54,7 +54,7 @@
         <label for="server_language">Language</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <select class="form-control" name="server_language" id="server_language">
+        <select class="form-control" name="server_language" id="server_language" v-model="server_language_selected">
           <option value="en">English</option>
           <option value="jp">Japanese</option>
           <option value="fr">French</option>
@@ -72,8 +72,9 @@
         <label for="server_news_channel">Lodestone News Channel</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <select class="form-control" name="server_news_channel" id="server_news_channel">
+        <select class="form-control" name="server_news_channel" id="server_news_channel" v-model="server_news_channel_selected">
           <option value=""></option>
+          <option v-for="channel in server_news_channels" v-bind:value="channel.id" v-text="channel.name"></option>
         </select>
 
         <div class="mt-2 settings-description">
@@ -87,7 +88,7 @@
         <label for="server_news_locale">Lodestone News Language</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <select class="form-control" name="server_news_locale" id="server_news_locale">
+        <select class="form-control" name="server_news_locale" id="server_news_locale" v-model="server_news_language_selected">
           <option value="na">English (NA)</option>
           <option value="eu">English (EU)</option>
           <option value="jp">Japanese</option>
@@ -106,8 +107,9 @@
         <label for="server_fr_channel">Fashion Report Channel</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <select class="form-control" name="server_fr_channel" id="server_fr_channel">
+        <select class="form-control" name="server_fr_channel" id="server_fr_channel" v-model="server_fr_channel_selected">
           <option value=""></option>
+          <option v-for="channel in server_fr_channels" v-bind:value="channel.id" v-text="channel.name"></option>
         </select>
 
         <div class="mt-2 settings-description">
@@ -121,7 +123,7 @@
         <label for="server_auto_delete">Auto Delete Commands</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <select class="form-control" name="server_auto_delete" id="server_auto_delete">
+        <select class="form-control" name="server_auto_delete" id="server_auto_delete" v-model="server_auto_delete">
           <option value=0>No</option>
           <option value=1>Yes</option>
         </select>
@@ -137,8 +139,9 @@
         <label for="server_default_channel">Default Reply Channel</label>
       </div>
       <div class="col-12 col-lg-8 d-flex flex-column align-items-start">
-        <select class="form-control" name="server_default_channel" id="server_default_channel">
+        <select class="form-control" name="server_default_channel" id="server_default_channel" v-model="server_default_channel_selected">
           <option value=""></option>
+          <option v-for="channel in server_default_channels" v-bind:value="channel.id" v-text="channel.name"></option>
         </select>
 
         <div class="mt-2 settings-description">
@@ -175,6 +178,23 @@
 
 @section('footer')
 <script>
+const app = new Vue({
+  el: '#app',
+  data: {
+    server_name: '',
+    server_prefix: '',
+    server_language_selected: '',
+    server_news_channels: [],
+    server_news_channel_selected: '',
+    server_news_language_selected: '',
+    server_fr_channels: [],
+    server_fr_channel_selected: '',
+    server_auto_delete: '',
+    server_default_channels: [],
+    server_default_channel_selected: '',
+  }
+});
+
 axios.post('/api/serverSettings', {
   'server_id': '<?=$server_id?>',
   'uuid': '<?=$user->discord_id?>',
@@ -192,107 +212,48 @@ axios.post('/api/serverSettings', {
     document.querySelector("#settings-form").classList.remove("d-none");
 
     if( data.server ) {
-      document.querySelector("#server_name").textContent = " - " + data.server.name;
+      app.server_name = " - " + data.server.name;
     }
 
     if( data.serverSettings ) {
       // Prefix
       if( data.serverSettings.prefix ) {
-        document.querySelector("#server_prefix").value = data.serverSettings.prefix;
+        app.server_prefix = data.serverSettings.prefix;
       }
 
       // Language
       if( data.serverSettings.language ) {
-        switch(data.serverSettings.language) {
-          case "jp":
-            document.querySelector("#server_language option[value=jp]").setAttribute('selected','selected');
-            break;
-          case "fr":
-            document.querySelector("#server_language option[value=fr]").setAttribute('selected','selected');
-            break;
-          case "de":
-            document.querySelector("#server_language option[value=de]").setAttribute('selected','selected');
-            break;
-          default:
-            document.querySelector("#server_language option[value=en]").setAttribute('selected','selected');
-        }
+        app.server_language_selected = data.serverSettings.language;
       }
 
       // News + FR + Default Channel
       if( data.channels ) {
         // News
         if( data.serverSettings.news_channel_id || data.serverSettings.news_channel_id == null ) {
-          for(i in data.channels) {
-
-            var option = document.createElement("option");
-            option.text = data.channels[i].name;
-            option.value = data.channels[i].id;
-
-            if( data.channels[i].id == data.serverSettings.news_channel_id ) {
-              option.setAttribute('selected','selected');
-            }
-
-            document.querySelector("#server_news_channel").appendChild(option);
-          }
+          app.server_news_channels = data.channels;
+          app.server_news_channel_selected = data.serverSettings.news_channel_id;
         }
 
         // FR
         if( data.serverSettings.fr_channel_id || data.serverSettings.fr_channel_id == null ) {
-          for(i in data.channels) {
-
-            var option = document.createElement("option");
-            option.text = data.channels[i].name;
-            option.value = data.channels[i].id;
-
-            if( data.channels[i].id == data.serverSettings.fr_channel_id ) {
-              option.setAttribute('selected','selected');
-            }
-
-            document.querySelector("#server_fr_channel").appendChild(option);
-          }
+          app.server_fr_channels = data.channels;
+          app.server_fr_channel_selected = data.serverSettings.fr_channel_id;
         }
 
         // Default Channel
         if( data.serverSettings.default_reply_channel_id || data.serverSettings.default_reply_channel_id == null ) {
-          for(i in data.channels) {
-
-            var option = document.createElement("option");
-            option.text = data.channels[i].name;
-            option.value = data.channels[i].id;
-
-            if( data.channels[i].id == data.serverSettings.default_reply_channel_id ) {
-              option.setAttribute('selected','selected');
-            }
-
-            document.querySelector("#server_default_channel").appendChild(option);
-          }
+          app.server_default_channels = data.channels;
+          app.server_default_channel_selected = data.serverSettings.default_reply_channel_id;
         }
       }
 
       // News Locale
       if( data.serverSettings.news_channel_locale ) {
-        switch(data.serverSettings.news_channel_locale) {
-          case "jp":
-            document.querySelector("#server_news_locale option[value=jp]").setAttribute('selected','selected');
-            break;
-          case "fr":
-            document.querySelector("#server_news_locale option[value=fr]").setAttribute('selected','selected');
-            break;
-          case "de":
-            document.querySelector("#server_news_locale option[value=de]").setAttribute('selected','selected');
-            break;
-          case "eu":
-            document.querySelector("#server_news_locale option[value=eu]").setAttribute('selected','selected');
-            break;
-          default:
-            document.querySelector("#server_news_locale option[value=na]").setAttribute('selected','selected');
-        }
+        app.server_news_language_selected = data.serverSettings.news_channel_locale;
       }
 
       // Auto delete
-      if( data.serverSettings.auto_delete > 0 ) {
-        document.querySelector('#server_auto_delete option[value="1"]').setAttribute('selected','selected');
-      }
+      app.server_auto_delete = data.serverSettings.auto_delete;
     }
   }
   else {
