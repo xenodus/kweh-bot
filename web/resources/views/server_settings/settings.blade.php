@@ -212,7 +212,7 @@ axios.post('/api/serverSettings', {
     document.querySelector("#settings-form").classList.remove("d-none");
 
     if( data.server ) {
-      app.server_name = " - " + data.server.name;
+      app.server_name = " ➟ " + data.server.name;
     }
 
     if( data.serverSettings ) {

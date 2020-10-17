@@ -10,6 +10,7 @@ const lodash = require('lodash');
 const moment = require("moment");
 
 const pool = config.getPool();
+const readPool = config.getReadPool();
 
 /******************************
   Functions
@@ -46,7 +47,7 @@ async function getItemByID(itemID, type="item") {
   let itemInfo = {};
 
   // Check if data in own DB first
-  let itemFrDB = await pool.query("SELECT * FROM items WHERE item_id = ? AND type = ?", [itemID, type]).then(function(res){
+  let itemFrDB = await readPool.query("SELECT * FROM items WHERE item_id = ? AND type = ?", [itemID, type]).then(function(res){
     if( res.length > 0 ) {
       return res[0];
     }

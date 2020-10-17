@@ -10,6 +10,7 @@ const lodash = require('lodash');
 const moment = require("moment");
 
 const pool = config.getPool();
+const readPool = config.getReadPool();
 
 const Parser = require('rss-parser');
 const parser = new Parser();
@@ -331,7 +332,7 @@ const frChannelGet = async function(server_id) {
 
   let frChannel = {};
 
-  frChannel = await pool.query("SELECT * FROM fashion_report_subscription WHERE server_id = ?", [server_id]).then(function(res){
+  frChannel = await readPool.query("SELECT * FROM fashion_report_subscription WHERE server_id = ?", [server_id]).then(function(res){
 
     if( res.length > 0 ) {
       return {
@@ -396,7 +397,7 @@ const frChannelRemove = async function(message) {
 const isPosted = async function(channel_id, report_id) {
   let isPosted = false;
 
-  isPosted = await pool.query("SELECT * FROM fashion_report_posted WHERE channel_id = ? AND report_id = ?", [channel_id, report_id]).then(function(res){
+  isPosted = await readPool.query("SELECT * FROM fashion_report_posted WHERE channel_id = ? AND report_id = ?", [channel_id, report_id]).then(function(res){
     if( res.length > 0 ) {
       return true;
     }

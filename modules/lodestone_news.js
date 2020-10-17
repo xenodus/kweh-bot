@@ -10,7 +10,7 @@ const lodash = require('lodash');
 const moment = require("moment");
 
 const pool = config.getPool();
-//const pool = config.getStagingPool()
+const readPool = config.getReadPool();
 
 /******************************
   GET NEWS CHANNEL
@@ -20,7 +20,7 @@ const newsChannelGet = async function(server_id) {
 
   let newsChannel = {};
 
-  newsChannel = await pool.query("SELECT * FROM news_subscription WHERE server_id = ?", [server_id]).then(function(res){
+  newsChannel = await readPool.query("SELECT * FROM news_subscription WHERE server_id = ?", [server_id]).then(function(res){
 
     if( res.length > 0 ) {
       return {
@@ -170,7 +170,7 @@ const fetchNews = async function(limitPerCat = 3, locale = "na") {
 const isPosted = async function(channel_id, news_id) {
   let isPosted = false;
 
-  isPosted = await pool.query("SELECT * FROM news_posted WHERE channel_id = ? AND news_id = ?", [channel_id, news_id]).then(function(res){
+  isPosted = await readPool.query("SELECT * FROM news_posted WHERE channel_id = ? AND news_id = ?", [channel_id, news_id]).then(function(res){
     if( res.length > 0 ) {
       return true;
     }

@@ -14,6 +14,7 @@ const nodeHtmlToImage = require('node-html-to-image')
 const fs = require("fs");
 
 const pool = config.getPool();
+const readPool = config.getReadPool();
 
 /******************************
   Functions
@@ -44,7 +45,7 @@ const setUserInfo = async function(userID, dc, server, region, firstname, lastna
 const getUserInfo = async function(userID) {
   let user = {};
 
-  user = await pool.query("SELECT * FROM users WHERE user_id = ?", [userID]).then(function(res){
+  user = await readPool.query("SELECT * FROM users WHERE user_id = ?", [userID]).then(function(res){
     if( res.length > 0 ) {
       return {
         id: userID,
@@ -367,7 +368,7 @@ const printCharacterInfo = async function(characterInfo, message) {
 const getUserProfile = async function(lodestone_id) {
   let userProfile = {};
 
-  userProfile = await pool.query("SELECT * FROM user_profile WHERE lodestone_id = ?", [lodestone_id]).then(function(res){
+  userProfile = await readPool.query("SELECT * FROM user_profile WHERE lodestone_id = ?", [lodestone_id]).then(function(res){
     if( res.length > 0 ) {
       return {
         id: lodestone_id,

@@ -55,6 +55,7 @@ class GetMaintenance extends Command
 
                 foreach($maintenance as $maint) {
                     $is_maint = preg_match('/All Worlds Maintenance \(.*\)$/', $maint->title);
+                    $is_maint = $is_maint ? $is_maint : preg_match('/All Worlds Emergency Maintenance \(.*\)$/', $maint->title);
 
                     if( $is_maint ) {
 

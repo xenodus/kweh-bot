@@ -28,6 +28,9 @@ const client = new Discord.Client({
   messageSweepInterval: 3600
 });
 
+const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
+const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
+
 let checkIntervals = 300 * 1000;
 
 /******************************
@@ -53,8 +56,6 @@ else {
     helper.printStatus('Server count posted to top.gg!');
   });
 }
-
-const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
 
 // Modules
 const helper = require("./helper.js");
@@ -1217,7 +1218,7 @@ async function getServerSettings(serverID) {
     'auto_delete': false
   };
 
-  await pool.query("SELECT * FROM servers LEFT JOIN server_default_channel ON servers.server_id = server_default_channel.server_id WHERE servers.server_id = ?", [serverID]).then(function(res){
+  await readPool.query("SELECT * FROM servers LEFT JOIN server_default_channel ON servers.server_id = server_default_channel.server_id WHERE servers.server_id = ?", [serverID]).then(function(res){
     if( res.length > 0 ) {
       settings['prefix'] = res[0].prefix.length > 0 ? res[0].prefix : settings['prefix'];
       settings['language'] = res[0].language ? res[0].language : settings['language'];
@@ -1253,7 +1254,7 @@ async function getCommandsLast5s(serverID) {
   let cmds = 0;
   let curr_datetime = moment().subtract(5, 'seconds').format('YYYY-M-D HH:mm:ss');
 
-  cmds = await pool.query("SELECT count(*) as cmds FROM commands WHERE server_id = ? AND date_added >= ?", [serverID, curr_datetime]).then(function(res){
+  cmds = await readPool.query("SELECT count(*) as cmds FROM commands WHERE server_id = ? AND date_added >= ?", [serverID, curr_datetime]).then(function(res){
     if( res.length > 0 ) {
       return res[0].cmds;
     }

@@ -9,6 +9,7 @@ const axios = require('axios');
 const moment = require("moment");
 
 const pool = config.getPool();
+const readPool = config.getReadPool();
 
 /******************************
   Eorzea Time Functions
@@ -184,7 +185,7 @@ const getNextMaintenance = async function() {
     date_end: 0
   };
 
-  await pool.query("SELECT * FROM `events` WHERE type = 'maintenance' AND date_end > NOW() ORDER BY date_start ASC LIMIT 1").then(function(res){
+  await readPool.query("SELECT * FROM `events` WHERE type = 'maintenance' AND date_end > NOW() ORDER BY date_start ASC LIMIT 1").then(function(res){
     if( res.length > 0 ) {
       next_maint["date_start"] = res[0].date_start;
       next_maint["date_end"] = res[0].date_end;
@@ -207,7 +208,7 @@ const getLastMaintenance = async function() {
     date_end: 0
   };
 
-  await pool.query("SELECT * FROM `events` WHERE type = 'maintenance' AND date_end < NOW() ORDER BY date_start DESC LIMIT 1").then(function(res){
+  await readPool.query("SELECT * FROM `events` WHERE type = 'maintenance' AND date_end < NOW() ORDER BY date_start DESC LIMIT 1").then(function(res){
     if( res.length > 0 ) {
       last_maint["date_start"] = res[0].date_start;
       last_maint["date_end"] = res[0].date_end;

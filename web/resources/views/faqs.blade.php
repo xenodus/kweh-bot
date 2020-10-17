@@ -9,6 +9,7 @@
   <!--p><strong>FAQ List</strong></p-->
   <ol class="mb-0">
     <li><a href="#install">How do I invite {{env('APP_NAME')}} to my Discord server?</a></li>
+    <li><a href="#permissions">What permissions does {{ env('APP_NAME') }} require?</a></li>
     <li><a href="#language">How do I change the default language?</a></li>
     <li><a href="#profiledifferent">Why is my profile or glamour different from what I'm wearing ingame?</a></li>
     <li><a href="#news">How do I receive Lodestone news notification?</a></li>
@@ -33,6 +34,65 @@
     </div>
   </div>
 </div>
+
+<div class="d-flex align-items-start p-3 command-item">
+  <a name="permissions"></a>
+  <div class="faq-content ml-3 mb-2">
+    <div class="faq-header">{{ $i++ }}. What permissions does {{ env('APP_NAME') }} require?</div>
+
+    <div class="mt-3 faq-description">
+      <p>Most of {{ env('APP_NAME') }}'s commands works just fine with <strong>Read Messages</strong>, <strong>Send Messages</strong> and <strong>Embed Links</strong> permissions.</p>
+
+      <p>Commands that require additional permissions to function at 100% are listed below. Granting of the required permissions are optional and won't break {{ env('APP_NAME') }} if omitted.</p>
+    </div>
+
+    <div class="mt-3 table-responsive">
+      <table class="table">
+        <thead>
+          <tr class="border-0 text-center text-white">
+            <th>Command</th>
+            <th>Read Messages</th>
+            <th>Send Messages</th>
+            <th>Embed Links</th>
+            <th>Manage Messages</th>
+            <th>Add Reactions</th>
+          </tr>
+        </thead>
+        <tbody class="text-center bg-light">
+          <tr>
+            <td>!ec</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+          </tr>
+          <tr>
+            <td>!kweh autodelete</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td>✓</td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<style>
+  table thead {
+    background: #000!important;
+  }
+  table th,
+  table td {
+    border: none!important;
+  }
+  table td + td {
+    border-left: 1px solid #ddd!important;
+  }
+</style>
 
 <div class="d-flex align-items-start p-3 command-item">
   <a name="language"></a>
