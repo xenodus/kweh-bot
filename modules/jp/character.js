@@ -16,6 +16,8 @@ const fs = require("fs");
 const pool = config.getPool();
 const readPool = config.getReadPool();
 
+const redis = config.getRedis();
+
 /******************************
   Functions
 *******************************/
@@ -40,24 +42,50 @@ const setUserInfo = async function(userID, dc, server, region, firstname, lastna
       curr_datetime
     ]
   );
+
+  // Reset redis key
+  let redisKey = "kweh_user:" + userID;
+  let user = {
+    id: userID,
+    lodestone_id: lodestone_id,
+    dc: dc,
+    server: server,
+    region: region,
+    firstname: firstname,
+    lastname: lastname
+  };
+  redis.set(redisKey, JSON.stringify(user), "EX", config.redisExpiry);
 }
 
 const getUserInfo = async function(userID) {
   let user = {};
 
-  user = await readPool.query("SELECT * FROM users WHERE user_id = ?", [userID]).then(function(res){
-    if( res.length > 0 ) {
-      return {
-        id: userID,
-        lodestone_id: res[0].lodestone_id,
-        dc: res[0].dc,
-        server: res[0].server,
-        region: res[0].region,
-        firstname: res[0].firstname,
-        lastname: res[0].lastname
-      }
-    }
+  // Check redis first before db
+  let redisKey = "kweh_user:" + userID;
+  let userFrRedis = await redis.get(redisKey).then(function (result) {
+    return result;
   });
+
+  if( userFrRedis ) {
+    user = JSON.parse(userFrRedis);
+  }
+  else {
+    user = await readPool.query("SELECT * FROM users WHERE user_id = ?", [userID]).then(function(res){
+      if( res.length > 0 ) {
+        return {
+          id: userID,
+          lodestone_id: res[0].lodestone_id,
+          dc: res[0].dc,
+          server: res[0].server,
+          region: res[0].region,
+          firstname: res[0].firstname,
+          lastname: res[0].lastname
+        }
+      }
+    });
+
+    redis.set(redisKey, JSON.stringify(user), "EX", config.redisExpiry);
+  }
 
   return user;
 }
