@@ -5,6 +5,8 @@
 const config = require('../config').production;
 const axios = require('axios');
 
+const redis = config.getRedis();
+
 /*********************************
   DC / Server Related Functions
 **********************************/
@@ -12,19 +14,35 @@ const axios = require('axios');
 const getDCServers = async function() {
 
   let dcServers = {};
-  let apiUrl = config.xivApiBaseURL + "servers/dc";
-  apiUrl += "?private_key=" + config.xivApiToken;
 
-  await axios.get(apiUrl).then(async function(response){
-    if( response.status === 200 ) {
-      if( response.data ) {
-        dcServers = response.data;
-      }
-    }
-  })
-  .catch(function(err){
-    console.log(err);
+  // Check redis first before db
+  let redisKey = "kweh_dc_servers";
+  let dcServersFrRedis = await redis.get(redisKey).then(function (result) {
+    return result;
   });
+
+  if( dcServersFrRedis ) {
+    dcServers = JSON.parse(dcServersFrRedis);
+    console.log("Fetched dc servers from redis");
+  }
+  else {
+    let apiUrl = config.xivApiBaseURL + "servers/dc";
+    apiUrl += "?private_key=" + config.xivApiToken;
+
+    await axios.get(apiUrl).then(async function(response){
+      if( response.status === 200 ) {
+        if( response.data ) {
+          dcServers = response.data;
+          console.log("Fetched dc servers from xivapi");
+        }
+      }
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+
+    redis.set("kweh_dc_servers", JSON.stringify(dcServers), "EX", config.redisExpiry);
+  }
 
   return dcServers;
 }
