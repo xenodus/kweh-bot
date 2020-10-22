@@ -18,7 +18,7 @@ const getDCServers = async function() {
   // Check redis first before db
   let redisKey = "kweh_dc_servers";
   let dcServersFrRedis = await redis.get(redisKey).then(function (result) {
-    return result;
+	  return result;
   });
 
   if( dcServersFrRedis ) {
@@ -41,7 +41,7 @@ const getDCServers = async function() {
       console.log(err);
     });
 
-    redis.set("kweh_dc_servers", JSON.stringify(dcServers), "EX", config.redisExpiry);
+    redis.set(redisKey, JSON.stringify(dcServers), "EX", config.redisExpiry);
   }
 
   return dcServers;

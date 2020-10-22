@@ -84,7 +84,9 @@ const getUserInfo = async function(userID) {
       }
     });
 
-    redis.set(redisKey, JSON.stringify(user), "EX", config.redisExpiry);
+    if( lodash.isEmpty(user) == false ) {
+      redis.set(redisKey, JSON.stringify(user), "EX", config.redisExpiry);
+    }
   }
 
   return user;
@@ -93,6 +95,8 @@ const getUserInfo = async function(userID) {
 const searchCharacter = async function(server, firstname, lastname){
   let apiUrl = config.xivApiBaseURL + "character/search?name=" + firstname + "+" + lastname + "&server=" + server;
   apiUrl += "&private_key=" + config.xivApiToken;
+
+  console.log("Character Search Api URL: " + apiUrl);
 
   let characterSearchResult = {};
 
