@@ -172,7 +172,7 @@
                 <ul class="side-menu">
                   @if(session()->has('auth_user_id'))
                   <li class="{{ (isset($active_page) && ($active_page == 'servers' || $active_page == 'server_settings') ) ? 'active' : ''  }}">
-                    <a href="/me/servers">My Servers</a>
+                    <a href="/me/servers">Servers</a>
                     @if( isset($servers) )
                     <ol class="sub-menu" style="list-style: circle;">
                       @foreach($servers as $s)
@@ -180,6 +180,9 @@
                       @endforeach
                     </ol>
                     @endif
+                  </li>
+                  <li class="{{ (isset($active_page) && $active_page == 'profile') ? 'active' : ''  }}">
+                    <a href="/me/profile">Profile</a>
                   </li>
                   <li>
                     <a href="/logout">Logout</a>

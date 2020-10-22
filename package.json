@@ -23,6 +23,7 @@
     "discord.js": "^12.3.1",
     "erlpack": "github:discord/erlpack",
     "hashids": "^2.2.1",
+    "ioredis": "^4.17.3",
     "lodash": "^4.17.20",
     "moment": "^2.29.0",
     "newrelic": "^6.13.1",

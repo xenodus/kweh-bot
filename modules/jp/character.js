@@ -321,7 +321,7 @@ const printCharacterInfo = async function(characterInfo, message) {
   embed.addField("ジョブ", "レベル " + current_level + " " + race + " " + current_job);
 
   if( fc ) {
-    embed.addField("フリーカンパニー", "\n<" + fc + "> [" +fc_tag+ "]");
+    embed.addField("フリーカンパニー", fc + " «"+fc_tag+ "»");
   }
 
   // Minions, Mounts, Achievements

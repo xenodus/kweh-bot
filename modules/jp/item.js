@@ -11,6 +11,8 @@ const moment = require("moment");
 const pool = config.getPool();
 const readPool = config.getReadPool();
 
+const redis = config.getRedis();
+
 /******************************
   Functions
 *******************************/
@@ -44,15 +46,15 @@ async function getItemByID(itemID, type="item") {
 
   let itemInfo = {};
 
-  // Check if data in own DB first
-  let itemFrDB = await readPool.query("SELECT * FROM items WHERE item_id = ? AND type = ?", [itemID, type]).then(function(res){
-    if( res.length > 0 ) {
-      return res[0];
-    }
+  // Check redis first before api
+  let redisKey = "kweh_item:" + itemID;
+  let itemFrRedis = await redis.get(redisKey).then(function (result) {
+    return result;
   });
 
-  if( itemFrDB ) {
-    itemInfo = JSON.parse(itemFrDB.data);
+  if( itemFrRedis ) {
+    itemInfo = JSON.parse(itemFrRedis);
+    console.log("Found in redis: " + itemID);
   }
   // Else fetch from xivapi
   else {
@@ -64,21 +66,15 @@ async function getItemByID(itemID, type="item") {
       if( response.status === 200 ) {
         if( response.data ) {
           itemInfo = response.data;
+
+          console.log("Found in xivapi: " + itemID);
+          redis.set(redisKey, JSON.stringify(itemInfo), "EX", config.redisExpiry);
         }
       }
     })
     .catch(function(err){
       console.log(err);
     });
-
-    if( itemInfo && !itemFrDB ) {
-
-      let curr_datetime = moment().format('YYYY-M-D HH:mm:ss');
-
-      pool.query(`INSERT INTO items
-        (item_id, type, data, date_added) VALUES (?, ?, ?, ?)
-        ON DUPLICATE KEY UPDATE type = VALUES(type), data = VALUES(data), date_added = VALUES(date_added)`, [itemID, type, JSON.stringify(itemInfo), curr_datetime]);
-    }
   }
 
   return itemInfo;

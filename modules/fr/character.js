@@ -321,7 +321,7 @@ const printCharacterInfo = async function(characterInfo, message) {
   embed.addField("Job", "Niveau " + current_level + " " + race + " " + current_job);
 
   if( fc ) {
-    embed.addField("Compagnie libre", "\n<" + fc + "> [" +fc_tag+ "]");
+    embed.addField("Compagnie libre", fc + " «"+fc_tag+ "»");
   }
 
   // Minions, Mounts, Achievements
