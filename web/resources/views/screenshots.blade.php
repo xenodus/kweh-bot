@@ -127,6 +127,8 @@
   </div>
 </div>
 
+@include('adsense.horizontal')
+
 <style>
   .screenshot-item {
     text-align: center;

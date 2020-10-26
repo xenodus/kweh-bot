@@ -34,14 +34,13 @@ const getDCServers = async function() {
         if( response.data ) {
           dcServers = response.data;
           console.log("Fetched dc servers from xivapi");
+          redis.set(redisKey, JSON.stringify(dcServers), "EX", config.redisExpiry);
         }
       }
     })
     .catch(function(err){
       console.log(err);
     });
-
-    redis.set(redisKey, JSON.stringify(dcServers), "EX", config.redisExpiry);
   }
 
   return dcServers;

@@ -38,4 +38,6 @@
   </ul>
   <p><em>Kweeeeeh!</em></p>
 </div>
+
+@include('adsense.horizontal')
 @endsection

@@ -183,4 +183,6 @@
     </div>
   </div>
 </div>
+
+@include('adsense.horizontal')
 @endsection

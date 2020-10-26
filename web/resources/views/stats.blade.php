@@ -332,7 +332,7 @@ function randomColor(){
   <div class="mb-3 col-12 text-center">
     <canvas id="servers_added_date"></canvas>
   </div>
-
 </div>
 
+@include('adsense.horizontal')
 @endsection

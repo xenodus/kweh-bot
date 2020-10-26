@@ -105,6 +105,8 @@
   </div>
 </div>
 
+@include('adsense.horizontal')
+
 <div class="d-flex align-items-start p-3 command-item">
   <a name="marketboard"></a>
   <div class="text-center command-no">{{ $i++ }}</div>
@@ -175,6 +177,8 @@
     <div class="mt-3 command-alias">Aliases: maintenance</div>
   </div>
 </div>
+
+@include('adsense.horizontal')
 
 <div class="d-flex align-items-start p-3 command-item">
   <a name="tt"></a>
@@ -309,4 +313,7 @@
     <div class="mt-3 command-description">Kweh! will DM you the command list in Discord.</div>
   </div>
 </div>
+
+@include('adsense.horizontal')
+
 @endsection
