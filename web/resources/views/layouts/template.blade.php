@@ -32,7 +32,6 @@
     <meta property="og:image" content="https://kwehbot.xyz/images/og_image.png">
 
     <link rel="stylesheet" href="{{ mix('/css/compiled/common.css') }}"/>
-    <!--link rel="stylesheet" href="/css/style.css?<?=time()?>"/-->
   </head>
   <body class="bg-grey text-white">
     <div id="app" class="container" style="margin-top: 25px;">
@@ -213,7 +212,6 @@
           <div>&copy; 2020 kwehbot.xyz</div>
           <div class="text-uppercase"><small>FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.</small></div>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous" async></script>
         <script src="{{ mix('/js/compiled/common.js') }}"></script>
         @yield('footer')
       </div>
