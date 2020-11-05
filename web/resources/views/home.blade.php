@@ -11,7 +11,7 @@
       <li>Lodestone profile with custom generated character card</li>
       <li>Character glamour report</li>
       <li>Lookup <a href="https://ffxiv.eorzeacollection.com/" target="_blank">Eorzea Collection</a> glamours</li>
-      <li>Lookup <a href="https://housingsnap.com/" target="_blank">Housing Snap</a></li>
+      <li>Lookup <a href="https://housingsnap.com/" target="_blank">Housing Snap</a> posts</li>
       <li>Marketboard prices from <a href="https://universalis.app/" target="_blank">Universalis</a></li>
       <li>Integrated with <a href="https://www.fflogs.com/" target="_blank">FFLogs</a></li>
       <li>Item and recipe information from <a href="https://ffxivteamcraft.com/" target="_blank">Teamcraft</a> & <a href="https://xivapi.com/" target="_blank">XIVAPI</a></li>
