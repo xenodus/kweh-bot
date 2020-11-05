@@ -225,7 +225,7 @@ axios.get('/api/stats').then(function(response){
     var serverAddedDates = data.servers_by_date.map(function(p){ return moment(p.month_year, "MM-YYYY").format("MMM YYYY") });
     var serverAddedNo = data.servers_by_date.map(function(p){ return p.no });
 
-    var serversAddedCanvas = document.getElementById('servers_added_date').getContext('2d');
+    var serversAddedCanvas = document.getElementById('servers-added-date').getContext('2d');
 
     var serversAddedChart = new Chart(serversAddedCanvas, {
       type: 'bar',
@@ -318,19 +318,23 @@ function randomColor(){
   </div>
 
   <div class="mb-3 col-12 text-center">
+    <a name="commands"></a>
     <canvas id="commands"></canvas>
   </div>
 
   <div class="mb-3 col-12 text-center">
+    <a name="server-settings-commands"></a>
     <canvas id="server-settings-commands"></canvas>
   </div>
 
   <div class="mb-3 col-12 text-center">
+    <a name="prefixes"></a>
     <canvas id="prefixes"></canvas>
   </div>
 
   <div class="mb-3 col-12 text-center">
-    <canvas id="servers_added_date"></canvas>
+    <a name="servers-added"></a>
+    <canvas id="servers-added-date"></canvas>
   </div>
 </div>
 

@@ -35,6 +35,9 @@
     <li>
       <a href="https://ffxiv.eorzeacollection.com/" target="_blank">Eorzea Collection</a>
     </li>
+    <li>
+      <a href="https://housingsnap.com/" target="_blank">Housing Snap</a>
+    </li>
   </ul>
   <p><em>Kweeeeeh!</em></p>
 </div>

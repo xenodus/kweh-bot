@@ -125,6 +125,7 @@
                       <li><a href="#profile">Profile</a></li>
                       <li><a href="#glam">Glamour</a></li>
                       <li><a href="#ec">Eorzea Collection</a></li>
+                      <li><a href="#hs">Housing Snap</a></li>
                       <li><a href="#fflogs">FFlogs</a></li>
                       <li><a href="#marketboard">Marketboard</a></li>
                       <li><a href="#item">Item</a></li>

@@ -90,6 +90,27 @@
   </div>
 </div>
 
+@include('adsense.horizontal')
+
+<div class="d-flex align-items-start p-3 command-item">
+  <a name="hs"></a>
+  <div class="text-center command-no">{{ $i++ }}</div>
+  <div class="command-content ml-3 mb-2">
+    <div class="bot-command">Housing Snap</div>
+    <div class="command-structure">!hs</div>
+    <div class="command-structure">!hs search search_text</div>
+    <div class="command-example mt-3">
+      e.g. !hs mansion
+    </div>
+
+    <div class="mt-3 command-description">
+      <p>Lookup <a href="https://housingsnap.com/" target="_blank">Housing Snap</a>.</p>
+      <p>Kweh! requires the "Manage Messages" permission to manage the left and right arrow reactions used to navigate through housing snap items.</p>
+    </div>
+    <div class="mt-3 command-alias">Alias: housingsnap</div>
+  </div>
+</div>
+
 <div class="d-flex align-items-start p-3 command-item">
   <a name="fflogs"></a>
   <div class="text-center command-no">{{ $i++ }}</div>
@@ -104,8 +125,6 @@
     <div class="mt-3 command-alias">Aliases: logs, parses</div>
   </div>
 </div>
-
-@include('adsense.horizontal')
 
 <div class="d-flex align-items-start p-3 command-item">
   <a name="marketboard"></a>
@@ -154,6 +173,8 @@
   </div>
 </div>
 
+@include('adsense.horizontal')
+
 <div class="d-flex align-items-start p-3 command-item">
   <a name="timers"></a>
   <div class="text-center command-no">{{ $i++ }}</div>
@@ -177,8 +198,6 @@
     <div class="mt-3 command-alias">Aliases: maintenance</div>
   </div>
 </div>
-
-@include('adsense.horizontal')
 
 <div class="d-flex align-items-start p-3 command-item">
   <a name="tt"></a>
@@ -230,6 +249,8 @@
     <div class="mt-3 admin-note text-danger">Admin allowed only command for channel subscription</div>
   </div>
 </div>
+
+@include('adsense.horizontal')
 
 <div class="d-flex align-items-start p-3 command-item">
   <a name="language"></a>

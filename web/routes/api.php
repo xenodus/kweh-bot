@@ -21,3 +21,5 @@ Route::post('/serverSettings', 'ServerSettingsController@get_server_settings')->
 
 Route::get('/eorzeacollection/getByURL', 'EorzeaCollectionController@getByURL')->name('get_glamour_by_url');
 Route::get('/eorzeacollection/{type?}', 'EorzeaCollectionController@getGlamours')->name('get_glamours');
+
+Route::get('/housingsnap/{tag?}', 'HousingSnapController@getSnaps')->name('get_snaps');

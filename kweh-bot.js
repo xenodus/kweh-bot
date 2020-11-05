@@ -67,6 +67,7 @@ const fashion_report = require("./modules/fashion_report.js");
 const eorzea_time = require("./modules/eorzea_time.js");
 const eorzea_collection = require("./modules/eorzea_collection.js");
 const xivcollect = require("./modules/xivcollect.js");
+const housing_snap = require("./modules/housingsnap.js");
 
 let character, marketboard, item;
 
@@ -103,8 +104,9 @@ client.on('messageReactionAdd', async function(reaction, user) {
   if ( user.bot ) return; // Ignore bots
 
   if( reaction.message.author.id == config.botID ) { // only process kweh messages
-    // Eorzea Collection
     if( reaction.message.embeds.length > 0 ) {
+
+      // Eorzea Collection
       if( reaction.message.embeds[0].author.name && reaction.message.embeds[0].author.name.includes("Eorzea Collection") ) {
 
         let numberOptions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
@@ -117,6 +119,22 @@ client.on('messageReactionAdd', async function(reaction, user) {
         }
         if(numberOptions.includes(reaction.emoji.name)) {
           await eorzea_collection.loadGlamNo(reaction, reaction.emoji.name);
+        }
+      }
+
+      // Housing Snap
+      if( reaction.message.embeds[0].author.name && reaction.message.embeds[0].author.name.includes("Housing Snap") ) {
+
+        let numberOptions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
+
+        if(reaction.emoji.name === "⬅️") {
+          await housing_snap.loadNextImg(reaction, "desc");
+        }
+        if(reaction.emoji.name === "➡️") {
+          await housing_snap.loadNextImg(reaction, "asc");
+        }
+        if(numberOptions.includes(reaction.emoji.name)) {
+          await housing_snap.loadItemNo(reaction, reaction.emoji.name);
         }
       }
     }
@@ -1130,6 +1148,25 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`"+prefix+command+"` \n`"+prefix+command+" latest` \n`"+prefix+command+" loved` \n`"+prefix+command+" featured` \n\nLookup by keywords with \n `"+prefix+command+" keyword your_keywords` \n\nLookup by author with \n `"+prefix+command+" author author_name`", message, true);
       }
     }
+
+    message.response_channel.stopTyping();
+  }
+
+  /*************************************************
+  **** Eorzea Collection
+  *************************************************/
+  else if ( command === "housingsnap" ||  command === "hs" ) {
+
+    let tag = "";
+
+    if( args.length > 0 ) {
+      tag = args.join(' ');
+    }
+
+    message.response_channel.startTyping();
+
+    let housing_snap_results = await housing_snap.getHousingSnap(tag);
+    housing_snap.printHousingSnap(housing_snap_results, message);
 
     message.response_channel.stopTyping();
   }

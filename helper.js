@@ -175,6 +175,13 @@ const sendHelpMsg = function(message, prefix) {
   ];
   embed.addField((i++)+". Eorzea Collection", ecCommands.join("\n"));
 
+  // !hs
+  let hsCommands = [
+    "`" + prefix + "hs`",
+    "`" + prefix + "hs search_string`",
+  ];
+  embed.addField((i++)+". Housing Snap", hsCommands.join("\n"));
+
   // !logs @xenodus
   let logsCommands = [
     "`" + prefix + "fflogs server firstname lastname`",
