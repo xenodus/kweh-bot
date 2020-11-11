@@ -30,6 +30,7 @@ const client = new Discord.Client({
 
 const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
 const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
+const redis = config.getRedis();
 
 let checkIntervals = 300 * 1000;
 
@@ -67,7 +68,7 @@ const fashion_report = require("./modules/fashion_report.js");
 const eorzea_time = require("./modules/eorzea_time.js");
 const eorzea_collection = require("./modules/eorzea_collection.js");
 const xivcollect = require("./modules/xivcollect.js");
-const housing_snap = require("./modules/housingsnap.js");
+const housing_snap = require("./modules/housing_snap.js");
 
 let character, marketboard, item;
 
@@ -162,7 +163,7 @@ client.on("message", async function(message) {
   const default_channel_id = serverSettings["default_channel_id"];
   const default_channel = serverSettings["default_channel"];
 
-  if( command != 'kweh' && prefix != message.content.charAt(0) ) return; // ignore if prefix don't match EXCEPT for kweh commands
+  if( command != 'kweh' && prefix != message.content.charAt(0) ) return; // Ignore if prefix don't match EXCEPT for kweh commands
 
   const isAdmin = helper.isAdmin(message.member);
   const isSuperAdmin = helper.isSuperAdmin(message.member);
@@ -337,6 +338,17 @@ client.on("message", async function(message) {
         }
       }
     }
+  }
+
+  /*************************************************
+  **** PING
+  *************************************************/
+  else if ( command === "ping" ) {
+    const message_timestamp = message.createdTimestamp;
+    const curr_timestamp = Date.now();
+    const pong_time = curr_timestamp - message_timestamp;
+
+    message.response_channel.send("Pong in " +pong_time+ " ms");
   }
 
   /*************************************************
@@ -1223,26 +1235,32 @@ function updateServerInfo(serverID, name) {
 
 function setServerPrefix(serverID, prefix) {
   pool.query("UPDATE servers SET prefix = ? WHERE server_id = ?", [prefix, serverID]);
-}
-
-function setServerPrefix(serverID, prefix) {
-  pool.query("UPDATE servers SET prefix = ? WHERE server_id = ?", [prefix, serverID]);
+  resetServerRedisKey(serverID);
 }
 
 async function setDefaultChannel(serverID, channelID) {
   await pool.query("INSERT INTO server_default_channel (server_id, channel_id, date_added) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE channel_id = VALUES(channel_id), date_added = VALUES(date_added)", [serverID, channelID, moment().format('YYYY-M-D HH:mm:ss')]);
+  resetServerRedisKey(serverID);
 }
 
 function removeDefaultChannel(serverID) {
   pool.query("DELETE FROM server_default_channel WHERE server_id = ?", [serverID]);
+  resetServerRedisKey(serverID);
 }
 
 function enableAutoDelete(serverID) {
   pool.query("UPDATE servers SET auto_delete = 1 WHERE server_id = ?", [serverID]);
+  resetServerRedisKey(serverID);
 }
 
 function disableAutoDelete(serverID) {
   pool.query("UPDATE servers SET auto_delete = 0 WHERE server_id = ?", [serverID]);
+  resetServerRedisKey(serverID);
+}
+
+function resetServerRedisKey(serverID) {
+  let redisKey = "kweh_server:" + serverID;
+  redis.del(redisKey);
 }
 
 async function getServerSettings(serverID) {
@@ -1255,17 +1273,30 @@ async function getServerSettings(serverID) {
     'auto_delete': false
   };
 
-  await readPool.query("SELECT * FROM servers LEFT JOIN server_default_channel ON servers.server_id = server_default_channel.server_id WHERE servers.server_id = ?", [serverID]).then(function(res){
-    if( res.length > 0 ) {
-      settings['prefix'] = res[0].prefix.length > 0 ? res[0].prefix : settings['prefix'];
-      settings['language'] = res[0].language ? res[0].language : settings['language'];
-      settings['default_channel_id'] = res[0].channel_id ? res[0].channel_id : '';
-      settings['auto_delete'] = res[0].auto_delete == 1 ? true : false;
-    }
-  })
-  .catch(function(err){
-    console.log(err);
+  // Check redis first before db
+  let redisKey = "kweh_server:" + serverID;
+  let serverFrRedis = await redis.get(redisKey).then(function (result) {
+    return result;
   });
+
+  if( serverFrRedis ) {
+    settings = JSON.parse(serverFrRedis);
+  }
+  else {
+    await readPool.query("SELECT * FROM servers LEFT JOIN server_default_channel ON servers.server_id = server_default_channel.server_id WHERE servers.server_id = ?", [serverID]).then(function(res){
+      if( res.length > 0 ) {
+        settings['prefix'] = res[0].prefix.length > 0 ? res[0].prefix : settings['prefix'];
+        settings['language'] = res[0].language ? res[0].language : settings['language'];
+        settings['default_channel_id'] = res[0].channel_id ? res[0].channel_id : '';
+        settings['auto_delete'] = res[0].auto_delete == 1 ? true : false;
+
+        redis.set(redisKey, JSON.stringify(settings), "EX", config.redisExpiry);
+      }
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+  }
 
   if( settings['default_channel_id'] ) {
     let channel = await client.channels.cache.get( settings['default_channel_id'] );

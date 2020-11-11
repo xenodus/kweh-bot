@@ -8,6 +8,7 @@ use Goutte;
 use Laravel\Socialite\Facades\Socialite;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Cache;
 
 class ServerSettingsController extends Controller
 {
@@ -117,6 +118,9 @@ class ServerSettingsController extends Controller
                     $default_channel->save();
                 }
             }
+
+            Cache::setPrefix('');
+            Cache::put('kweh_server:' . $server_id, 'value', -5);
         }
 
         return redirect()->route('user_server_settings', [$server_id])->with('status', 'Server settings saved!');
