@@ -67,7 +67,7 @@ const fashion_report = require("./modules/fashion_report.js");
 const eorzea_time = require("./modules/eorzea_time.js");
 const eorzea_collection = require("./modules/eorzea_collection.js");
 const xivcollect = require("./modules/xivcollect.js");
-const housing_snap = require("./modules/housingsnap.js");
+const housing_snap = require("./modules/housing_snap.js");
 
 let character, marketboard, item;
 

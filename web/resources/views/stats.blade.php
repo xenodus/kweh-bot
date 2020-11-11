@@ -222,7 +222,13 @@ axios.get('/api/stats').then(function(response){
     });
 
     // Servers by date
-    var serverAddedDates = data.servers_by_date.map(function(p){ return moment(p.month_year, "MM-YYYY").format("MMM YYYY") });
+    var serverAddedDates = data.servers_by_date.map(function(p){
+      // Indicate ongoing data for the month
+      if( moment(p.month_year, "MM-YYYY").month() == moment().month() && moment(p.month_year, "MM-YYYY").year() == moment().year() )
+        return [moment(p.month_year, "MM-YYYY").format("MMM YYYY"), "(Ongoing)"];
+      else
+        return moment(p.month_year, "MM-YYYY").format("MMM YYYY");
+    });
     var serverAddedNo = data.servers_by_date.map(function(p){ return p.no });
 
     var serversAddedCanvas = document.getElementById('servers-added-date').getContext('2d');
