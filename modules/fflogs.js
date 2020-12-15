@@ -10,6 +10,27 @@ const moment = require("moment");
 
 const currentTierEncounters = [
   {
+    "encounterID": 73,
+    "encounterName": "Cloud of Darkness",
+  },
+  {
+    "encounterID": 74,
+    "encounterName": "Shadowkeeper",
+  },
+  {
+    "encounterID": 75,
+    "encounterName": "Fatebreaker",
+  },
+  {
+    "encounterID": 76,
+    "encounterName": "Eden's Promise",
+  },
+  {
+    "encounterID": 77,
+    "encounterName": "Oracle of Darkness",
+  },
+  /*
+  {
     "encounterID": 69,
     "encounterName": "Ramuh"
   },
@@ -29,6 +50,7 @@ const currentTierEncounters = [
     "encounterID": 1050,
     "encounterName": "The Epic of Alexander",
   },
+  */
 ];
 
 /******************************
