@@ -313,7 +313,7 @@ client.on("message", async function(message) {
           // Set channel
           let targetChannel = message.mentions.channels.first();
 
-          if( targetChannel ) {
+          if( targetChannel && args[1] != 'remove' && args[1] != 'rm' ) {
             await setDefaultChannel(message.guild.id, targetChannel.id);
             helper.sendSuccessMsg("Success", "The default response channel for " + config.appName + " bot has been set to #" + targetChannel.name, message);
           }
