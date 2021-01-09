@@ -61,7 +61,9 @@ const getFFLogs = async function(name, server, region) {
 
   let logsResults = {};
   let apiUrl = config.fflogsApiBaseURL + "parses/character/" + name + "/" + server + "/" + region;
-  apiUrl += "?api_key=" + config.fflogsToken;
+  apiUrl += "?api_key=" + config.fflogsToken + "&metric=rdps";
+
+  console.log( apiUrl );
 
   await axios.get(apiUrl).then(async function(response){
 
@@ -80,6 +82,9 @@ const getFFLogs = async function(name, server, region) {
 
 const printFFLogs = function(logsResults, message) {
 
+  // Only show savage logs - 101
+  logsResults = lodash.filter(logsResults, {'difficulty': 101});
+
   logsResults = lodash.orderBy(logsResults, ['startTime'], ['desc']);
   recentLogs = logsResults.slice(0, 5);
 
@@ -93,7 +98,7 @@ const printFFLogs = function(logsResults, message) {
 
   if( logsResults.length ) {
 
-    embed.setAuthor( "FFLogs Parses - " + logsResults[0].characterName, config.fflogsLogo, "" );
+    embed.setAuthor( "FFLogs Parses - " + logsResults[0].characterName, config.fflogsLogo, config.fflogsBaseURL + "character/id/" + logsResults[0].characterID );
 
     if( recentLogs.length ) {
 
@@ -101,7 +106,7 @@ const printFFLogs = function(logsResults, message) {
 
       for(var i=0; i<recentLogs.length; i++) {
         let logDate = moment( recentLogs[i].startTime ).format("D MMM");
-        recentLogsTxt+= "\n [" + recentLogs[i].encounterName + " ("+Math.round(recentLogs[i].percentile)+"%)]("+config.fflogsBaseURL+"reports/"+recentLogs[i].reportID+"#fight=last) - " + logDate;
+        recentLogsTxt+= "\n [" + recentLogs[i].encounterName + " ("+Math.floor(recentLogs[i].percentile)+"%)]("+config.fflogsBaseURL+"reports/"+recentLogs[i].reportID+"#fight="+recentLogs[i].fightID+"&playermetrictimeframe=today&view=rankings) - " + logDate;
       }
 
       embed.addField("Recent Parses", recentLogsTxt, true);
@@ -112,7 +117,7 @@ const printFFLogs = function(logsResults, message) {
 
       for(var i=0; i<topLogs.length; i++) {
         let logDate = moment( topLogs[i].startTime ).format("D MMM");
-        topLogsTxt+= "\n [" + topLogs[i].encounterName + " ("+Math.round(topLogs[i].percentile)+"%)]("+config.fflogsBaseURL+"reports/"+topLogs[i].reportID+"#fight=last) - " + logDate;
+        topLogsTxt+= "\n [" + topLogs[i].encounterName + " ("+Math.floor(topLogs[i].percentile)+"%)]("+config.fflogsBaseURL+"reports/"+topLogs[i].reportID+"#fight="+topLogs[i].fightID+"&playermetrictimeframe=today&view=rankings) - " + logDate;
       }
 
       embed.addField("Top Parses", topLogsTxt, true);
@@ -124,15 +129,16 @@ const printFFLogs = function(logsResults, message) {
 
       if( encounterLogs.length > 0 ) {
 
-        let duration = Math.floor(moment.duration(encounterLogs[0].duration).minutes()) + ":" + Math.floor(moment.duration(encounterLogs[0].duration%60000).asSeconds());
-        let encounterTxt = encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].total).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].reportID+"#fight=last)" + " [" + encounterLogs[0].rank + "/"+ encounterLogs[0].outOf +"]" + " [" + Math.round(encounterLogs[0].percentile) + "%] ["+duration+"]";
+        // let duration = Math.floor(moment.duration(encounterLogs[0].duration).minutes()) + ":" + Math.floor(moment.duration(encounterLogs[0].duration%60000).asSeconds());
+        let duration = moment.utc(encounterLogs[0].duration).format("m:ss");
+        let encounterTxt = encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].total).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].reportID+"#fight="+encounterLogs[0].fightID+"&playermetrictimeframe=today&view=rankings)" + " [" + encounterLogs[0].rank + "/"+ encounterLogs[0].outOf +"]" + " [" + Math.floor(encounterLogs[0].percentile) + "%] ["+duration+"]";
 
         // Check for second class
         let first_spec = encounterLogs[0].spec;
         encounterLogs = encounterLogs.filter(f => f.spec != first_spec);
 
         if( encounterLogs.length > 0 ) {
-          encounterTxt += "\n" + encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].total).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].reportID+"#fight=last)" + " [" + encounterLogs[0].rank + "/"+ encounterLogs[0].outOf +"]" + " [" + Math.round(encounterLogs[0].percentile) + "%] ["+duration+"]";
+          encounterTxt += "\n" + encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].total).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].reportID+"#fight="+encounterLogs[0].fightID+"&playermetrictimeframe=today&view=rankings)" + " [" + encounterLogs[0].rank + "/"+ encounterLogs[0].outOf +"]" + " [" + Math.floor(encounterLogs[0].percentile) + "%] ["+duration+"]";
         }
 
         embed.addField(currentTierEncounters[i].encounterName, encounterTxt);

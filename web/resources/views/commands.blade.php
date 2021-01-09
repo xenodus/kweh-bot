@@ -121,7 +121,7 @@
     <div class="command-structure">!fflogs server firstname lastname</div>
     <div class="command-example mt-3">e.g. !fflogs tonberry yidhra cantarell</div>
 
-    <div class="mt-3 command-description">View someone's FFLogs parses or yours if no user is specified</div>
+    <div class="mt-3 command-description">View someone's FFLogs parses or yours if no user is specified. Percentiles are based on rDPS values from FFLogs.</div>
     <div class="mt-3 command-alias">Aliases: logs, parses</div>
   </div>
 </div>
