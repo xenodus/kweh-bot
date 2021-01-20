@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/xenodus/kweh-bot#readme",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bufferutil": "^4.0.1",
     "dblapi.js": "^2.4.1",
     "discord.js": "^12.3.1",
