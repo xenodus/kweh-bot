@@ -18,10 +18,19 @@
   <div class="text-center command-no">{{ $i++ }}</div>
   <div class="command-content ml-3 mb-2">
     <div class="bot-command">Register</div>
-    <div class="command-structure">!register server firstname lastname</div>
-    <div class="command-example mt-3">e.g. !register tonberry boki toki</div>
+    <div class="command-structure">
+      !register server firstname lastname
+      <br/>!register lodestone_id
+    </div>
+    <div class="command-example mt-3">
+      e.g. !register tonberry boki toki
+      <br/>e.g. !register 40945
+    </div>
 
-    <div class="mt-3 command-description">Links your Discord account to a Final Fantasy Lodestone profile so if you do a <span class="command">!me</span> or <span class="command">!fflogs</span> command, it'll display your profile or fflogs without needing to enter your server, firstname and lastname in future.</div>
+    <div class="mt-3 command-description">
+      <p>Links your Discord account to a Final Fantasy Lodestone profile so if you do a <span class="command">!me</span> <span class="command">!profile</span> <span class="command">!glam</span> or <span class="command">!fflogs</span> command, it'll display your profile, glams or fflogs without needing to enter your server, firstname and lastname in future.</p>
+      <p>There are very rare cases where characters being retrieved may not be the correct one due to multiple characters sharing the same name on a server. You can use the alternate command to register by providing your lodestone id which is the long string of numbers at the end of your lodestone profile's url. <br/><br/>e.g. https://na.finalfantasyxiv.com/lodestone/character/<b>40945</b> ← 40945 is my lodestone id</p>
+    </div>
     <div class="mt-3 command-alias">Alias: iam</div>
   </div>
 </div>

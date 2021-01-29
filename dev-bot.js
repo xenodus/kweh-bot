@@ -394,6 +394,33 @@ client.on("message", async function(message) {
         }
       }
     }
+    // lodestone id
+    else if( args.length == 1 ) {
+      let apiUrl = config.xivApiBaseURL + "character/" + args[0];
+      apiUrl += "?private_key=" + config.xivApiToken;
+
+      let lodestone_id = args[0];
+
+      let characterSearchResult = await character.searchCharacterByLodestoneID(lodestone_id);
+
+      if( lodash.isEmpty(characterSearchResult) == false ) {
+
+        let characterInfo = await character.getCharacterInfoOwnServer(characterSearchResult, language);
+
+        let region = dcserver.getDCregion(characterInfo.datacenter);
+        characterInfo.discordID = message.author.id;
+
+        if( lodash.isEmpty(characterInfo) == false ) {
+          character.printCharacterInfo(characterInfo, message);
+        }
+
+        // Update Profile
+        character.setUserInfo(message.author.id, characterInfo.datacenter, characterInfo.server, region, characterSearchResult.firstname, characterSearchResult.lastname, characterSearchResult.lodestone_id);
+      }
+      else {
+        helper.sendErrorMsg("Error", "Character not found", message);
+      }
+    }
     else {
       helper.sendErrorMsg("Error", "Register your character with \n`"+prefix+command+" server firstname lastname`", message);
     }
@@ -505,6 +532,27 @@ client.on("message", async function(message) {
           helper.sendErrorMsg("Error", "Profile not found", message);
         }
       }
+      // By Lodestone ID
+      else if(args.length == 1) {
+        let lodestone_id = args[0];
+
+        let characterSearchResult = await character.searchCharacterByLodestoneID(lodestone_id);
+
+        if( lodash.isEmpty(characterSearchResult) == false ) {
+
+          let characterInfo = await character.getCharacterInfoOwnServer(characterSearchResult, language);
+
+          if( lodash.isEmpty(characterInfo) == false ) {
+            character.printCharacterInfo(characterInfo, message);
+          }
+          else {
+            helper.sendErrorMsg("Error", "Character not found", message);
+          }
+        }
+        else {
+          helper.sendErrorMsg("Error", "Profile not found", message);
+        }
+      }
       else {
         helper.sendErrorMsg("Error", "View character profile with \n`"+prefix+command+" server firstname lastname`", message);
       }
@@ -579,6 +627,26 @@ client.on("message", async function(message) {
 
           if( lodash.isEmpty(characterInfo) == false ) {
             characterInfo.discordID = message.mentions.users.first().id;
+            character.printGlamInfo(characterInfo, message);
+          }
+          else {
+            helper.sendErrorMsg("Error", "Character not found", message);
+          }
+        }
+        else {
+          helper.sendErrorMsg("Error", "Profile not found", message);
+        }
+      }
+      else if(args.length == 1) {
+        let lodestone_id = args[0];
+
+        let characterSearchResult = await character.searchCharacterByLodestoneID(lodestone_id);
+
+        if( lodash.isEmpty(characterSearchResult) == false ) {
+
+          let characterInfo = await character.getCharacterInfoXIVAPI(characterSearchResult, false);
+
+          if( lodash.isEmpty(characterInfo) == false ) {
             character.printGlamInfo(characterInfo, message);
           }
           else {

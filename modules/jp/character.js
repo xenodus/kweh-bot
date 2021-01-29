@@ -130,6 +130,33 @@ const searchCharacter = async function(server, firstname, lastname){
   return characterSearchResult;
 }
 
+const searchCharacterByLodestoneID = async function(lodestone_id){
+  let apiUrl = config.xivApiBaseURL + "character/" + lodestone_id;
+  apiUrl += "?private_key=" + config.xivApiToken;
+
+  console.log("Character Search Api (Lodestone ID) URL: " + apiUrl);
+
+  let characterSearchResult = {};
+
+  await axios.get(apiUrl).then(async function(response){
+    if( response.status === 200 ) {
+      if( response.data.Character ) {
+        characterSearchResult = {
+          "dc": response.data.Character.Server ? response.data.Character.Server : "",
+          "firstname": response.data.Character.Name ? response.data.Character.Name.split(" ")[0] : "",
+          "lastname": response.data.Character.Name ? response.data.Character.Name.split(" ")[1] : "",
+          "lodestone_id": lodestone_id
+        };
+      }
+    }
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+
+  return characterSearchResult;
+}
+
 const getCharacterInfoOwnServer = async function(userInfo, language) {
 
   let characterInfo = {};
@@ -823,6 +850,7 @@ const getUserProfileHTML = function(characterInfo) {
 
 module.exports = {
   searchCharacter,
+  searchCharacterByLodestoneID,
   getCharacterInfoXIVAPI,
   getCharacterInfoOwnServer,
   getCharacterTitle,
