@@ -8,6 +8,8 @@ use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Client;
 use Carbon\Carbon;
 
+use Cache;
+
 class GetMaintenance extends Command
 {
     /**

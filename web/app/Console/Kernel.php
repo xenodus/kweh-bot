@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
         $baseFilePath = '/var/data/www/sites/discord-bot/kweh-bot/web/storage/logs/';
 
         // Check for Maintenance from Lodestone
-        $schedule->command('get:maint')->everyMinute(); //->appendOutputTo($baseFilePath . 'check_maint.log');
+        $schedule->command('get:maint')->everyTenMinutes(); //->appendOutputTo($baseFilePath . 'check_maint.log');
     }
 
     /**

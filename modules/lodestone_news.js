@@ -12,6 +12,8 @@ const moment = require("moment");
 const pool = config.getPool();
 const readPool = config.getReadPool();
 
+const redis = config.getRedis();
+
 /******************************
   GET NEWS CHANNEL
 *******************************/
@@ -110,34 +112,56 @@ const fetchNews = async function(limitPerCat = 3, locale = "na") {
   let interestedNews = [];
   let apiUrl = config.lodestoneApiURL;
 
+  let redisKey;
+
   switch(locale) {
     case "jp":
       apiUrl = config.lodestoneApiURL_JP;
+      redisKey = "kweh_lodestoneNews_" + "jp";
       break;
     case "de":
       apiUrl = config.lodestoneApiURL_DE;
+      redisKey = "kweh_lodestoneNews_" + "de";
       break;
     case "fr":
       apiUrl = config.lodestoneApiURL_FR;
+      redisKey = "kweh_lodestoneNews_" + "fr";
       break;
     case "eu":
       apiUrl = config.lodestoneApiURL_EU;
+      redisKey = "kweh_lodestoneNews_" + "eu";
       break;
     case "na":
     default:
+      redisKey = "kweh_lodestoneNews_" + "na";
       apiUrl = config.lodestoneApiURL;
   }
 
-  await axios.get(apiUrl).then(async function(response){
-    if( response.status === 200 ) {
-      if( response.data ) {
-        news = response.data;
-      }
-    }
-  })
-  .catch(function(err){
-    console.log(err);
+  let newsFrRedis = await redis.get(redisKey).then(function (result) {
+    return result;
   });
+
+  if( newsFrRedis ) {
+    news = JSON.parse(newsFrRedis);
+    helper.printStatus("Found lodestone news ("+locale+") in redis");
+  }
+  else {
+    helper.printStatus("Fetching from lodestone news api: " + apiUrl);
+
+    await axios.get(apiUrl).then(async function(response){
+      if( response.status === 200 ) {
+        if( response.data ) {
+          news = response.data;
+
+          helper.printStatus("Cached lodestone news ("+locale+")");
+          redis.set(redisKey, JSON.stringify(news), "EX", config.lodestoneRedisExpiry);
+        }
+      }
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+  }
 
   // Process News
   if( lodash.isEmpty(news) == false ) {

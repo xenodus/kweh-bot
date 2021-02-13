@@ -56,7 +56,7 @@ async function getItemByID(itemID, type="item") {
 
   if( itemFrRedis ) {
     itemInfo = JSON.parse(itemFrRedis);
-    console.log("Found in redis: " + itemID);
+    helper.printStatus("Found in redis: " + itemID);
   }
   // Else fetch from xivapi
   else {
@@ -69,7 +69,7 @@ async function getItemByID(itemID, type="item") {
         if( response.data ) {
           itemInfo = response.data;
 
-          console.log("Found in xivapi: " + itemID);
+          helper.printStatus("Found in xivapi: " + itemID);
           redis.set(redisKey, JSON.stringify(itemInfo), "EX", config.redisExpiry);
         }
       }

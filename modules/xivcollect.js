@@ -104,7 +104,6 @@ const getMountData = async function(message, search_str, is_id = false) {
   }
 
   await axios.get(apiUrl).then(async function(response){
-
     if( response.status === 200 ) {
       if( response.data ) {
         mountData = response.data;

@@ -32,7 +32,8 @@ const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.g
 const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
 const redis = config.getRedis();
 
-let checkIntervals = 300 * 1000;
+let fashionCheckIntervals = 300 * 1000;
+let lodestoneCheckIntervals = 600 * 1000;
 
 /******************************
   Bot Auth
@@ -90,10 +91,10 @@ client.on("ready", async function() {
   }, 10000);
 
   // Check Lodestone periodically
-  client.setInterval(lodestone_news.autoCheckPostNews, checkIntervals, client);
+  client.setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
 
   // Check fashion report periodically
-  client.setInterval(fashion_report.autoCheckPostFR, checkIntervals, client);
+  client.setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
 });
 
 /******************************
@@ -840,10 +841,10 @@ client.on("message", async function(message) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getMountData(message, searchedItem);
 
-      if( itemMatchResult.results.length == 1 ) {
+      if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length == 1 ) {
         await xivcollect.printItemInfo(itemMatchResult.results[0], message);
       }
-      else if( itemMatchResult.results.length > 1 ) {
+      else if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length > 1 ) {
         await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
       }
       else {
@@ -868,10 +869,10 @@ client.on("message", async function(message) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getMinionData(message, searchedItem);
 
-      if( itemMatchResult.results.length == 1 ) {
+      if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length == 1 ) {
         await xivcollect.printItemInfo(itemMatchResult.results[0], message);
       }
-      else if( itemMatchResult.results.length > 1 ) {
+      else if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length > 1 ) {
         await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
       }
       else {
@@ -896,10 +897,10 @@ client.on("message", async function(message) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getTitleData(message, searchedItem);
 
-      if( itemMatchResult.results.length == 1 ) {
+      if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length == 1 ) {
         await xivcollect.printItemInfo(itemMatchResult.results[0], message);
       }
-      else if( itemMatchResult.results.length > 1 ) {
+      else if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length > 1 ) {
         await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
       }
       else {
@@ -924,10 +925,10 @@ client.on("message", async function(message) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getEmoteData(message, searchedItem);
 
-      if( itemMatchResult.results.length == 1 ) {
+      if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length == 1 ) {
         await xivcollect.printItemInfo(itemMatchResult.results[0], message);
       }
-      else if( itemMatchResult.results.length > 1 ) {
+      else if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length > 1 ) {
         await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
       }
       else {
@@ -952,10 +953,10 @@ client.on("message", async function(message) {
       let searchedItem = args.join(' ');
       let itemMatchResult = await xivcollect.getBardingData(message, searchedItem);
 
-      if( itemMatchResult.results.length == 1 ) {
+      if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length == 1 ) {
         await xivcollect.printItemInfo(itemMatchResult.results[0], message);
       }
-      else if( itemMatchResult.results.length > 1 ) {
+      else if( lodash.isEmpty(itemMatchResult) == false && itemMatchResult.results.length > 1 ) {
         await xivcollect.handleMultipleItems(itemMatchResult, searchedItem, message);
       }
       else {
