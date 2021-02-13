@@ -6,7 +6,7 @@
 </h1>
 
 <div>
-  <p><strong>Kweh!</strong> is powered by and exists only because of the amazing community APIs and resources listed below.
+  <p><strong>Kweh!</strong> is powered by and exists only because of the amazing community APIs and resources listed below.</p>
   <ul>
   	<li>
   	  <a href="https://xivapi.com/" target="_blank">XIVAPI</a>
@@ -39,6 +39,7 @@
       <a href="https://housingsnap.com/" target="_blank">Housing Snap</a>
     </li>
   </ul>
+  <p>Huge thanks to <a href="https://github.com/mattantonelli" target="_blank">Raelys</a> :)</p>
   <p><em>Kweeeeeh!</em></p>
 </div>
 

@@ -6,7 +6,7 @@
 </h1>
 
 <div>
-  <p><strong>&bull; Notice: Lodestone news module is currently down for maintenance! (13 Feb 2021)</strong></p>
+  <!--p><strong>&bull; Notice: Lodestone news module is currently down for maintenance! (13 Feb 2021)</strong></p-->
   <p>The default command prefix is <span class="px-2" style="background: rgba(0,0,0,.8);">!</span>, the exclamation point. Most commands have alternate aliases or shortforms.</p>
 </div>
 
