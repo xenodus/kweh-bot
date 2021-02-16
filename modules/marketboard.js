@@ -85,6 +85,11 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     let description = "Which item are you looking for?\n";
 
     for(var i=0; i<items.length; i++) {
+
+      // Character limit check
+      if( (description+"\n" + (i+1) + ". " + items[i].Name).length > 2048 )
+        break;
+
       description+= "\n" + (i+1) + ". " + items[i].Name;
       options.push(i+1);
     }
