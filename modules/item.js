@@ -22,7 +22,7 @@ async function searchItemByName(itemName) {
 
   let itemInfo = [];
   let apiUrl = config.xivApiBaseURL + "search";
-  apiUrl += "?string=" + itemName;
+  apiUrl += "?string=" + encodeURIComponent(itemName);
   // apiUrl += "&string_algo=match";
   apiUrl += "&indexes=Item";
   apiUrl += "&limit=" + config.itemSearchLimit;
