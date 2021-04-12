@@ -84,7 +84,7 @@
   <div class="command-content ml-3 mb-2">
     <div class="bot-command">Eorzea Collection</div>
     <div class="command-structure">!ec</div>
-    <div class="command-structure">!ec featured / latest / loved</div>
+    <div class="command-structure">!ec latest / loved / male / female</div>
     <div class="command-structure">!ec search search_text</div>
     <div class="command-structure">!ec author author_name</div>
     <div class="command-example mt-3">

@@ -127,29 +127,29 @@ class EorzeaCollectionController extends Controller
                 $title .= " - Most Loved";
                 $url = "/glamours/loved";
                 break;
+            case "male":
+                $title .= " - Male";
+                $url = "/glamours/men";
+                break;
+            case "female":
+                $title .= " - Female";
+                $url = "/glamours/women";
+                break;
             case "latest":
+            default:
                 $title .= " - Latest";
                 $url = "/glamours";
                 $cache_time_seconds = 60 * 30; // 30 Mins
-                break;
-            case "featured":
-            default:
-                $title .= " - Featured";
-                $url = "/glamours/featured";
         }
 
-        $url .= "?filter[maximumLvl]=80";
-
         if ($request->has('search')) {
-            $url = "/glamours?filter[maximumLvl]=80";
-            $url .= "&search=" . $request->input('search');
+            $url = "/glamours?filter[orderBy]=date&filter[race]=any&filter[gender]=any&author=&filter[minimumLvl]=1&filter[maximumLvl]=80&search=" . $request->input('search');
             $title = "Eorzea Collection - Search by Keywords";
             $cache_time_seconds = 60 * 30; // 30 Mins
         }
 
         if ($request->has('author')) {
-            $url = "/glamours?filter[maximumLvl]=80";
-            $url .= "&author=" . $request->input('author');
+            $url = "/glamours?filter[orderBy]=date&filter[race]=any&filter[gender]=any&search=&filter[minimumLvl]=1&filter[maximumLvl]=80&author=" . $request->input('author');
             $title = "Eorzea Collection - Search by Author";
             $cache_time_seconds = 60 * 30; // 30 Mins
         }
