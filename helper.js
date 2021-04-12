@@ -169,7 +169,7 @@ const sendHelpMsg = function(message, prefix) {
   // !ec
   let ecCommands = [
     "`" + prefix + "ec`",
-    "`" + prefix + "ec featured/latest/loved`",
+    "`" + prefix + "ec latest/loved/male/female`",
     "`" + prefix + "ec author author_name`",
     "`" + prefix + "ec search search_string`",
   ];
