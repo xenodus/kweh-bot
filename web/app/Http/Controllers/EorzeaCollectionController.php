@@ -12,6 +12,78 @@ class EorzeaCollectionController extends Controller
 {
     const BASE_URL = "https://ffxiv.eorzeacollection.com";
 
+    public function getGlamData($crawler, &$item, $category) {
+        $slots = ['head', 'body', 'hands', 'legs', 'feet', 'weapon', 'offhand', 'earrings', 'necklace', 'bracelets'];
+
+        foreach($slots as $slot) {
+            if ($category == "equipment") {
+                $item[$category][$slot] = self::getGlamName($crawler, $slot);
+
+                $item[$category]['rings'] = [];
+
+                if( $crawler->filter('a.c-gear-slot-ring')->count() == 2 ) {
+
+                    $crawler->filter('a.c-gear-slot-ring')->each(function($node, $i) use (&$item, $category){
+                        $item[$category]['rings'][$i] = $node->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-name')->count() ? $node->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-name')->text() : '';
+                    });
+                }
+            }
+            else if ($category == "dye") {
+                $item[$category][$slot] = self::getGlamDye($crawler, $slot);
+
+                $item[$category]['rings'] = [];
+
+                if( $crawler->filter('a.c-gear-slot-ring')->count() == 2 ) {
+
+                    $crawler->filter('a.c-gear-slot-ring')->each(function($node, $i) use (&$item, $category){
+                        $item[$category]['rings'][$i] = $node->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-info-color')->count() ? $node->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-info-color')->text() : '';
+                    });
+                }
+            }
+            else {
+                $item[$category][$slot] = self::getGlamLink($crawler, $slot);
+
+                $item[$category]['rings'] = [];
+
+                if( $crawler->filter('a.c-gear-slot-ring')->count() == 2 ) {
+
+                    $crawler->filter('a.c-gear-slot-ring')->each(function($node, $i) use (&$item, $category){
+                        $item[$category]['rings'][$i] = $node->count() ? $node->attr("href") : '';
+                    });
+                }
+            }
+        }
+
+        return $item;
+    }
+
+    public function getGlamName($crawler, $slot) {
+        try {
+            return $crawler->filter('a.c-gear-slot-' . $slot)->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-name')->count() ? $crawler->filter('a.c-gear-slot-' . $slot)->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-name')->text() : '';
+        }
+        catch(\Exception $e) {
+            return '';
+        }
+    }
+
+    public function getGlamDye($crawler, $slot) {
+        try {
+            return $crawler->filter('a.c-gear-slot-' . $slot)->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-info-color')->count() ? $crawler->filter('a.c-gear-slot-' . $slot)->siblings()->filter('div.c-gear-slot-item .c-gear-slot-item-info-color')->text() : '';
+        }
+        catch(\Exception $e) {
+            return '';
+        }
+    }
+
+    public function getGlamLink($crawler, $slot) {
+        try {
+            return $crawler->filter('a.c-gear-slot-' . $slot)->count() ? $crawler->filter('a.c-gear-slot-' . $slot)->attr("href") : '';
+        }
+        catch(\Exception $e) {
+            return '';
+        }
+    }
+
     public function getByURL(Request $request)
     {
         $item = [];
@@ -22,6 +94,12 @@ class EorzeaCollectionController extends Controller
 
             $cache_time_seconds = 60 * 60 * 24;
 
+            $client = new Goutte\Client();
+            $crawler = $client->request("GET", $url);
+
+            $item['url'] = $url;
+            $item['img'] = $crawler->filter('glamour-display')->count() > 0 ? $crawler->filter('glamour-display')->attr('cover') : "";
+
             $item = Cache::remember('kweh_EorzeaCollection_' . urlencode($url), $cache_time_seconds, function() use($url){
 
                 $client = new Goutte\Client();
@@ -31,67 +109,13 @@ class EorzeaCollectionController extends Controller
                 $item['img'] = $crawler->filter('glamour-display')->count() > 0 ? $crawler->filter('glamour-display')->attr('cover') : "";
 
                 // Items
-                $item['equipment']['head'] = $crawler->filter('div.c-gear-slot-head .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-head .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['body'] = $crawler->filter('div.c-gear-slot-body .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-body .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['hands'] = $crawler->filter('div.c-gear-slot-hands .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-hands .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['legs'] = $crawler->filter('div.c-gear-slot-legs .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-legs .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['feet'] = $crawler->filter('div.c-gear-slot-feet .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-feet .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['weapon'] = $crawler->filter('div.c-gear-slot-weapon .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-weapon .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['offhand'] = $crawler->filter('div.c-gear-slot-offhand .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-offhand .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['earrings'] = $crawler->filter('div.c-gear-slot-earrings .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-earrings .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['necklace'] = $crawler->filter('div.c-gear-slot-necklace .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-necklace .c-gear-slot-item-info-name')->text() : "";
-                $item['equipment']['bracelets'] = $crawler->filter('div.c-gear-slot-bracelets .c-gear-slot-item-info-name')->count() > 0 ? $crawler->filter('div.c-gear-slot-bracelets .c-gear-slot-item-info-name')->text() : "";
-
-                $item['equipment']['rings'] = [];
-
-                if( $crawler->filter('div.c-gear-slot-ring')->count() == 2 ) {
-
-                    $crawler->filter('div.c-gear-slot-ring')->each(function($node, $i) use (&$item){
-                        $item['equipment']['rings'][$i] = $node->filter('.c-gear-slot-item-info-name')->count() > 0 ? $node->filter('.c-gear-slot-item-info-name')->text() : "";
-                    });
-                }
+                self::getGlamData($crawler, $item, 'equipment');
 
                 // Dyes
-                $item['dye']['head'] = $crawler->filter('div.c-gear-slot-head .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-head .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['body'] = $crawler->filter('div.c-gear-slot-body .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-body .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['hands'] = $crawler->filter('div.c-gear-slot-hands .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-hands .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['legs'] = $crawler->filter('div.c-gear-slot-legs .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-legs .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['feet'] = $crawler->filter('div.c-gear-slot-feet .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-feet .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['weapon'] = $crawler->filter('div.c-gear-slot-weapon .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-weapon .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['offhand'] = $crawler->filter('div.c-gear-slot-offhand .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-offhand .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['earrings'] = $crawler->filter('div.c-gear-slot-earrings .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-earrings .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['necklace'] = $crawler->filter('div.c-gear-slot-necklace .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-necklace .c-gear-slot-item-info-color')->text() : "";
-                $item['dye']['bracelets'] = $crawler->filter('div.c-gear-slot-bracelets .c-gear-slot-item-info-color')->count() > 0 ? $crawler->filter('div.c-gear-slot-bracelets .c-gear-slot-item-info-color')->text() : "";
-
-                $item['dye']['rings'] = [];
-
-                if( $crawler->filter('div.c-gear-slot-ring')->count() == 2 ) {
-
-                    $crawler->filter('div.c-gear-slot-ring')->each(function($node, $i) use (&$item){
-                        $item['dye']['rings'][$i] = $node->filter('.c-gear-slot-item-info-color')->count() > 0 ? $node->filter('.c-gear-slot-item-info-color')->text() : "";
-                    });
-                }
+                self::getGlamData($crawler, $item, 'dye');
 
                 // Links
-                $item['link']['head'] = $crawler->filter('div.c-gear-slot-head a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-head a.eorzeadb_link')->attr("href") : "";
-                $item['link']['body'] = $crawler->filter('div.c-gear-slot-body a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-body a.eorzeadb_link')->attr("href") : "";
-                $item['link']['hands'] = $crawler->filter('div.c-gear-slot-hands a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-hands a.eorzeadb_link')->attr("href") : "";
-                $item['link']['legs'] = $crawler->filter('div.c-gear-slot-legs a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-legs a.eorzeadb_link')->attr("href") : "";
-                $item['link']['feet'] = $crawler->filter('div.c-gear-slot-feet a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-feet a.eorzeadb_link')->attr("href") : "";
-                $item['link']['weapon'] = $crawler->filter('div.c-gear-slot-weapon a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-weapon a.eorzeadb_link')->attr("href") : "";
-                $item['link']['offhand'] = $crawler->filter('div.c-gear-slot-offhand a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-offhand a.eorzeadb_link')->attr("href") : "";
-                $item['link']['earrings'] = $crawler->filter('div.c-gear-slot-earrings a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-earrings a.eorzeadb_link')->attr("href") : "";
-                $item['link']['necklace'] = $crawler->filter('div.c-gear-slot-necklace a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-necklace a.eorzeadb_link')->attr("href") : "";
-                $item['link']['bracelets'] = $crawler->filter('div.c-gear-slot-bracelets a.eorzeadb_link')->count() > 0 ? $crawler->filter('div.c-gear-slot-bracelets a.eorzeadb_link')->attr("href") : "";
-
-                $item['link']['rings'] = [];
-
-                if( $crawler->filter('div.c-gear-slot-ring')->count() == 2 ) {
-
-                    $crawler->filter('div.c-gear-slot-ring')->each(function($node, $i) use (&$item){
-                        $item['link']['rings'][$i] = $node->filter('a.eorzeadb_link')->count() > 0 ? $node->filter('a.eorzeadb_link')->attr("href") : "";
-                    });
-                }
+                self::getGlamData($crawler, $item, 'link');
 
                 // Post Process
                 foreach( $item['dye'] as $k => $v ) {

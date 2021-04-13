@@ -13,6 +13,7 @@ const helper = require('../helper');
 *******************************/
 
 const loadNextImg = async function(reaction, direction="asc") {
+
   // Determine current slide with footer text
   if( reaction.message.embeds[0].footer &&
       reaction.message.embeds[0].fields.length > 0 &&
@@ -329,19 +330,19 @@ const resetReactions = async function(message) {
     while( x < message.embeds[0].fields.length ) {
 
       switch(x) {
-        case 1:
+        case 0:
           await message.react('1️⃣');
           break;
-        case 2:
+        case 1:
           await message.react('2️⃣');
           break;
-        case 3:
+        case 2:
           await message.react('3️⃣');
           break;
-        case 4:
+        case 3:
           await message.react('4️⃣');
           break;
-        case 5:
+        case 4:
           await message.react('5️⃣');
           break;
       }

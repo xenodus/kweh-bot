@@ -1211,8 +1211,12 @@ client.on("message", async function(message) {
         let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("loved");
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
-      else if( args[0] == "featured" ) {
-        let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("featured");
+      else if( args[0] == "male" ) {
+        let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("male");
+        eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
+      }
+      else if( args[0] == "female" ) {
+        let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("female");
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
       else if( args[0] == "author" ) {
@@ -1226,7 +1230,7 @@ client.on("message", async function(message) {
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
       else {
-        helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`"+prefix+command+"` \n`"+prefix+command+" latest` \n`"+prefix+command+" loved` \n`"+prefix+command+" featured` \n\nLookup by keywords with \n `"+prefix+command+" keyword your_keywords` \n\nLookup by author with \n `"+prefix+command+" author author_name`", message, true);
+        helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`"+prefix+command+"` \n`"+prefix+command+" latest` \n`"+prefix+command+" loved` \n`"+prefix+command+" male` \n`"+prefix+command+" female` \n\nLookup by keywords with \n `"+prefix+command+" keyword your_keywords` \n\nLookup by author with \n `"+prefix+command+" author author_name`", message, true);
       }
     }
 

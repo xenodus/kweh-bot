@@ -15,6 +15,7 @@
     <li><a href="#news">How do I receive Lodestone news notification?</a></li>
     <li><a href="#fashion">How do I receive Fashion Report result notification?</a></li>
     <li><a href="#embedlink">Why can't I see anything after issuing a command?</a></li>
+    <li><a href="#contact">Something broke. How do I report it?</a></li>
     <li><a href="#support">How do I contribute or support {{ env('APP_NAME') }}?</a></li>
   </ol>
 </div>
@@ -168,6 +169,18 @@
     <div class="mt-3 faq-description">
       <p>If nobody is able to see anything, it's likely a permission issue. Verify that Kweh! has the ability to read and send messages in the channel.</p>
       <p>If only certain members are having problems, ensure User Settings > Text & Images > Link Preview is checked in their individual Discord's settings.</p>
+    </div>
+  </div>
+</div>
+
+<div class="d-flex align-items-start p-3 command-item">
+  <a name="contact"></a>
+  <div class="faq-content ml-3 mb-2">
+    <div class="faq-header">{{ $i++ }}. Something broke. How do I report it??</div>
+
+    <div class="mt-3 faq-description">
+      <p>The creator is currently on a break from FFXIV so might not be aware if a part of the bot stops working.</p>
+      <p>You can report or get in touch via the different methods listed in the <a href="/contact">contact</a> page.</p>
     </div>
   </div>
 </div>
