@@ -93,6 +93,9 @@ const getUserInfo = async function(userID) {
 }
 
 const searchCharacter = async function(server, firstname, lastname){
+
+  server = lodash.capitalize(server)
+
   let apiUrl = config.xivApiBaseURL + "character/search?name=" + encodeURI(firstname) + "+" + encodeURI(lastname) + "&server=" + encodeURI(server);
   apiUrl += "&private_key=" + config.xivApiToken;
 

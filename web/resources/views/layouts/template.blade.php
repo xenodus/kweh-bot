@@ -194,6 +194,13 @@
                   @endif
                 </ul>
               </nav>
+
+              <div class="top-status">
+                <a href="https://top.gg/bot/725551243551834112" target="_blank">
+                  <img src="https://top.gg/api/widget/status/725551243551834112.svg?leftcolor=aaa&righttextcolor=000&lefttextcolor=000" alt="Kweh!"/>
+                </a>
+              </div>
+
             </div>
           </div>
           <div class="p-3 ml-0 ml-md-3 ff-style-container" style="width: 100%;">
@@ -212,6 +219,7 @@
           </div>
           <div>&copy; 2020 kwehbot.xyz</div>
           <div class="text-uppercase"><small>FINAL FANTASY is a registered trademark of Square Enix Holdings Co., Ltd.</small></div>
+          <div><small>3KNAwbPpc4uFcoNRKFtVEVBG8SyQEA9FDZ</small></div>
         </div>
         <script src="{{ mix('/js/compiled/common.js') }}"></script>
         @yield('footer')
