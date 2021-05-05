@@ -13,7 +13,7 @@
   @foreach($servers as $server)
   <a href="{{route('user_server_settings', [$server->id])}}" class="servers text-white">
     <div class="p-3 text-center" style="width: 180px;">
-      <img src="https://cdn.discordapp.com/icons/{{$server->id}}/{{$server->icon}}.png" class="border-warning border"/>
+      <img src="https://cdn.discordapp.com/icons/{{$server->id}}/{{$server->icon}}.png" class="border-warning border bg-dark"/>
       <div class="mt-2">
         <div>{{$server->name}}</div>
       </div>

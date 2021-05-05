@@ -30,7 +30,7 @@
 
     <div class="mt-3 command-description">
       <p>Links your Discord account to a Final Fantasy Lodestone profile so if you do a <span class="command">!me</span> <span class="command">!profile</span> <span class="command">!glam</span> or <span class="command">!fflogs</span> command, it'll display your profile, glams or fflogs without needing to enter your server, firstname and lastname in future.</p>
-      <p>There are very rare cases where characters being retrieved may not be the correct one due to multiple characters sharing the same name on a server. You can use the alternate command to register by providing your lodestone id which is the long string of numbers at the end of your lodestone profile's url. <br/><br/>e.g. https://na.finalfantasyxiv.com/lodestone/character/<b>40945</b> ← 40945 is my lodestone id</p>
+      <p>There are very rare cases where characters being retrieved may not be the correct one due to multiple characters sharing the same name on a server. You can use the alternate command to register by providing your lodestone id which is the long string of numbers at the end of your lodestone profile's url. <br/><br/>e.g. <span class="text-break">https://na.finalfantasyxiv.com/lodestone/character/<b>40945</b></span> ← 40945 is my lodestone id</p>
     </div>
     <div class="mt-3 command-alias">Alias: iam</div>
   </div>

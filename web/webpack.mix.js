@@ -29,7 +29,7 @@ mix.styles([
         JAVASCRIPT
 **********************************/
 
-mix.js('resources/js/app.js', 'public/js');
+mix.js('resources/js/app.js', 'public/js').vue();
 
 // COMMON JS
 mix.scripts([
