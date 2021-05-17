@@ -25,7 +25,8 @@ const scriptName = __filename.slice(__dirname.length + 1);
 const client = new Discord.Client({
   messageCacheMaxSize: 20,
   messageCacheLifetime: 1800,
-  messageSweepInterval: 3600
+  messageSweepInterval: 3600,
+  shards: 'auto'
 });
 
 const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
