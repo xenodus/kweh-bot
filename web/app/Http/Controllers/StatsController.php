@@ -51,7 +51,8 @@ class StatsController extends Controller
 
             // Servers By Date
             $data['servers_by_date'] = DB::table('servers')
-                     ->select(DB::raw('DATE_FORMAT(date_added,"%m-%Y") as month_year, count(*) as no'))
+                     ->select(DB::raw('DATE_FORMAT(date_added,"%Y-%m") as month_year, count(*) as no'))
+                     //->whereRaw('year(date_added) >= 2021')
                      ->groupBy('month_year')
                      ->orderBy('month_year', 'ASC')
                      ->get();

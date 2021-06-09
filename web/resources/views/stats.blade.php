@@ -224,10 +224,10 @@ axios.get('/api/stats').then(function(response){
     // Servers by date
     var serverAddedDates = data.servers_by_date.map(function(p){
       // Indicate ongoing data for the month
-      if( moment(p.month_year, "MM-YYYY").month() == moment().month() && moment(p.month_year, "MM-YYYY").year() == moment().year() )
-        return [moment(p.month_year, "MM-YYYY").format("MMM YYYY"), "(Ongoing)"];
+      if( moment(p.month_year, "YYYY-MM").month() == moment().month() && moment(p.month_year, "YYYY-MM").year() == moment().year() )
+        return [moment(p.month_year, "YYYY-MM").format("MMM YYYY"), "(Ongoing)"];
       else
-        return moment(p.month_year, "MM-YYYY").format("MMM YYYY");
+        return moment(p.month_year, "YYYY-MM").format("MMM YYYY");
     });
     var serverAddedNo = data.servers_by_date.map(function(p){ return p.no });
 
