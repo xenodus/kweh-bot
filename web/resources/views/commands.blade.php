@@ -43,7 +43,10 @@
     <div class="bot-command">Me</div>
     <div class="command-structure">!me</div>
 
-    <div class="mt-3 command-description">View your Lodestone profile after you've linked your account with <span class="command">!register</span>.</div>
+    <div class="mt-3 command-description">
+      <p>View your Lodestone profile after you've linked your account with <span class="command">!register</span>.</p>
+      <p>Generated profile images are cached for 1 hour.</p>
+    </div>
     <div class="mt-3 command-alias">Alias: whoami</div>
   </div>
 </div>
