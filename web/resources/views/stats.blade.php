@@ -225,7 +225,7 @@ axios.get('/api/stats').then(function(response){
     var serverAddedDates = data.servers_by_date.map(function(p){
       // Indicate ongoing data for the month
       if( moment(p.month_year, "YYYY-MM").month() == moment().month() && moment(p.month_year, "YYYY-MM").year() == moment().year() )
-        return [moment(p.month_year, "YYYY-MM").format("MMM YYYY"), "(Ongoing)"];
+        return moment(p.month_year, "YYYY-MM").format("MMM YYYY") + " (Current)";
       else
         return moment(p.month_year, "YYYY-MM").format("MMM YYYY");
     });
