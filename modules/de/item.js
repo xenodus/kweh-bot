@@ -196,7 +196,7 @@ async function displayUsedFor(message, item) {
         }
 
         let craftedItem = await getItemByID( itemIDs[i], "recipe" );
-        let newItemTxt = "\n[" + craftedItem.Name_de + "](" + config.teamcraftBaseURL + "de/item/" + craftedItem.ID + ")";
+        let newItemTxt = "\n[" + craftedItem.Name_de + "](" + config.teamcraftBaseURL + "de/item/" + craftedItem.ItemResult.ID + ")";
 
         if( craftedItem.Name == null ) continue;
 
