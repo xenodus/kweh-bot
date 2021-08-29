@@ -23,9 +23,10 @@ const Discord = require("discord.js");
 const DBL = require("dblapi.js");
 const scriptName = __filename.slice(__dirname.length + 1);
 const client = new Discord.Client({
-  messageCacheMaxSize: 20,
+  messageCacheMaxSize: 3,
   messageCacheLifetime: 1800,
   messageSweepInterval: 3600,
+  messageEditHistoryMaxSize: 1,
   shards: 'auto'
 });
 
@@ -1385,6 +1386,7 @@ async function getServerSettings(serverID) {
 
 function setServerLanguage(serverID, language) {
   pool.query("UPDATE servers SET language = ? WHERE server_id = ?", [language, serverID]);
+  resetServerRedisKey(serverID);
 }
 
 /******************************

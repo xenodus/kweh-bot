@@ -1386,6 +1386,7 @@ async function getServerSettings(serverID) {
 
 function setServerLanguage(serverID, language) {
   pool.query("UPDATE servers SET language = ? WHERE server_id = ?", [language, serverID]);
+  resetServerRedisKey(serverID);
 }
 
 /******************************
