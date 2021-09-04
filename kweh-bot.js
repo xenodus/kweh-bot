@@ -17,6 +17,8 @@ const config = require('./config').production;
   Variables & Libs
 *******************************/
 
+const { setIntervalAsync } = require('set-interval-async/dynamic')
+const { clearIntervalAsync } = require('set-interval-async')
 const lodash = require('lodash');
 const moment = require("moment");
 const Discord = require("discord.js");
@@ -34,7 +36,7 @@ const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.g
 const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
 const redis = config.getRedis();
 
-let fashionCheckIntervals = 300 * 1000;
+let fashionCheckIntervals = 600 * 1000;
 let lodestoneCheckIntervals = 600 * 1000;
 
 /******************************

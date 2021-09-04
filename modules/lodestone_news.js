@@ -331,7 +331,7 @@ const autoCheckPostNews = async function(client, ignoreChannelAddedDate=false) {
   helper.printStatus("========================================================");
 
   if( client.guilds.cache.size > 0 ) {
-    for( var guild of client.guilds.cache.values() ) {
+    for await ( var guild of client.guilds.cache.values() ) {
       if( guild.available ) {
 
         let newsChannel = await newsChannelGet(guild.id);

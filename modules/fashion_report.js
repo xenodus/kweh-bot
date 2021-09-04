@@ -29,7 +29,7 @@ const autoCheckPostFR = async function(client, ignoreChannelAddedDate=false) {
 
   if( fr.length > 0 ) {
     if( client.guilds.cache.size > 0 ) {
-      for( var guild of client.guilds.cache.values() ) {
+      for await( var guild of client.guilds.cache.values() ) {
         if( guild.available ) {
 
           let frChannel = await frChannelGet(guild.id);
