@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('/characterIDSearch/{name}/{server}', 'LodestoneController@characterIDSearch')->name('get_character_id');
+
 Route::get('/profile/{lodestone_id}/{locale?}', 'LodestoneController@profile')->name('get_lodestone_profile');
 Route::get('/stats', 'StatsController@getStats')->name('get_stats');
 

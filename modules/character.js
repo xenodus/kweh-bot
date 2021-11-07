@@ -92,11 +92,38 @@ const getUserInfo = async function(userID) {
   return user;
 }
 
+const searchCharacterOwnServer = async function(server, firstname, lastname){
+
+  server = lodash.capitalize(server)
+
+  let apiUrl = "https://kwehbot.xyz/api/characterIDSearch/" + encodeURI(firstname.replace("’", "'")) + "+" + encodeURI(lastname.replace("’", "'")) + "/" + encodeURI(server);
+
+  console.log("Character Search (Own Server) Api URL: " + apiUrl);
+
+  let characterSearchResult = {};
+
+  await axios.get(apiUrl).then(async function(response){
+    if( response.status === 200 ) {
+      if( response.data && response.data.id ) {
+        characterSearchResult.lodestone_id = response.data.id
+        characterSearchResult.firstname = response.data.firstname
+        characterSearchResult.lastname = response.data.lastname
+        characterSearchResult.dc = response.data.dc
+      }
+    }
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+
+  return characterSearchResult;
+}
+
 const searchCharacter = async function(server, firstname, lastname){
 
   server = lodash.capitalize(server)
 
-  let apiUrl = config.xivApiBaseURL + "character/search?name=" + encodeURI(firstname) + "+" + encodeURI(lastname) + "&server=" + encodeURI(server);
+  let apiUrl = config.xivApiBaseURL + "character/search?name=" + encodeURI(firstname.replace("’", "'")) + "+" + encodeURI(lastname.replace("’", "'")) + "&server=" + encodeURI(server);
   apiUrl += "&private_key=" + config.xivApiToken;
 
   console.log("Character Search Api URL: " + apiUrl);
@@ -856,6 +883,7 @@ const getUserProfileHTML = function(characterInfo) {
 
 module.exports = {
   searchCharacter,
+  searchCharacterOwnServer,
   searchCharacterByLodestoneID,
   getCharacterInfoXIVAPI,
   getCharacterInfoOwnServer,

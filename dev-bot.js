@@ -17,6 +17,8 @@ const config = require('./config').production;
   Variables & Libs
 *******************************/
 
+const { setIntervalAsync } = require('set-interval-async/dynamic')
+const { clearIntervalAsync } = require('set-interval-async')
 const lodash = require('lodash');
 const moment = require("moment");
 const Discord = require("discord.js");
@@ -34,7 +36,7 @@ const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.g
 const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
 const redis = config.getRedis();
 
-let fashionCheckIntervals = 300 * 1000;
+let fashionCheckIntervals = 600 * 1000;
 let lodestoneCheckIntervals = 600 * 1000;
 
 /******************************
@@ -376,7 +378,8 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        //let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
@@ -399,23 +402,21 @@ client.on("message", async function(message) {
     }
     // lodestone id
     else if( args.length == 1 ) {
-      let apiUrl = config.xivApiBaseURL + "character/" + args[0];
-      apiUrl += "?private_key=" + config.xivApiToken;
-
       let lodestone_id = args[0];
+      let characterSearchResult = {
+        'lodestone_id': lodestone_id
+      };
 
-      let characterSearchResult = await character.searchCharacterByLodestoneID(lodestone_id);
+      let characterInfo = await character.getCharacterInfoOwnServer(characterSearchResult, language);
 
-      if( lodash.isEmpty(characterSearchResult) == false ) {
-
-        let characterInfo = await character.getCharacterInfoOwnServer(characterSearchResult, language);
-
+      if( lodash.isEmpty(characterInfo) == false ) {
         let region = dcserver.getDCregion(characterInfo.datacenter);
         characterInfo.discordID = message.author.id;
+        character.printCharacterInfo(characterInfo, message);
 
-        if( lodash.isEmpty(characterInfo) == false ) {
-          character.printCharacterInfo(characterInfo, message);
-        }
+        characterSearchResultNameArr = characterInfo.name.split(" ");
+        characterSearchResult.firstname = characterSearchResultNameArr[0];
+        characterSearchResult.lastname = characterSearchResultNameArr[1];
 
         // Update Profile
         character.setUserInfo(message.author.id, characterInfo.datacenter, characterInfo.server, region, characterSearchResult.firstname, characterSearchResult.lastname, characterSearchResult.lodestone_id);
@@ -495,7 +496,8 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        // let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
@@ -538,22 +540,17 @@ client.on("message", async function(message) {
       // By Lodestone ID
       else if(args.length == 1) {
         let lodestone_id = args[0];
+        let characterSearchResult = {
+          'lodestone_id': lodestone_id
+        };
 
-        let characterSearchResult = await character.searchCharacterByLodestoneID(lodestone_id);
+        let characterInfo = await character.getCharacterInfoOwnServer(characterSearchResult, language);
 
-        if( lodash.isEmpty(characterSearchResult) == false ) {
-
-          let characterInfo = await character.getCharacterInfoOwnServer(characterSearchResult, language);
-
-          if( lodash.isEmpty(characterInfo) == false ) {
-            character.printCharacterInfo(characterInfo, message);
-          }
-          else {
-            helper.sendErrorMsg("Error", "Character not found", message);
-          }
+        if( lodash.isEmpty(characterInfo) == false ) {
+          character.printCharacterInfo(characterInfo, message);
         }
         else {
-          helper.sendErrorMsg("Error", "Profile not found", message);
+          helper.sendErrorMsg("Error", "Character not found", message);
         }
       }
       else {
@@ -600,7 +597,8 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        // let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
@@ -642,22 +640,17 @@ client.on("message", async function(message) {
       }
       else if(args.length == 1) {
         let lodestone_id = args[0];
+        let characterSearchResult = {
+          'lodestone_id': lodestone_id
+        };
 
-        let characterSearchResult = await character.searchCharacterByLodestoneID(lodestone_id);
+        let characterInfo = await character.getCharacterInfoXIVAPI(characterSearchResult, false);
 
-        if( lodash.isEmpty(characterSearchResult) == false ) {
-
-          let characterInfo = await character.getCharacterInfoXIVAPI(characterSearchResult, false);
-
-          if( lodash.isEmpty(characterInfo) == false ) {
-            character.printGlamInfo(characterInfo, message);
-          }
-          else {
-            helper.sendErrorMsg("Error", "Character not found", message);
-          }
+        if( lodash.isEmpty(characterInfo) == false ) {
+          character.printGlamInfo(characterInfo, message);
         }
         else {
-          helper.sendErrorMsg("Error", "Profile not found", message);
+          helper.sendErrorMsg("Error", "Character not found", message);
         }
       }
       else {
@@ -702,7 +695,8 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        // let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
