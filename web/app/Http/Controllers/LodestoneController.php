@@ -14,8 +14,6 @@ class LodestoneController extends Controller
     {
         // url = https://na.finalfantasyxiv.com/lodestone/character/?q=maximus+validus&worldname=Tonberry
         $url = "https://na.finalfantasyxiv.com" . "/lodestone/character/" . "?q=" . $name . "&worldname=" . $server;
-        // $url = "https://na.finalfantasyxiv.com/lodestone/character/?q=maximus+validus&worldname=Tonberry";
-
         $client = new Goutte\Client();
         $crawler = $client->request("GET", $url);
         $data["id"] = "";
@@ -28,12 +26,14 @@ class LodestoneController extends Controller
 
             $dom = $crawler->filter('div.ldst__main div.entry');
 
-            // lodestone id
-            $lodestone_url = $dom->first()->filter('a')->attr("href");
-            $id_arr = explode("/", $lodestone_url);
+            if ( $dom->first()->filter('a')->count() ) {
+                // lodestone id
+                $lodestone_url = $dom->first()->filter('a')->attr("href");
+                $id_arr = explode("/", $lodestone_url);
 
-            if ( count($id_arr) >= 4 ) {
-                $data["id"] = $id_arr[3];
+                if ( count($id_arr) >= 4 ) {
+                    $data["id"] = $id_arr[3];
+                }
             }
 
             if ( $dom->first()->filter('p.entry__name')->count() ) {
@@ -41,7 +41,7 @@ class LodestoneController extends Controller
                 $name = $dom->first()->filter('p.entry__name')->text();
                 $name_arr = explode(" ", $name);
 
-                if ( count($name_arr) ) {
+                if ( count($name_arr) >= 2 ) {
                     $data["firstname"] = $name_arr[0];
                     $data["lastname"] = $name_arr[1];
                 }
