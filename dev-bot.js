@@ -577,7 +577,7 @@ client.on("message", async function(message) {
       if( lodash.isEmpty(userInfo) == false ) {
         let characterInfo = await character.getCharacterInfoXIVAPI(userInfo, false);
 
-        if( characterInfo ) {
+        if( lodash.isEmpty(characterInfo) == false ) {
           character.printGlamInfo(characterInfo, message);
         }
         else {
