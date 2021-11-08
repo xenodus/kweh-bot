@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App;
 use Goutte;
+use Symfony\Component\DomCrawler\Crawler;
 use Cache;
 use Illuminate\Http\Request;
 
@@ -12,47 +13,73 @@ class LodestoneController extends Controller
 {
     public function characterIDSearch(Request $request, $name, $server)
     {
-        // url = https://na.finalfantasyxiv.com/lodestone/character/?q=maximus+validus&worldname=Tonberry
-        $url = "https://na.finalfantasyxiv.com" . "/lodestone/character/" . "?q=" . $name . "&worldname=" . $server;
-        $client = new Goutte\Client();
-        $crawler = $client->request("GET", $url);
-        $data["id"] = "";
-        $data["firstname"] = "";
-        $data["lastname"] = "";
-        $data["dc"] = "";
+        $data = [];
+        $cache_time_seconds = 60 * 60 * 24; // 24 hours cache for lodestone ids
 
-        // only get first match
-        if ( $crawler->filter('div.ldst__main div.entry')->count() ) {
+        $data = Cache::remember('kweh_character_id_' . urlencode($name.$server), $cache_time_seconds, function() use($name, $server){
+            $page = 1;
+            $base_url = "https://na.finalfantasyxiv.com" . "/lodestone/character/" . "?q=" . $name . "&worldname=" . $server;
+            $data["id"] = "";
+            $data["firstname"] = "";
+            $data["lastname"] = "";
+            $data["dc"] = "";
 
-            $dom = $crawler->filter('div.ldst__main div.entry');
+            $morePages = true;
+            $isFound = false;
 
-            if ( $dom->first()->filter('a')->count() ) {
-                // lodestone id
-                $lodestone_url = $dom->first()->filter('a')->attr("href");
-                $id_arr = explode("/", $lodestone_url);
+            while( $morePages ) {
+                $morePages = false;
+                $url = $base_url . "&page=" . $page;
+                $client = new Goutte\Client();
+                $crawler = $client->request("GET", $url);
 
-                if ( count($id_arr) >= 4 ) {
-                    $data["id"] = $id_arr[3];
+                if ( $crawler->filter('div.ldst__main div.entry')->count() > 0 ) {
+
+                    // iterate through
+                    $crawler->filter('div.ldst__main div.entry')->each(function(Crawler $node, $i) use(&$data, &$isFound, $name) {
+
+                        if ( $node->filter('p.entry__name')->count() > 0 ) {
+                            // name
+                            $n = $node->filter('p.entry__name')->text();
+                            $name_arr = explode(" ", $n);
+
+                            if ( count($name_arr) >= 2 ) {
+                                if ( strtolower($name_arr[0]."+".$name_arr[1]) == strtolower($name) ) {
+                                    $data["firstname"] = $name_arr[0];
+                                    $data["lastname"] = $name_arr[1];
+
+                                    if ( $node->filter('a')->count() > 0 ) {
+                                        // lodestone id
+                                        $lodestone_url = $node->filter('a')->attr("href");
+                                        $id_arr = explode("/", $lodestone_url);
+
+                                        if ( count($id_arr) >= 4 ) {
+                                            $data["id"] = $id_arr[3];
+                                        }
+                                    }
+
+                                    if ( $node->filter('p.entry__world')->count() ) {
+                                        // dc
+                                        $data["dc"] = $node->filter('p.entry__world')->count() > 0 ?
+                                            substr(explode("(", $node->filter('p.entry__world')->text())[1], 0, -1) : "";
+                                    }
+
+                                    $isFound = true;
+                                    return;
+                                }
+                            }
+                        }
+                    });
+
+                    if ( $crawler->filter('div.ldst__main a.btn__pager__next')->count() > 0 && $isFound == false ) {
+                        $morePages = true;
+                        $page++;
+                    }
                 }
             }
 
-            if ( $dom->first()->filter('p.entry__name')->count() ) {
-                // name
-                $name = $dom->first()->filter('p.entry__name')->text();
-                $name_arr = explode(" ", $name);
-
-                if ( count($name_arr) >= 2 ) {
-                    $data["firstname"] = $name_arr[0];
-                    $data["lastname"] = $name_arr[1];
-                }
-            }
-
-            if ( $dom->first()->filter('p.entry__world')->count() ) {
-                // dc
-                $data["dc"] = $dom->first()->filter('p.entry__world')->count() ?
-                    substr(explode("(", $dom->first()->filter('p.entry__world')->text())[1], 0, -1) : "";
-            }
-        }
+            return $data;
+        });
 
         return response()->json($data);
     }
