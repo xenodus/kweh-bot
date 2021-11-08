@@ -365,9 +365,6 @@ client.on("message", async function(message) {
 
     // server, firstname, lastname
     if( args.length == 3 ) {
-      let apiUrl = config.xivApiBaseURL + "character/search?name=" + args[1] + "+" + args[2] + "&server=" + args[0];
-      apiUrl += "&private_key=" + config.xivApiToken;
-
       let server = args[0];
       let firstname = args[1];
       let lastname = args[2];
@@ -378,8 +375,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        //let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
-        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
+        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+
+        if( lodash.isEmpty(characterSearchResult) ) {
+          characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
+        }
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
@@ -496,8 +496,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        // let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
-        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
+        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+
+        if( lodash.isEmpty(characterSearchResult) ) {
+          characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
+        }
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
@@ -597,8 +600,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        // let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
-        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
+        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+
+        if( lodash.isEmpty(characterSearchResult) ) {
+          characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
+        }
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
@@ -695,8 +701,11 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        // let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
-        let characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname)
+        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+
+        if( lodash.isEmpty(characterSearchResult) ) {
+          characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
+        }
 
         if( lodash.isEmpty(characterSearchResult) == false ) {
 
