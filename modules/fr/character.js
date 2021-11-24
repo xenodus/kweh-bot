@@ -90,6 +90,33 @@ const getUserInfo = async function(userID) {
   return user;
 }
 
+const searchCharacterOwnServer = async function(server, firstname, lastname){
+
+  server = lodash.capitalize(server)
+
+  let apiUrl = "https://kwehbot.xyz/api/characterIDSearch/" + encodeURI(firstname.replace("’", "'")) + "+" + encodeURI(lastname.replace("’", "'")) + "/" + encodeURI(server);
+
+  console.log("Character Search (Own Server) Api URL: " + apiUrl);
+
+  let characterSearchResult = {};
+
+  await axios.get(apiUrl).then(async function(response){
+    if( response.status === 200 ) {
+      if( response.data && response.data.id ) {
+        characterSearchResult.lodestone_id = response.data.id
+        characterSearchResult.firstname = response.data.firstname
+        characterSearchResult.lastname = response.data.lastname
+        characterSearchResult.dc = response.data.dc
+      }
+    }
+  })
+  .catch(function(err){
+    console.log(err);
+  });
+
+  return characterSearchResult;
+}
+
 const searchCharacter = async function(server, firstname, lastname){
   let apiUrl = config.xivApiBaseURL + "character/search?name=" + encodeURI(firstname) + "+" + encodeURI(lastname) + "&server=" + encodeURI(server);
   apiUrl += "&private_key=" + config.xivApiToken;
@@ -355,12 +382,25 @@ const printCharacterInfo = async function(characterInfo, message) {
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor);
 
-  let profileImg = await getUserProfileURL(characterInfo, message.client);
+   // Image Source
+  let userProfile = await getUserProfile(characterInfo.ID);
+  let isGenerated = false;
 
-  if(profileImg) {
+  // Generate if no profile or if profile is older than 1 hour
+  if( lodash.isEmpty(userProfile) || moment(userProfile.last_updated).unix() < moment().subtract(1, 'hour').unix() ) {
+    profileImg = await generateUserProfile(characterInfo, message);
+    let attachment = new Discord.MessageAttachment(profileImg);
+    embed.setImage("attachment://" + profileImg.split("/")[ profileImg.split("/").length -1 ]);
+    embed.attachFiles(attachment);
+    isGenerated = true;
+  } else {
+    // From DB
+    profileImg = userProfile.url
     embed.setImage(profileImg);
   }
-  else {
+
+  // Default Image
+  if( !profileImg ) {
     embed.setImage(portrait);
   }
 
@@ -414,6 +454,22 @@ const printCharacterInfo = async function(characterInfo, message) {
   // Send Message
   channel.send( embed ).catch(function(err){
     console.log(err);
+  }).then(function(m){
+
+    // Save Image Record
+    if( m.embeds[0].image.url ) {
+      setUserProfile(characterInfo.ID, m.embeds[0].image.url);
+    }
+
+    // Delete local img
+    if( isGenerated ) {
+      fs.unlink(profileImg, (err) => {
+        if (err) {
+          console.error(err);
+          return;
+        }
+      });
+    }
   });
 }
 
@@ -454,35 +510,7 @@ const setUserProfile = async function(lodestone_id, url) {
   );
 }
 
-const getUserProfileURL = async function(characterInfo, client) {
-  let userProfile = await getUserProfile(characterInfo.Character.ID);
-  let userProfileURL = "";
-
-  // If no existing profile, generate img
-  if( lodash.isEmpty(userProfile) ) {
-    userProfileURL = await generateUserProfile(characterInfo, client);
-  }
-  else {
-    // If profile exists, check if it was updated within the last hour
-    // Generation only allowed once per hour to save resources
-    if( userProfile.last_updated ) {
-      let last_updated_profile = moment(userProfile.last_updated).unix();
-      let past_hour = moment().subtract(1, 'hour').unix();
-
-      // More than 1 hour ago
-      if( last_updated_profile < past_hour ) {
-        userProfileURL = await generateUserProfile(characterInfo, client);
-      }
-      else {
-        userProfileURL = userProfile.url;
-      }
-    }
-  }
-
-  return userProfileURL;
-}
-
-const generateUserProfile = async function(characterInfo, client) {
+const generateUserProfile = async function(characterInfo, message) {
 
   let userProfileURL = "";
 
@@ -497,27 +525,10 @@ const generateUserProfile = async function(characterInfo, client) {
     })
     .catch(e => console.log(e));
 
-    // Post to channel to get img hosted on discord
-    let profile_img_channel_id = '730005977394446366';
-    let profile_img_channel = await client.channels.cache.get(profile_img_channel_id);
-    let attachment = new Discord.MessageAttachment(outputPath);
-    await profile_img_channel.send("", attachment).then(async function(m){
-      if( m.attachments.first().url ) {
-        await setUserProfile(characterInfo.ID, m.attachments.first().url);
-        userProfileURL = m.attachments.first().url;
-      }
-    });
-
-    // Delete local img
-    fs.unlink(outputPath, (err) => {
-      if (err) {
-        console.error(err);
-        return;
-      }
-    });
+    return outputPath;
   }
 
-  return userProfileURL;
+  return "";
 }
 
 const getUserProfileHTML = function(characterInfo) {
@@ -850,6 +861,7 @@ const getUserProfileHTML = function(characterInfo) {
 
 module.exports = {
   searchCharacter,
+  searchCharacterOwnServer,
   searchCharacterByLodestoneID,
   getCharacterInfoXIVAPI,
   getCharacterInfoOwnServer,
@@ -858,7 +870,6 @@ module.exports = {
   printGlamInfo,
   getUserProfileHTML,
   generateUserProfile,
-  getUserProfileURL,
   setUserProfile,
   getUserProfile,
   setUserInfo,

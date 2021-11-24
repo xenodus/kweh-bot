@@ -22,7 +22,7 @@ const { clearIntervalAsync } = require('set-interval-async')
 const lodash = require('lodash');
 const moment = require("moment");
 const Discord = require("discord.js");
-const { AutoPoster } = require('topgg-autoposter')
+//const { AutoPoster } = require('topgg-autoposter')
 const scriptName = __filename.slice(__dirname.length + 1);
 const client = new Discord.Client({
   messageCacheMaxSize: 3,
@@ -52,11 +52,13 @@ else {
   require('newrelic');
 
   // Top.gg
+  /*
   const ap = AutoPoster('Your Top.gg Token', client)
 
   ap.on('posted', () => {
     console.log('Posted stats to Top.gg!')
   })
+  */
 
   client.login(config.discordBotToken);
   console.log("----- PRODUCTION BOT -----");

@@ -331,6 +331,9 @@ const autoCheckPostNews = async function(client, ignoreChannelAddedDate=false) {
   helper.printStatus("========================================================");
 
   if( client.guilds.cache.size > 0 ) {
+
+    helper.printStatus("Guilds: " + client.guilds.cache.size);
+
     for await ( var guild of client.guilds.cache.values() ) {
       if( guild.available ) {
 
@@ -363,10 +366,12 @@ const autoCheckPostNews = async function(client, ignoreChannelAddedDate=false) {
 
             if(channel) {
 
+              /*
               helper.printStatus("========================================================");
               helper.printStatus("Auto checking lodestone news for channel: " + channel.name);
               helper.printStatus("Locale: " + newsChannel.locale);
               helper.printStatus("========================================================");
+              */
 
               let hasPermission = true;
 
