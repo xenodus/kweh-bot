@@ -22,7 +22,6 @@ const { clearIntervalAsync } = require('set-interval-async')
 const lodash = require('lodash');
 const moment = require("moment");
 const Discord = require("discord.js");
-//const { AutoPoster } = require('topgg-autoposter')
 const scriptName = __filename.slice(__dirname.length + 1);
 const client = new Discord.Client({
   messageCacheMaxSize: 3,
@@ -50,15 +49,6 @@ if( scriptName == 'dev-bot.js' ) {
 else {
   // New Relic
   require('newrelic');
-
-  // Top.gg
-  /*
-  const ap = AutoPoster('Your Top.gg Token', client)
-
-  ap.on('posted', () => {
-    console.log('Posted stats to Top.gg!')
-  })
-  */
 
   client.login(config.discordBotToken);
   console.log("----- PRODUCTION BOT -----");
@@ -359,7 +349,7 @@ client.on("message", async function(message) {
     const curr_timestamp = Date.now();
     const pong_time = curr_timestamp - message_timestamp;
 
-    message.response_channel.send("Pong in " +pong_time+ " ms");
+    message.response_channel.send("Pong in " +pong_time+ " ms" + " on shard " + message.guild.shardID);
   }
 
   /*************************************************
