@@ -22,14 +22,13 @@ const { clearIntervalAsync } = require('set-interval-async')
 const lodash = require('lodash');
 const moment = require("moment");
 const Discord = require("discord.js");
-const DBL = require("dblapi.js");
+//const { AutoPoster } = require('topgg-autoposter')
 const scriptName = __filename.slice(__dirname.length + 1);
 const client = new Discord.Client({
   messageCacheMaxSize: 3,
   messageCacheLifetime: 1800,
   messageSweepInterval: 3600,
-  messageEditHistoryMaxSize: 1,
-  shards: 'auto'
+  messageEditHistoryMaxSize: 1
 });
 
 const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
@@ -52,15 +51,16 @@ else {
   // New Relic
   require('newrelic');
 
+  // Top.gg
+  //const ap = AutoPoster('Your Top.gg Token', client)
+  /*
+  ap.on('posted', () => {
+    console.log('Posted stats to Top.gg!')
+  })
+  */
+
   client.login(config.discordBotToken);
   console.log("----- PRODUCTION BOT -----");
-
-  // Top.gg
-  const dbl = new DBL(config.topGGtoken, client);
-
-  dbl.on('posted', () => {
-    helper.printStatus('Server count posted to top.gg!');
-  });
 }
 
 // Modules
@@ -349,11 +349,16 @@ client.on("message", async function(message) {
   **** PING
   *************************************************/
   else if ( command === "ping" ) {
+
+    client.shard.fetchClientValues('guilds.cache.size')
+      .then(results => console.log(`${results.reduce((prev, val) => prev + val, 0)} total guilds`))
+      .catch(console.error);
+
     const message_timestamp = message.createdTimestamp;
     const curr_timestamp = Date.now();
     const pong_time = curr_timestamp - message_timestamp;
 
-    message.response_channel.send("Pong in " +pong_time+ " ms");
+    message.response_channel.send("Pong in " +pong_time+ " ms" + " on shard " + message.guild.shardID);
   }
 
   /*************************************************
