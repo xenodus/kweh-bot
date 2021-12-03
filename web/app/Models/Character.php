@@ -80,6 +80,13 @@ class Character extends Model
       "fr" => "Astromancien",
       "de" => "Astrologe",
     ],
+    "sage" => [
+      "shortform" => "SGE",
+      "en" => "Sage",
+      "jp" => "賢者",
+      "fr" => "Sage",
+      "de" => "Weiser",
+    ],
 
     // DPS
     "pugilist" => [
@@ -130,6 +137,13 @@ class Character extends Model
       "jp" => "侍",
       "fr" => "Samouraï",
       "de" => "Samurai",
+    ],
+    "reaper" => [
+      "shortform" => "RPR",
+      "en" => "Reaper",
+      "jp" => "リーパー",
+      "fr" => "Faucheur",
+      "de" => "Schnitter",
     ],
 
     "archer" => [

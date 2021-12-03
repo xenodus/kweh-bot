@@ -464,7 +464,7 @@ const printCharacterInfo = async function(characterInfo, message) {
   }).then(function(m){
 
     // Save Image Record
-    if( m.embeds[0].image.url ) {
+    if( m && m.embeds[0].image.url ) {
       setUserProfile(characterInfo.ID, m.embeds[0].image.url);
     }
 
@@ -581,11 +581,13 @@ const getUserProfileHTML = function(characterInfo) {
   let whm_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 24)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 24)[0].Level : 0;
   let sch_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 28)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 28)[0].Level : 0;
   let ast_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 33)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 33)[0].Level : 0;
+  let sge_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 40)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 40)[0].Level : 0;
 
   let mnk_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 20)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 20)[0].Level : 0;
   let drg_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 22)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 22)[0].Level : 0;
   let nin_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 30)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 30)[0].Level : 0;
   let sam_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 34)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 34)[0].Level : 0;
+  let rpr_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 39)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 39)[0].Level : 0;
 
   let brd_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 23)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 23)[0].Level : 0;
   let mch_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 31)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 31)[0].Level : 0;
@@ -704,6 +706,7 @@ const getUserProfileHTML = function(characterInfo) {
                     <div class="job"><img src="`+jobIconBasePath+(whm_level>0?'whitemage':'conjurer')+`.png" class="job-icon"><br/>`+(whm_level>0?whm_level:cnj_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+(sch_level>0?'scholar':'arcanist')+`.png" class="job-icon"><br/>`+(sch_level>0?sch_level:acn_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+`astrologian.png" class="job-icon"><br/>`+ast_level+`</div>
+                    <div class="job"><img src="https://kwehbot.xyz/images/icons/sage.png" class="job-icon"><br/>`+sge_level+`</div>
                   </div>
 
                   <div class="melee" style="width: 33%;">
@@ -711,6 +714,7 @@ const getUserProfileHTML = function(characterInfo) {
                     <div class="job"><img src="`+jobIconBasePath+(mnk_level>0?'monk':'pugilist')+`.png" class="job-icon"><br/>`+(mnk_level>0?mnk_level:pug_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+(nin_level>0?'ninja':'rogue')+`.png" class="job-icon"><br/>`+(nin_level>0?nin_level:rog_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+`samurai.png" class="job-icon"><br/>`+sam_level+`</div>
+                    <div class="job"><img src="https://kwehbot.xyz/images/icons/reaper.png" class="job-icon"><br/>`+rpr_level+`</div>
                   </div>
                 </div>
                 <div class="job-container">
