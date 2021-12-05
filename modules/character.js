@@ -706,7 +706,7 @@ const getUserProfileHTML = function(characterInfo) {
                     <div class="job"><img src="`+jobIconBasePath+(whm_level>0?'whitemage':'conjurer')+`.png" class="job-icon"><br/>`+(whm_level>0?whm_level:cnj_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+(sch_level>0?'scholar':'arcanist')+`.png" class="job-icon"><br/>`+(sch_level>0?sch_level:acn_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+`astrologian.png" class="job-icon"><br/>`+ast_level+`</div>
-                    <div class="job"><img src="https://kwehbot.xyz/images/icons/sage.png" class="job-icon"><br/>`+sge_level+`</div>
+                    <div class="job"><img src="`+jobIconBasePath+`sage.png" class="job-icon"><br/>`+sge_level+`</div>
                   </div>
 
                   <div class="melee" style="width: 33%;">
@@ -714,7 +714,6 @@ const getUserProfileHTML = function(characterInfo) {
                     <div class="job"><img src="`+jobIconBasePath+(mnk_level>0?'monk':'pugilist')+`.png" class="job-icon"><br/>`+(mnk_level>0?mnk_level:pug_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+(nin_level>0?'ninja':'rogue')+`.png" class="job-icon"><br/>`+(nin_level>0?nin_level:rog_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+`samurai.png" class="job-icon"><br/>`+sam_level+`</div>
-                    <div class="job"><img src="https://kwehbot.xyz/images/icons/reaper.png" class="job-icon"><br/>`+rpr_level+`</div>
                   </div>
                 </div>
                 <div class="job-container">
@@ -727,9 +726,10 @@ const getUserProfileHTML = function(characterInfo) {
                     <div class="job"><img src="`+jobIconBasePath+(blm_level>0?'blackmage':'thaumaturge')+`.png" class="job-icon"><br/>`+(blm_level>0?blm_level:thm_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+(sum_level>0?'summoner':'arcanist')+`.png" class="job-icon"><br/>`+(sum_level>0?sum_level:acn_level)+`</div>
                     <div class="job"><img src="`+jobIconBasePath+`redmage.png" class="job-icon"><br/>`+rdm_level+`</div>
+                    <div class="job"><img src="`+jobIconBasePath+`bluemage.png" class="job-icon"><br/>`+blu_level+`</div>
                   </div>
                   <div class="special" style="width: 33%;">
-                    <div class="job"><img src="`+jobIconBasePath+`bluemage.png" class="job-icon"><br/>`+blu_level+`</div>
+                    <div class="job"><img src="`+jobIconBasePath+`reaper.png" class="job-icon"><br/>`+rpr_level+`</div>
                   </div>
                 </div>
               </div>
