@@ -12,6 +12,24 @@ var Hashids = require('hashids');
   Helper Functions
 *******************************/
 
+// https://discord.com/developers/docs/topics/opcodes-and-status-codes#json
+const handleDiscordError = function(err, message) {
+  console.log(err)
+
+  switch (err.code) {
+    case 50001:
+      message.author.send("Discord error: " + err.message + "\n" + "Please ensure " + config.appName + " bot has access to the channel")
+      // message.author.send("Please ensure " + config.appName + " bot has access to the channel")
+      break;
+    case 50013:
+      message.author.send("Discord error: " + err.message + "\n" + "Please ensure " + config.appName + " bot has permissions to send messages, embed links & attach files to the channel")
+      // message.author.send("Please ensure " + config.appName + " bot has permissions to send messages and embeds to the channel")
+      break;
+    default:
+      break;
+  }
+}
+
 const sendErrorMsg = function(errorTitle="", errorMsg="", message, ignoreDefaultChannel=false) {
     // Embed
     let embed = new Discord.MessageEmbed()
@@ -303,5 +321,6 @@ module.exports = {
   sendSuccessMsg,
   sendInfoMsg,
   sendHelpMsg,
-  sendDonateMsg
+  sendDonateMsg,
+  handleDiscordError
 }

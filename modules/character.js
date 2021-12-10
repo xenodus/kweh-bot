@@ -3,6 +3,7 @@
 *******************************/
 
 const config = require('../config').production;
+const helper = require('../helper');
 const dcserver = require('./dcserver');
 const item = require('./item');
 const xivcollect = require('./xivcollect');
@@ -460,11 +461,11 @@ const printCharacterInfo = async function(characterInfo, message) {
 
   // Send Message
   channel.send( embed ).catch(function(err){
-    console.log(err);
+    helper.handleDiscordError(err, message)
   }).then(function(m){
 
     // Save Image Record
-    if( m && m.embeds[0].image.url ) {
+    if( m && m.embeds && m.embeds.length && m.embeds[0].image.url ) {
       setUserProfile(characterInfo.ID, m.embeds[0].image.url);
     }
 

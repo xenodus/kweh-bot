@@ -3,6 +3,7 @@
 *******************************/
 
 const config = require('../../config').production;
+const helper = require('../../helper');
 const dcserver = require('../dcserver');
 const xivcollect = require('../xivcollect');
 const item = require('../item');
@@ -453,7 +454,7 @@ const printCharacterInfo = async function(characterInfo, message) {
 
   // Send Message
   channel.send( embed ).catch(function(err){
-    console.log(err);
+    helper.handleDiscordError(err, message)
   }).then(function(m){
 
     // Save Image Record
