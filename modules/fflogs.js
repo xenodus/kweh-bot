@@ -10,25 +10,25 @@ const moment = require("moment");
 
 const currentTierEncounters = [
   {
-    "encounterID": 73,
-    "encounterName": "Cloud of Darkness",
+    "encounterID": 1058,
+    "encounterName": "Zodiark",
   },
   {
-    "encounterID": 74,
-    "encounterName": "Shadowkeeper",
+    "encounterID": 1059,
+    "encounterName": "Hydaelyn",
   },
   {
-    "encounterID": 75,
-    "encounterName": "Fatebreaker",
+    "encounterID": 1062,
+    "encounterName": "The Epic of Alexander",
   },
   {
-    "encounterID": 76,
-    "encounterName": "Eden's Promise",
+    "encounterID": 1061,
+    "encounterName": "The Weapon's Refrain",
   },
   {
-    "encounterID": 77,
-    "encounterName": "Oracle of Darkness",
-  },
+    "encounterID": 1060,
+    "encounterName": "The Unending Coil of Bahamut",
+  }
   /*
   {
     "encounterID": 69,
@@ -83,7 +83,7 @@ const getFFLogs = async function(name, server, region) {
 const printFFLogs = function(logsResults, message) {
 
   // Only show savage logs - 101
-  logsResults = lodash.filter(logsResults, {'difficulty': 101});
+  // logsResults = lodash.filter(logsResults, {'difficulty': 101});
 
   logsResults = lodash.orderBy(logsResults, ['startTime'], ['desc']);
   recentLogs = logsResults.slice(0, 5);

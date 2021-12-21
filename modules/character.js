@@ -373,18 +373,26 @@ const printGlamInfo = async function(characterInfo, message) {
 
 const printCharacterInfo = async function(characterInfo, message) {
 
-  let name = characterInfo.name;
-  let race = characterInfo.race;
-  let data_center = characterInfo.datacenter;
-  let server = characterInfo.Character.server;
-  let current_level = characterInfo.level;
-  let current_job = characterInfo.job;
-  let fc = characterInfo.fc;
-  let fc_tag = characterInfo.fc_tag;
-  let title = characterInfo.title;
-  let avatar = characterInfo.avatar; // small
-  let portrait = characterInfo.portrait // big
-  let profileImg = ""
+  let name, race, data_center, server, current_level, current_job, fc, fc_tag, title, avatar, portrait, profileImg = "";
+
+  try {
+    name = characterInfo.name;
+    race = characterInfo.race;
+    data_center = characterInfo.datacenter;
+    server = characterInfo.Character.server;
+    current_level = characterInfo.level;
+    current_job = characterInfo.job;
+    fc = characterInfo.fc;
+    fc_tag = characterInfo.fc_tag;
+    title = characterInfo.title;
+    avatar = characterInfo.avatar; // small
+    portrait = characterInfo.portrait // big
+  }
+  catch(err) {
+    helper.sendErrorMsg("Error", "Unable to retrieve character information", message);
+    console.error("CHARACTER INFO ERROR", err);
+    return
+  }
 
   // Embed
   let embed = new Discord.MessageEmbed()
