@@ -59,11 +59,6 @@ const getFFLogsToken = async function() {
 }
 
 const getFFLogsGQL = async function(name, server, region) {
-  /*
-    #1 - Get Token
-    #2 - Get user id
-    #3 - Get user logs
-  */
 
   let encounterData = []
   let endpoint = config.fflogsGQLEndpoint
@@ -126,6 +121,10 @@ const getFFLogsGQL = async function(name, server, region) {
               encData.encounterName = currentTierEncounters[i].encounterName
               encData.characterName = logData.characterData.character.name
               encData.characterID = data.characterData.character.id
+              // todo: move to separate struct so no repeat data
+              encData.totalKills = logData.characterData.character.encounterRankings.totalKills
+              encData.fastestKill = logData.characterData.character.encounterRankings.fastestKill
+              encData.difficulty = logData.characterData.character.encounterRankings.difficulty
               encounterData.push(encData)
             }
           }
@@ -159,11 +158,11 @@ const printFFLogsGQL = function(logsResults, message) {
   // Embed
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor( "FFLogs Parses", config.fflogsLogo, "" );
+    .setAuthor( "FFLogs", config.fflogsLogo, "" );
 
   if( logsResults.length ) {
 
-    embed.setAuthor( "FFLogs Parses - " + logsResults[0].characterName, config.fflogsLogo, config.fflogsBaseURL + "character/id/" + logsResults[0].characterID );
+    embed.setAuthor( "FFLogs - " + logsResults[0].characterName, config.fflogsLogo, config.fflogsBaseURL + "character/id/" + logsResults[0].characterID );
 
     if( recentLogs.length ) {
 
@@ -174,7 +173,7 @@ const printFFLogsGQL = function(logsResults, message) {
         recentLogsTxt+= "\n [" + recentLogs[i].encounterName + " ("+Math.round(recentLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+recentLogs[i].report.code+"#fight="+recentLogs[i].report.fightID+") - " + logDate;
       }
 
-      embed.addField("Recent Parses", recentLogsTxt, true);
+      embed.addField("Recent", recentLogsTxt, true);
     }
 
     if( topLogs.length ) {
@@ -185,7 +184,7 @@ const printFFLogsGQL = function(logsResults, message) {
         topLogsTxt+= "\n [" + topLogs[i].encounterName + " ("+Math.round(topLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+topLogs[i].report.code+"#fight="+topLogs[i].report.fightID+") - " + logDate;
       }
 
-      embed.addField("Top Parses", topLogsTxt, true);
+      embed.addField("Top", topLogsTxt, true);
     }
 
     for(var i=0; i<currentTierEncounters.length; i++) {
@@ -195,6 +194,7 @@ const printFFLogsGQL = function(logsResults, message) {
       if( encounterLogs.length > 0 ) {
 
         // let duration = Math.floor(moment.duration(encounterLogs[0].duration).minutes()) + ":" + Math.floor(moment.duration(encounterLogs[0].duration%60000).asSeconds());
+        let noKills = encounterLogs[0].totalKills
         let duration = moment.utc(encounterLogs[0].duration).format("m:ss");
         let encounterTxt = encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+") ["+duration+"]";
 
@@ -206,13 +206,13 @@ const printFFLogsGQL = function(logsResults, message) {
           encounterTxt += "\n" + encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+") ["+duration+"]";
         }
 
-        embed.addField(currentTierEncounters[i].encounterName, encounterTxt);
+        embed.addField(currentTierEncounters[i].encounterName + " - " + noKills + " kills", encounterTxt);
       }
     }
 
   }
   else {
-    embed.addField("Recent Parses", "No data available");
+    embed.addField("Recent", "No data available");
   }
 
   // Channel
