@@ -186,7 +186,7 @@ const printFFLogsGQL = function(logsResults, message) {
 
       for(var i=0; i<recentLogs.length; i++) {
         let logDate = moment( recentLogs[i].startTime ).format("D MMM");
-        recentLogsTxt+= "\n [" + recentLogs[i].encounterName + " ("+Math.round(recentLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+recentLogs[i].report.code+"#fight="+recentLogs[i].report.fightID+") - " + logDate;
+        recentLogsTxt+= "\n[" + recentLogs[i].encounterName + " ("+Math.round(recentLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+recentLogs[i].report.code+"#fight="+recentLogs[i].report.fightID+") - " + logDate;
       }
 
       embed.addField("Recent", recentLogsTxt, true);
@@ -197,7 +197,7 @@ const printFFLogsGQL = function(logsResults, message) {
 
       for(var i=0; i<topLogs.length; i++) {
         let logDate = moment( topLogs[i].startTime ).format("D MMM");
-        topLogsTxt+= "\n [" + topLogs[i].encounterName + " ("+Math.round(topLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+topLogs[i].report.code+"#fight="+topLogs[i].report.fightID+") - " + logDate;
+        topLogsTxt+= "\n[" + topLogs[i].encounterName + " ("+Math.round(topLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+topLogs[i].report.code+"#fight="+topLogs[i].report.fightID+") - " + logDate;
       }
 
       embed.addField("Top", topLogsTxt, true);
@@ -212,14 +212,14 @@ const printFFLogsGQL = function(logsResults, message) {
         // let duration = Math.floor(moment.duration(encounterLogs[0].duration).minutes()) + ":" + Math.floor(moment.duration(encounterLogs[0].duration%60000).asSeconds());
         let noKills = encounterLogs[0].totalKills
         let duration = moment.utc(encounterLogs[0].duration).format("m:ss");
-        let encounterTxt = encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+") ["+duration+"]";
+        let encounterTxt = encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " aDPS] ["+Math.round(encounterLogs[0].rankPercent)+"%] ["+duration+"]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+")";
 
         // Check for second class
         let first_spec = encounterLogs[0].spec;
         encounterLogs = encounterLogs.filter(f => f.spec != first_spec);
 
         if( encounterLogs.length > 0 ) {
-          encounterTxt += "\n" + encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " DPS]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+") ["+duration+"]";
+          encounterTxt += "\n" + encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " aDPS] ["+Math.round(encounterLogs[0].rankPercent)+"%] ["+duration+"]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+")";
         }
 
         embed.addField(currentTierEncounters[i].encounterName + " - " + noKills + " kills", encounterTxt);
