@@ -12,6 +12,22 @@ const { GraphQLClient, gql }  = require('graphql-request');
 
 const currentTierEncounters = [
   {
+    "encounterID": 78,
+    "encounterName": "Erichthonios",
+  },
+  {
+    "encounterID": 79,
+    "encounterName": "Hippokampos",
+  },
+  {
+    "encounterID": 80,
+    "encounterName": "Phoinix",
+  },
+  {
+    "encounterID": 81,
+    "encounterName": "Hesperos",
+  },
+  {
     "encounterID": 1058,
     "encounterName": "Zodiark",
   },
