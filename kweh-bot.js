@@ -676,10 +676,10 @@ client.on("message", async function(message) {
 
       if( lodash.isEmpty(userInfo) == false ) {
 
-        let name = userInfo.firstname + "%20" + userInfo.lastname;
-        let logsResults = await fflogs.getFFLogs(name, userInfo.server, userInfo.region);
+        let name = userInfo.firstname + " " + userInfo.lastname;
+        let logsResults = await fflogs.getFFLogsGQL(name, userInfo.server, userInfo.region);
 
-        fflogs.printFFLogs(logsResults, message);
+        fflogs.printFFLogsGQL(logsResults, message);
       }
       else {
         helper.sendErrorMsg("Error", "Profile not found", message);
@@ -709,11 +709,11 @@ client.on("message", async function(message) {
 
           if( lodash.isEmpty(characterInfo) == false ) {
 
-            let name = firstname + "%20" + lastname;
+            let name = firstname + " " + lastname;
             let region = dcserver.getDCregion(characterInfo.datacenter);
-            let logsResults = await fflogs.getFFLogs(name, characterInfo.server, region);
+            let logsResults = await fflogs.getFFLogsGQL(name, characterInfo.server, region);
 
-            fflogs.printFFLogs(logsResults, message);
+            fflogs.printFFLogsGQL(logsResults, message);
           }
           else {
             helper.sendErrorMsg("Error", "Character not found", message);
@@ -733,10 +733,10 @@ client.on("message", async function(message) {
 
         if( lodash.isEmpty(userInfo) == false ) {
 
-          let name = userInfo.firstname + "%20" + userInfo.lastname;
-          let logsResults = await fflogs.getFFLogs(name, userInfo.server, userInfo.region);
+          let name = userInfo.firstname + " " + userInfo.lastname;
+          let logsResults = await fflogs.getFFLogsGQL(name, userInfo.server, userInfo.region);
 
-          fflogs.printFFLogs(logsResults, message);
+          fflogs.printFFLogsGQL(logsResults, message);
         }
         else {
           helper.sendErrorMsg("Error", "Profile not found", message);

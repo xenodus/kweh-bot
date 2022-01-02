@@ -292,8 +292,7 @@ const manualPostFR2Channel = async function(message) {
         helper.printStatus("Manually posted FR " + fr[i].id + " for " + message.channel.id);
       })
       .catch(function(err){
-        console.log(err);
-        helper.printStatus(message.channel);
+        helper.handleDiscordError(err, message)
       });
     }
   }
@@ -373,7 +372,7 @@ const frChannelAdd = async function(message) {
     ]
   )
   .catch(function(e){
-    console.log(e);
+    helper.handleDiscordError(e, message)
   })
 
   return;
