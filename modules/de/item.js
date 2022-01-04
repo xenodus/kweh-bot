@@ -164,7 +164,7 @@ async function displayItem(item, message) {
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
   // Send Message
-  await channel.send( embed )
+  await channel.send({ embeds: [embed] })
   .then(async function(m){
     if( item.GameContentLinks && item.GameContentLinks.Recipe && lodash.isEmpty(item.GameContentLinks.Recipe) == false ) {
       await displayUsedFor(m, item);
@@ -221,7 +221,7 @@ async function displayUsedFor(message, item) {
     }
   }
 
-  message.edit( embed );
+  message.edit({ embeds: [embed] });
 }
 
 /******************************
@@ -284,7 +284,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    await channel.send(embed).catch(function(err){
+    await channel.send({ embeds: [embed] }).catch(function(err){
       console.log(err);
     });
   }

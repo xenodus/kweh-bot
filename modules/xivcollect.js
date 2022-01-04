@@ -371,7 +371,7 @@ const printItemInfo = async function(item, message) {
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
   // Send Message
-  await channel.send( embed )
+  await channel.send({ embeds: [embed] })
   .catch(function(err){
     console.log(err);
   });
@@ -437,7 +437,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    await channel.send(embed).catch(function(err){
+    await channel.send({ embeds: [embed] }).catch(function(err){
       console.log(err);
     });
   }

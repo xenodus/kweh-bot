@@ -360,7 +360,7 @@ const printGlamInfo = async function(characterInfo, message) {
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
   // Send Message
-  channel.send( embed ).catch(function(err){
+  channel.send({ embeds: [embed] }).catch(function(err){
     console.log(err);
   });
 }
@@ -368,6 +368,7 @@ const printGlamInfo = async function(characterInfo, message) {
 const printCharacterInfo = async function(characterInfo, message) {
 
   let name, race, data_center, server, current_level, current_job, fc, fc_tag, title, avatar, portrait, profileImg = "";
+  let files = [];  
 
   try {
     name = characterInfo.name;
@@ -401,7 +402,7 @@ const printCharacterInfo = async function(characterInfo, message) {
     profileImg = await generateUserProfile(characterInfo, message);
     let attachment = new Discord.MessageAttachment(profileImg);
     embed.setImage("attachment://" + profileImg.split("/")[ profileImg.split("/").length -1 ]);
-    embed.attachFiles(attachment);
+    files.push(attachment)    
     isGenerated = true;
   } else {
     // From DB
@@ -462,7 +463,7 @@ const printCharacterInfo = async function(characterInfo, message) {
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
   // Send Message
-  channel.send( embed ).catch(function(err){
+  channel.send({ embeds: [embed], files: files }).catch(function(err){
     helper.handleDiscordError(err, message)
   }).then(function(m){
 

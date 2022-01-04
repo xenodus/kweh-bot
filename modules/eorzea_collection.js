@@ -227,7 +227,7 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    channel.send( embed )
+    channel.send({ embeds: [embed] })
     .then(async function(m){
       // Equipment Listing
       if( randomItem ) {

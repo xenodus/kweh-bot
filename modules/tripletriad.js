@@ -45,7 +45,7 @@ const printTripleTriadData = function(ffTripleTriadData, message, user) {
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
   // Send Message
-  channel.send( embed ).catch(function(err){
+  channel.send({ embeds: [embed] }).catch(function(err){
     console.log(err);
   });
 }

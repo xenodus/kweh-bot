@@ -130,7 +130,7 @@ const autoCheckPostFR = async function(client, ignoreChannelAddedDate=false) {
                     embed.setTitle( "[Expired] " + embed.title );
                   }
 
-                  await channel.send(embed)
+                  await channel.send({ embeds: [embed] })
                   .then(function(){
                     setPosted(frChannel.channel_id, fr[i].id);
                     helper.printStatus("Posted FR " + fr[i].id + " for " + frChannel.channel_id);
@@ -186,7 +186,7 @@ const sendLatestFRPrompt = async function(message){
   embed.setDescription(description);
 
   // Send Message
-  await message.channel.send( embed ).catch(function(err){
+  await message.channel.send({ embeds: [embed] }).catch(function(err){
     console.log(err);
   });
 }
@@ -286,7 +286,7 @@ const manualPostFR2Channel = async function(message) {
         embed.setTitle( "[Expired] " + embed.title );
       }
 
-      await message.channel.send(embed)
+      await message.channel.send({ embeds: [embed] })
       .then(function(){
         setPosted(message.channel.id, fr[i].id);
         helper.printStatus("Manually posted FR " + fr[i].id + " for " + message.channel.id);

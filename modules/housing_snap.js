@@ -221,7 +221,7 @@ const printHousingSnap = async function(housingSnapResult, message) {
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    channel.send( embed )
+    channel.send({ embeds: [embed] })
     .then(async function(m){
       if( housingSnaps.length > 1 ) {
         await resetReactions(m);
