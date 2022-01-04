@@ -135,7 +135,7 @@
     <div class="command-structure">!fflogs server firstname lastname</div>
     <div class="command-example mt-3">e.g. !fflogs tonberry yidhra cantarell</div>
 
-    <div class="mt-3 command-description">View someone's FFLogs parses or yours if no user is specified. Percentiles are based on rDPS values from FFLogs.</div>
+    <div class="mt-3 command-description">View someone's FFLogs parses or yours if no user is specified. Percentiles are based on aDPS values from FFLogs.</div>
     <div class="mt-3 command-alias">Aliases: logs, parses</div>
   </div>
 </div>
@@ -151,7 +151,7 @@
     <div class="command-example mt-3">e.g. !mb tonberry seeing horde guillotine</div>
 
     <div class="mt-3 command-description">
-      <p>Retrieve the latest marketboard prices from <a href="Universalis.app" target="_blank">Universalis.app</a> for an item for a specific server or all servers in a data center.</p>
+      <p>Retrieve the latest marketboard prices from <a href="https://universalis.app" target="_blank">Universalis.app</a> for an item for a specific server or all servers in a data center.</p>
       <p>If you've registered, you may omit the datacenter or server and your character's datacenter will be used automatically.</p>
     </div>
     <div class="mt-3 command-alias">Aliases: market, marketboard</div>
