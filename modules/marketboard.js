@@ -80,7 +80,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     // Embed
     let embed = new Discord.MessageEmbed()
       .setColor(config.defaultEmbedColor)
-      .setAuthor(searchedKeyword, config.universalisLogo);
+      .setAuthor({name: searchedKeyword, iconURL: config.universalisLogo});
 
     let description = "Which item are you looking for?\n";
 
@@ -100,7 +100,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    await channel.send(embed).catch(function(err){
+    await channel.send({embeds: [embed]}).catch(function(err){
       console.log(err);
     });
   }
@@ -149,7 +149,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
     let embed = new Discord.MessageEmbed()
       .setColor(config.defaultEmbedColor)
       .setTitle( mbData.item.Name )
-      .setAuthor( "Universalis", config.universalisLogo, config.universalisMarketBaseURL + mbData.item.ID )
+      .setAuthor({name: "Universalis", iconURL: config.universalisLogo, url: config.universalisMarketBaseURL + mbData.item.ID})
       .setThumbnail( config.xivApiBaseURL + mbData.item.Icon );
 
     // Last Upload Time
@@ -180,7 +180,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
               let priceListings = (lodash.isEmpty(lowestNQPrice)?"":lowestNQPrice.pricePerUnit.toLocaleString() + "g [NQ] x "+lowestNQPrice.quantity);
               priceListings += "\n" + (lodash.isEmpty(lowestHQPrice)?"" : lowestHQPrice.pricePerUnit.toLocaleString() + "g [HQ] x "+lowestHQPrice.quantity);
 
-              embed.addField(servers[i], priceListings);
+              embed.addField(servers[i], String(priceListings));
 
               if( lodash.isEmpty(lowestNQPrice) == false ) {
                 lowestNQAllServer.push(lowestNQPrice);
@@ -216,7 +216,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
       // Send Message
-      channel.send( embed ).catch(function(err){
+      channel.send({embeds: [embed]}).catch(function(err){
         console.log(err);
       });
     }
@@ -251,7 +251,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
       // Send Message
-      channel.send( embed ).catch(function(err){
+      channel.send({embeds: [embed]}).catch(function(err){
         console.log(err);
       });
     }

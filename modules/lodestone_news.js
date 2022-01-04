@@ -274,7 +274,7 @@ const manualPostNews2Channel = async function(message, locale = "na") {
       }
 
       if( news[i].category ) {
-        embed.setAuthor( news[i].category.charAt(0).toUpperCase() + news[i].category.slice(1), config.lodestoneImg );
+        embed.setAuthor({ name: news[i].category.charAt(0).toUpperCase() + news[i].category.slice(1), iconURL: config.lodestoneImg});
       }
 
       if( news[i].image ) {
@@ -282,10 +282,10 @@ const manualPostNews2Channel = async function(message, locale = "na") {
       }
 
       if( news[i].time ) {
-        embed.setFooter( "Posted on " + moment(news[i].time).format("DD MMM YYYY h:mm A") );
+        embed.setFooter({ text: "Posted on " + moment(news[i].time).format("DD MMM YYYY h:mm A") });
       }
 
-      await message.channel.send(embed)
+      await message.channel.send({embeds: [embed]})
       .then(function(){
         setPosted(message.channel.id, news[i].id);
         helper.printStatus("Manually posted " + news[i].id + " for " + message.channel.id);
@@ -304,7 +304,7 @@ const manualPostNews2Channel = async function(message, locale = "na") {
 const sendLatestNewsPrompt = async function(message){
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor( "Lodestone" )
+    .setAuthor({ name: "Lodestone" })
     .setThumbnail( config.lodestoneImg );
 
   let description = "Do you want to populate this channel with the current news?\n\nReply with `1` to proceed";
@@ -312,7 +312,7 @@ const sendLatestNewsPrompt = async function(message){
   embed.setDescription(description);
 
   // Send Message
-  await message.channel.send( embed ).catch(function(err){
+  await message.channel.send({embeds: [embed]}).catch(function(err){
     console.log(err);
   });
 }
@@ -401,7 +401,7 @@ const autoCheckPostNews = async function(client, ignoreChannelAddedDate=false) {
                   }
 
                   if( news[i].category ) {
-                    embed.setAuthor( news[i].category.charAt(0).toUpperCase() + news[i].category.slice(1), config.lodestoneImg );
+                    embed.setAuthor({ name: news[i].category.charAt(0).toUpperCase() + news[i].category.slice(1), iconURL: config.lodestoneImg });
                   }
 
                   if( news[i].image ) {
@@ -409,10 +409,10 @@ const autoCheckPostNews = async function(client, ignoreChannelAddedDate=false) {
                   }
 
                   if( news[i].time ) {
-                    embed.setFooter( "Posted on " + moment(news[i].time).format("DD MMM YYYY h:mm A") );
+                    embed.setFooter({ text: "Posted on " + moment(news[i].time).format("DD MMM YYYY h:mm A") });
                   }
 
-                  await channel.send(embed)
+                  await channel.send({embeds: [embed]})
                   .then(function(){
                     setPosted(newsChannel.channel_id, news[i].id);
                     helper.printStatus("Posted " + news[i].id + " for " + newsChannel.channel_id);

@@ -89,9 +89,9 @@ async function displayItem(item, message) {
   // Embed
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor(item.Name, config.xivApiLogo)
+    .setAuthor({name: item.Name, iconURL: config.xivApiLogo})
     .setThumbnail(config.xivApiBaseURL + item.Icon)
-    .setFooter("Powered by xivapi.com");
+    .setFooter({text: "Powered by xivapi.com"});
 
   let linksTxt = "[Teamcraft](" + config.teamcraftBaseURL + "en/item/" + item.ID + ")";
 
@@ -285,7 +285,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     // Embed
     let embed = new Discord.MessageEmbed()
       .setColor(config.defaultEmbedColor)
-      .setAuthor(searchedKeyword, config.xivApiLogo);
+      .setAuthor({name: searchedKeyword, iconURL: config.xivApiLogo});
 
     let description = "Which item are you looking for?\n";
 

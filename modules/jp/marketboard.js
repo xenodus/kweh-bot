@@ -100,7 +100,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    await channel.send(embed).catch(function(err){
+    await channel.send({ embeds: [embed]}).catch(function(err){
       console.log(err);
     });
   }
@@ -174,7 +174,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
               let priceListings = (lodash.isEmpty(lowestNQPrice)?"":lowestNQPrice.pricePerUnit.toLocaleString() + "g [NQ] x "+lowestNQPrice.quantity);
               priceListings += "\n" + (lodash.isEmpty(lowestHQPrice)?"" : lowestHQPrice.pricePerUnit.toLocaleString() + "g [HQ] x "+lowestHQPrice.quantity);
 
-              embed.addField(servers[i], priceListings);
+              embed.addField(servers[i], String(priceListings));
 
               if( lodash.isEmpty(lowestNQPrice) == false ) {
                 lowestNQAllServer.push(lowestNQPrice);
@@ -210,7 +210,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
       // Send Message
-      channel.send( embed ).catch(function(err){
+      channel.send({ embeds: [embed]}).catch(function(err){
         console.log(err);
       });
     }
@@ -239,13 +239,13 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
       }
 
       // Listings
-      embed.addField(mbData.server.charAt(0).toUpperCase() + mbData.server.slice(1), priceListings);
+      embed.addField(mbData.server.charAt(0).toUpperCase() + mbData.server.slice(1), String(priceListings));
 
       // Channel
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
       // Send Message
-      channel.send( embed ).catch(function(err){
+      channel.send({ embeds: [embed]}).catch(function(err){
         console.log(err);
       });
     }

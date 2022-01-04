@@ -44,7 +44,7 @@ const sendErrorMsg = function(errorTitle="", errorMsg="", message, ignoreDefault
     if( ignoreDefaultChannel ) channel = message.channel;
 
     // Send Message
-    channel.send( embed ).catch(function(err){
+    channel.send({embeds: [embed]}).catch(function(err){
       console.log(err);
     });
 }
@@ -63,7 +63,7 @@ const sendSuccessMsg = function(successTitle="", successMsg="", message, ignoreD
     if( ignoreDefaultChannel ) channel = message.channel;
 
     // Send Message
-    channel.send( embed ).catch(function(err){
+    channel.send({embeds: [embed]}).catch(function(err){
       console.log(err);
     });
 }
@@ -82,7 +82,7 @@ const sendInfoMsg = function(infoTitle="", infoMsg="", message, ignoreDefaultCha
     if( ignoreDefaultChannel ) channel = message.channel;
 
     // Send Message
-    channel.send( embed ).catch(function(err){
+    channel.send({embeds: [embed]}).catch(function(err){
       console.log(err);
     });
 }
@@ -292,20 +292,20 @@ const sendHelpMsg = function(message, prefix) {
 
   embed.addField("Support Kweh!", "["+config.donationLink+"]("+config.donationLink+")");
 
-  message.author.send(embed);
+  message.author.send({embeds: [embed]});
 }
 
 const sendDonateMsg  = function(message) {
 
-  let embed1 = new Discord.MessageEmbed()
+  let embed = new Discord.MessageEmbed()
     .setTitle("Help support " + config.appName + "!")
     .setColor( config.defaultEmbedColor )
     .setThumbnail( config.appLogo )
     .setURL( config.donationLink )
     .setDescription("If you've found the bot useful and would like to donate, you can do so via the link below. Donations will be used to cover server hosting fees. Kwehhhh (Thanks)!");
 
-  message.author.send( embed1 );
-  message.author.send( "Patreon link: <"+config.donationLink+">" );
+  message.author.send({embeds: [embed]});
+  message.author.send("Patreon link: <"+config.donationLink+">");
 }
 
 /******************************
