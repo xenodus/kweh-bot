@@ -87,9 +87,9 @@ async function displayItem(item, message) {
   // Embed
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor(item.Name_fr, config.xivApiLogo)
+    .setAuthor({name: item.Name_fr, iconURL: config.xivApiLogo})
     .setThumbnail(config.xivApiBaseURL + item.Icon)
-    .setFooter("Powered by xivapi.com");
+    .setFooter({text: "Powered by xivapi.com"});
 
   let linksTxt = "[Teamcraft](" + config.teamcraftBaseURL + "fr/item/" + item.ID + ")";
 
@@ -238,7 +238,7 @@ const handleMultipleItems = async function(itemMatchResult, searchedItem, messag
   };
 
   // Await Reply
-  message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+  message.response_channel.awaitMessages({ multipleItemsfilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     let specificItem = itemMatchResult[ collected.first().content - 1 ];
     let specificItemInfo = await getItemByID( specificItem.ID );
     // print result
@@ -269,7 +269,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     // Embed
     let embed = new Discord.MessageEmbed()
       .setColor(config.defaultEmbedColor)
-      .setAuthor(searchedKeyword, config.xivApiLogo);
+      .setAuthor({name: searchedKeyword, iconURL: config.xivApiLogo});
 
     let description = "Quel article recherchez-vous?\n";
 

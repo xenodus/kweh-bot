@@ -239,7 +239,7 @@ const sendManualPostNews2ChannelPrompt = async function(message, locale = "na") 
   };
 
   // Await Reply
-  message.channel.awaitMessages(postLatestNewsFilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+  message.channel.awaitMessages({ postLatestNewsFilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     if( collected.first().content == 1 ) {
       await manualPostNews2Channel(message, locale);
 

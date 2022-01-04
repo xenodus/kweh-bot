@@ -162,7 +162,7 @@ const printHousingSnap = async function(housingSnapResult, message) {
       .setColor(config.defaultEmbedColor);
 
     if( housingSnapResult.title && housingSnapResult.url ) {
-      embed.setAuthor(housingSnapResult.title, config.housingSnapLogo, encodeURI(housingSnapResult.url));
+      embed.setAuthor({name: housingSnapResult.title, iconURL: config.housingSnapLogo, url: encodeURI(housingSnapResult.url)});
     }
 
     let description = "";
@@ -187,10 +187,10 @@ const printHousingSnap = async function(housingSnapResult, message) {
 
       // No need footer label with # if only 1 result
       if( housingSnaps.length > 1 ) {
-        embed.setFooter((randomIndex+1) + '. ' + randomItem.title);
+        embed.setFooter({text: (randomIndex+1) + '. ' + randomItem.title});
       }
       else {
-        embed.setFooter(randomItem.title);
+        embed.setFooter({text: randomItem.title});
       }
     }
 
@@ -243,7 +243,7 @@ const updateImage = async function(m, nextSlideImg="") {
 
     messageEmbed.setImage(nextSlideImg);
 
-    m.edit( messageEmbed );
+    m.edit({ embeds: [messageEmbed] });
   }
 }
 

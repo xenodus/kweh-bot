@@ -44,7 +44,7 @@ const printTimers = async function(message) {
   // Embed
   let embed = new Discord.MessageEmbed()
     .setColor( config.defaultEmbedColor )
-    .setAuthor( "Timers", config.timerImg );
+    .setAuthor({name: "Timers", iconURL: config.timerImg});
 
   embed.addField("Eorzea Time", eorzeaTimeString);
   embed.addField("Daily Reset", dailyResetString);
@@ -101,7 +101,7 @@ const printMaint = async function(message) {
 
   let embed = new Discord.MessageEmbed()
     .setColor( config.defaultEmbedColor )
-    .setAuthor( "Maintenance", config.maintenanceImg );
+    .setAuthor({name: "Maintenance", iconURL: config.maintenanceImg});
 
   let next_maint = await getNextMaintenance();
 

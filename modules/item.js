@@ -254,7 +254,7 @@ const handleMultipleItems = async function(itemMatchResult, searchedItem, messag
   };
 
   // Await Reply
-  message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+  message.response_channel.awaitMessages({ multipleItemsfilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     let specificItem = itemMatchResult[ collected.first().content - 1 ];
     let specificItemInfo = await getItemByID( specificItem.ID );
     // print result

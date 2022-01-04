@@ -69,7 +69,7 @@ const autoCheckPostFR = async function(client, ignoreChannelAddedDate=false) {
                 if( isNewsPosted == false && isNewsOlderThanChannel == false ) {
                   let embed = new Discord.MessageEmbed()
                     .setColor( config.defaultEmbedColor )
-                    .setAuthor( config.fashionReportAuthorName, config.fashionReportAuthorAvatar )
+                    .setAuthor({name: config.fashionReportAuthorName, iconURL: config.fashionReportAuthorAvatar})
                     .setTitle( fr[i].title )
                     .setURL( fr[i].link );
 
@@ -78,7 +78,7 @@ const autoCheckPostFR = async function(client, ignoreChannelAddedDate=false) {
                   }
 
                   if( fr[i].isoDate ) {
-                    embed.setFooter( "Posted on " + moment(fr[i].isoDate).format("DD MMM YYYY h:mm A") );
+                    embed.setFooter({text: "Posted on " + moment(fr[i].isoDate).format("DD MMM YYYY h:mm A")});
                   }
 
                   // Expiry date
@@ -178,7 +178,7 @@ const autoCheckPostFR = async function(client, ignoreChannelAddedDate=false) {
 const sendLatestFRPrompt = async function(message){
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor( "Fasion Report by " + config.fashionReportAuthorName )
+    .setAuthor({name: "Fashion Report by " + config.fashionReportAuthorName})
     .setThumbnail( config.fashionReportAuthorAvatar );
 
   let description = "Do you want to display the latest fashion report?\n\nReply with `1` to proceed";
@@ -199,7 +199,7 @@ const sendManualPostFR2ChannelPrompt = async function(message) {
   };
 
   // Await Reply
-  message.channel.awaitMessages(postLatestFRFilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+  message.channel.awaitMessages({ postLatestFRFilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     if( collected.first().content == 1 ) {
       await manualPostFR2Channel(message);
 
@@ -225,7 +225,7 @@ const manualPostFR2Channel = async function(message) {
       // Embed
       let embed = new Discord.MessageEmbed()
         .setColor( config.defaultEmbedColor )
-        .setAuthor( config.fashionReportAuthorName, config.fashionReportAuthorAvatar )
+        .setAuthor({name: config.fashionReportAuthorName, iconURL: config.fashionReportAuthorAvatar})
         .setTitle( fr[i].title )
         .setURL( fr[i].link );
 
@@ -234,7 +234,7 @@ const manualPostFR2Channel = async function(message) {
       }
 
       if( fr[i].isoDate ) {
-        embed.setFooter( "Posted on " + moment(fr[i].isoDate).format("DD MMM YYYY h:mm A") );
+        embed.setFooter({text: "Posted on " + moment(fr[i].isoDate).format("DD MMM YYYY h:mm A")});
       }
 
       // Expiry date

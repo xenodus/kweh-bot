@@ -88,8 +88,8 @@ const sendInfoMsg = function(infoTitle="", infoMsg="", message, ignoreDefaultCha
 }
 
 const isAdmin = function(member) {
-  if (  member.hasPermission('ADMINISTRATOR') ||
-        member.hasPermission('MANAGE_CHANNELS') ||
+  if (  member.permissions.has('ADMINISTRATOR') ||
+        member.permissions.has('MANAGE_CHANNELS') ||
         Object.keys(config.adminIDs).includes(member.id) )
     return true;
   else
@@ -145,7 +145,7 @@ const sendHelpMsg = function(message, prefix) {
   let embed = new Discord.MessageEmbed()
     .setDescription("You can also edit your server settings on the official website.")
     .setColor( config.defaultEmbedColor )
-    .setAuthor( "Kweh! - Help" )
+    .setAuthor({name: "Kweh! - Help"})
     .setThumbnail( config.appErrorImg );
 
   embed.addField("Prefix for " + message.guild.name, prefix);

@@ -35,7 +35,7 @@ const printTripleTriadData = function(ffTripleTriadData, message, user) {
   // Embed
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor( user.username + " - Triple Triad Collection", config.ffttLogo, config.ffttBaseURL + "character/" + user.id );
+    .setAuthor({name: user.username + " - Triple Triad Collection", iconURL: config.ffttLogo, url: config.ffttBaseURL + "character/" + user.id});
 
   embed.addField("Collected", ffTripleTriadData.cards.owned + " / " + ffTripleTriadData.cards.total + " ("+Math.round(ffTripleTriadData.cards.owned/ffTripleTriadData.cards.total*100)+"%)");
   embed.addField("Missing", ffTripleTriadData.cards.missing + " / " + ffTripleTriadData.cards.total + " ("+Math.round(ffTripleTriadData.cards.missing/ffTripleTriadData.cards.total*100)+"%)");

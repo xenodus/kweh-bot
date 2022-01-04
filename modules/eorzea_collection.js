@@ -165,7 +165,7 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
       .setColor(config.defaultEmbedColor);
 
     if( eorzeaCollectionResult.title && eorzeaCollectionResult.url ) {
-      embed.setAuthor(eorzeaCollectionResult.title, config.eorzeaCollectionLogo, encodeURI(eorzeaCollectionResult.url));
+      embed.setAuthor({name: eorzeaCollectionResult.title, iconURL: config.eorzeaCollectionLogo, url: encodeURI(eorzeaCollectionResult.url)});
     }
 
     let description = "";
@@ -190,10 +190,10 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
 
       // No need footer label with # if only 1 result
       if( eorzeaCollectionGlams.length > 1 ) {
-        embed.setFooter((randomIndex+1) + '. ' + randomItem.title);
+        embed.setFooter({text: (randomIndex+1) + '. ' + randomItem.title});
       }
       else {
-        embed.setFooter(randomItem.title);
+        embed.setFooter({text: randomItem.title});
       }
     }
 
@@ -317,7 +317,7 @@ const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
       messageEmbed.setImage(nextSlideImg);
     }
 
-    m.edit( messageEmbed );
+    m.edit({ embeds: [messageEmbed] });
   }
 }
 

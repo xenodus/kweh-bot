@@ -286,11 +286,12 @@ const getAchievementData = async function(message, search_str, is_id = false) {
 *******************************/
 
 const printItemInfo = async function(item, message) {
+
   // Embed
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
-    .setAuthor(item.name)
-    .setFooter("Powered by ffxivcollect.com");
+    .setAuthor({name: item.name})
+    .setFooter({text: "Powered by ffxivcollect.com"});
 
   if( item.icon ) {
     embed.setThumbnail(item.icon);
@@ -307,7 +308,7 @@ const printItemInfo = async function(item, message) {
   }
 
   if( item.seats ) {
-    embed.addField("Riders", item.seats);
+    embed.addField("Riders", String(item.seats));
   }
 
   if( item.sources && item.sources.length > 0 ) {
@@ -330,37 +331,37 @@ const printItemInfo = async function(item, message) {
     }
 
     if( sources ) {
-      embed.addField( item.sources.length == 1 ? "Source" : "Sources", sources);
+      embed.addField( item.sources.length == 1 ? "Source" : "Sources", String(sources));
     }
   }
 
   // Emote
   if( item.command ) {
-    embed.addField("Command", item.command);
+    embed.addField("Command", String(item.command));
 
     if( item.category && item.category.name ) {
-      embed.addField("Category", item.category.name);
+      embed.addField("Category", String(item.category.name));
     }
   }
 
   // Title
   if( item.female_name && item.female_name != item.name ) {
-    embed.addField("Male", item.name);
-    embed.addField("Female", item.female_name);
+    embed.addField("Male", String(item.name));
+    embed.addField("Female", String(item.female_name));
   }
 
   if( item.achievement ) {
     let source = item.achievement.description ? "Achievement: " + item.achievement.description : "";
 
     if( source ) {
-      embed.addField( "Source", source);
+      embed.addField( "Source", String(source));
     }
 
     embed.setThumbnail("");
   }
 
   if( item.owned ) {
-    embed.addField("Owned", item.owned);
+    embed.addField("Owned", String(item.owned));
   }
 
   if( item.image ) {
@@ -391,7 +392,7 @@ const handleMultipleItems = async function(itemMatchResult, searchedItem, messag
   };
 
   // Await Reply
-  message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+  message.response_channel.awaitMessages({ multipleItemsfilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     let specificItem = itemMatchResult.results[ collected.first().content - 1 ];
 
     await printItemInfo(specificItem, message);
@@ -421,8 +422,8 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     // Embed
     let embed = new Discord.MessageEmbed()
       .setColor(config.defaultEmbedColor)
-      .setAuthor(searchedKeyword)
-      .setFooter("Powered by ffxivcollect.com");
+      .setAuthor({name: searchedKeyword})
+      .setFooter({text: "Powered by ffxivcollect.com"});
 
     let description = "Which item are you looking for?\n";
 

@@ -300,7 +300,7 @@ const printGlamInfo = async function(characterInfo, message) {
   let embed = new Discord.MessageEmbed()
     .setColor(config.defaultEmbedColor)
     .setImage(portrait)
-    .setAuthor(name + " - Glamours", avatar)
+    .setAuthor({name: name + " - Glamours", iconURL: avatar})
     .setDescription("Stufe " + current_level + " " + race + " " + current_job + " " + gender);
 
   let glam_slots = [
@@ -417,10 +417,10 @@ const printCharacterInfo = async function(characterInfo, message) {
 
   // Title
   if( title ) {
-    embed.setAuthor(name + ", " + title, avatar);
+    embed.setAuthor({name: name + ", " + title, iconURL: avatar});
   }
   else {
-    embed.setAuthor(name, avatar);
+    embed.setAuthor({name: name, iconURL: avatar});
   }
 
   // Body

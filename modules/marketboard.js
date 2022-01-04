@@ -51,7 +51,7 @@ const handleMultipleItems = async function(itemMatchResult, searchedItem, dcOrSe
   };
 
   // Await Reply
-  message.response_channel.awaitMessages(multipleItemsfilter, { max: 1, time: config.userPromptsTimeout }).then(async function(collected){
+  message.response_channel.awaitMessages({ multipleItemsfilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     let itemInfo = itemMatchResult[ collected.first().content - 1 ];
     await printMarketboardResult(itemInfo, dcOrServer, isDCSupplied, message);
 
@@ -154,7 +154,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
 
     // Last Upload Time
     let datetimeUploaded = moment(mbData.lastUploadTime).format("DD MMM YYYY h:mm A");
-    embed.setFooter("Data from " + datetimeUploaded);
+    embed.setFooter({text: "Data from " + datetimeUploaded});
 
     // Display data center specific results
     if( isDC ) {
