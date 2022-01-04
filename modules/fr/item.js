@@ -101,11 +101,11 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("ilvl", item.LevelItem);
+      embed.addField("ilvl", String(item.LevelItem));
     }
 
     if( item.LevelEquip ) {
-      embed.addField("Niveau", item.LevelEquip);
+      embed.addField("Niveau", String(item.LevelEquip));
     }
 
     embed.addField("Teintable", item.IsDyeable == 0 ? 'Non' : 'Oui');

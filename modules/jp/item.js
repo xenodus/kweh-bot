@@ -101,11 +101,11 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("アイテムレベル", item.LevelItem);
+      embed.addField("アイテムレベル", String(item.LevelItem));
     }
 
     if( item.LevelEquip ) {
-      embed.addField("レベル", item.LevelEquip);
+      embed.addField("レベル", String(item.LevelEquip));
     }
 
     embed.addField("染色可能", item.IsDyeable == 0 ? 'いいえ' : 'はい');

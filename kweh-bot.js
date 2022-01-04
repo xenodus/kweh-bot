@@ -24,10 +24,22 @@ const moment = require("moment");
 const Discord = require("discord.js");
 const scriptName = __filename.slice(__dirname.length + 1);
 const client = new Discord.Client({
-  messageCacheMaxSize: 3,
-  messageCacheLifetime: 1800,
-  messageSweepInterval: 3600,
-  messageEditHistoryMaxSize: 1
+  intents: [
+    Discord.Intents.FLAGS.GUILDS,
+    Discord.Intents.FLAGS.GUILD_MESSAGES,
+    Discord.Intents.FLAGS.GUILD_MESSAGE_REACTIONS,
+    Discord.Intents.FLAGS.GUILD_MESSAGE_TYPING
+  ],
+  makeCache: Discord.Options.cacheWithLimits({
+    MessageManager: 10,
+    PresenceManager: 0,
+  }),
+  sweepers: {
+    messages: {
+      lifetime: 1800,   
+      interval: 3600
+    }
+  }
 });
 
 const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
@@ -78,18 +90,18 @@ client.on("ready", async function() {
 
   helper.printStatus(config.appName + " bot is ready!");
 
-  client.user.setPresence({ activity: { name: '!kweh help', type: "PLAYING"}, status: 'online'});
+  client.user.setPresence({ activities: [{ name: '!kweh help', type: "PLAYING"}], status: 'online'});
 
   // random status message every 10s
-  client.setInterval(function(){
-    client.user.setPresence({ activity: { name: config.statuses[Math.floor(Math.random() * config.statuses.length)], type: "PLAYING"}, status: 'online'});
+  setInterval(function(){
+    client.user.setPresence({ activities: [{ name: config.statuses[Math.floor(Math.random() * config.statuses.length)], type: "PLAYING"}], status: 'online'});
   }, 10000);
 
   // Check Lodestone periodically
-  client.setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
+  setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
 
   // Check fashion report periodically
-  client.setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
+  setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
 });
 
 /******************************
@@ -142,7 +154,7 @@ client.on('messageReactionAdd', async function(reaction, user) {
   Message Listener
 *******************************/
 
-client.on("message", async function(message) {
+client.on("messageCreate", async function(message) {
 
   if ( message.author.bot ) return; // Ignore bots
   if ( !message.channel.guild ) return; // Ignore dm
@@ -349,7 +361,7 @@ client.on("message", async function(message) {
     const curr_timestamp = Date.now();
     const pong_time = curr_timestamp - message_timestamp;
 
-    message.response_channel.send("Pong in " +pong_time+ " ms" + " on shard " + message.guild.shardID);
+    message.response_channel.send("Pong in " +pong_time+ " ms" + " on shard " + message.guild.shardId);
   }
 
   /*************************************************
@@ -357,7 +369,7 @@ client.on("message", async function(message) {
   *************************************************/
   else if ( command === "register" || command === "iam" ) {
 
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     // server, firstname, lastname
     if( args.length == 3 ) {
@@ -424,15 +436,13 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Register your character with \n`"+prefix+command+" server firstname lastname`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
   **** GET CHARACTER
   *************************************************/
   else if ( command === "me" || command === "whoami" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     let userInfo = await character.getUserInfo(message.author.id);
 
@@ -451,15 +461,13 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`"+prefix+"register server firstname lastname`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
   **** GET CHARACTER OF TARGET / MENTIONED
   *************************************************/
   else if ( command === "whois" || command === "profile" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     // Self
     if( args.length == 0 ) {
@@ -556,15 +564,13 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "View character profile with \n`"+prefix+command+" server firstname lastname`", message);
       }
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
   **** GET GLAMS OF TARGET / MENTIONED
   *************************************************/
   else if ( command === "glam" || command === "glamour" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     // Self
     if( args.length == 0 ) {
@@ -659,8 +665,6 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "View character glamours with \n`"+prefix+command+" server firstname lastname`", message);
       }
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -668,7 +672,7 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "logs" || command === "fflogs" || command === "parses" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     // Self
     if( args.length == 0 ) {
@@ -746,15 +750,13 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "View FFLogs with \n`"+prefix+command+" server firstname lastname`", message);
       }
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
   **** Market Board Search
   *************************************************/
   else if ( command === "mb" || command === "market" || command == "marketboard" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     // dc + item name
     if( args.length > 0 ) {
@@ -797,8 +799,6 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup marketboard prices with \n`"+prefix+command+" datacenter/server itemname`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -806,7 +806,7 @@ client.on("message", async function(message) {
   *************************************************/
   else if ( command === "item" ) {
 
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -827,8 +827,6 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup items with \n`"+prefix+command+" itemname`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -836,7 +834,7 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "mount" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -855,8 +853,6 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup mounts with \n`"+prefix+command+" search_string`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -864,7 +860,7 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "minion" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -883,8 +879,6 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup minions with \n`"+prefix+command+" search_string`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -892,7 +886,7 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "title" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -911,8 +905,6 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup titles with \n`"+prefix+command+" search_string`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -920,7 +912,7 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "emote" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -939,8 +931,6 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup emotes with \n`"+prefix+command+" search_string`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -948,7 +938,7 @@ client.on("message", async function(message) {
   *************************************************/
 
   else if ( command === "barding" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -967,15 +957,13 @@ client.on("message", async function(message) {
     else {
       helper.sendErrorMsg("Error", "Lookup bardings with \n`"+prefix+command+" search_string`", message);
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
   **** GET TRIPLE TRIAD FOR CHARACTER
   *************************************************/
   else if ( command === "tt" || command === "ttcollection" || command === "cards" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length == 0 ) {
 
@@ -1003,8 +991,6 @@ client.on("message", async function(message) {
         }
       }
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -1159,9 +1145,8 @@ client.on("message", async function(message) {
       }
     }
     else {
-      message.channel.startTyping();
+      message.channel.sendTyping();
       await fashion_report.manualPostFR2Channel(message);
-      message.channel.stopTyping();
     }
   }
 
@@ -1183,7 +1168,7 @@ client.on("message", async function(message) {
   **** Eorzea Collection
   *************************************************/
   else if ( command === "eorzeacollection" ||  command === "ec" ) {
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     if( args.length == 0 ) {
       let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("featured");
@@ -1234,8 +1219,6 @@ client.on("message", async function(message) {
         helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`"+prefix+command+"` \n`"+prefix+command+" latest` \n`"+prefix+command+" loved` \n`"+prefix+command+" male` \n`"+prefix+command+" female` \n\nLookup by keywords with \n `"+prefix+command+" keyword your_keywords` \n\nLookup by author with \n `"+prefix+command+" author author_name`", message, true);
       }
     }
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************
@@ -1249,12 +1232,10 @@ client.on("message", async function(message) {
       tag = args.join(' ');
     }
 
-    message.response_channel.startTyping();
+    message.response_channel.sendTyping();
 
     let housing_snap_results = await housing_snap.getHousingSnap(tag);
     housing_snap.printHousingSnap(housing_snap_results, message);
-
-    message.response_channel.stopTyping();
   }
 
   /*************************************************

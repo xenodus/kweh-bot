@@ -101,11 +101,11 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("G.-St.", item.LevelItem);
+      embed.addField("G.-St.", String(item.LevelItem));
     }
 
     if( item.LevelEquip ) {
-      embed.addField("Stufe", item.LevelEquip);
+      embed.addField("Stufe", String(item.LevelEquip));
     }
 
     embed.addField("Färbbar", item.IsDyeable == 0 ? 'Nein' : 'Ja');

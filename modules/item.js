@@ -103,11 +103,11 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("Item Level", item.LevelItem);
+      embed.addField("Item Level", String(item.LevelItem));
     }
 
     if( item.LevelEquip ) {
-      embed.addField("Min. Level", item.LevelEquip);
+      embed.addField("Min. Level", String(item.LevelEquip));
     }
 
     embed.addField("Dyeable", item.IsDyeable == 0 ? 'No' : 'Yes');
