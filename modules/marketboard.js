@@ -31,7 +31,9 @@ const getMarketboardListings = async function(itemID, dcOrServer) {
   })
   .catch(async function(err){
     console.log(err);
-    mbListings.status = err.response.status;
+    if( err.response ) {
+      mbListings.status = err.response.status;
+    }
   });
 
   return mbListings;
