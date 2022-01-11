@@ -71,7 +71,7 @@ class LodestoneController extends Controller
                         }
                     });
 
-                    if ( $crawler->filter('div.ldst__main a.btn__pager__next')->count() > 0 && $isFound == false ) {
+                    if ( $crawler->filter('div.ldst__main a.btn__pager__next')->reduce(function(Crawler $node, $i){ return $node->attr("href") != "javascript:void(0);"; })->count() > 0 && $isFound == false ) {
                         $morePages = true;
                         $page++;
                     }
