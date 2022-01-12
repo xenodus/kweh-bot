@@ -3,6 +3,7 @@
 *******************************/
 
 const config = require('../../config').production;
+const helper = require('../../helper');
 const axios = require('axios');
 const Discord = require("discord.js");
 const lodash = require('lodash');

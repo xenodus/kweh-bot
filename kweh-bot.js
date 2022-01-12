@@ -36,7 +36,7 @@ const client = new Discord.Client({
   }),
   sweepers: {
     messages: {
-      lifetime: 1800,   
+      lifetime: 1800,
       interval: 3600
     }
   }
@@ -116,7 +116,7 @@ client.on('messageReactionAdd', async function(reaction, user) {
     if( reaction.message.embeds.length > 0 ) {
 
       // Eorzea Collection
-      if( reaction.message.embeds[0].author.name && reaction.message.embeds[0].author.name.includes("Eorzea Collection") ) {
+      if( reaction.message.embeds[0].hasOwnProperty('author') && reaction.message.embeds[0].author.hasOwnProperty('name') && reaction.message.embeds[0].author.name.includes("Eorzea Collection") ) {
 
         let numberOptions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
 
@@ -132,7 +132,7 @@ client.on('messageReactionAdd', async function(reaction, user) {
       }
 
       // Housing Snap
-      if( reaction.message.embeds[0].author.name && reaction.message.embeds[0].author.name.includes("Housing Snap") ) {
+      if( reaction.message.embeds[0].hasOwnProperty('author') && reaction.message.embeds[0].author.hasOwnProperty('name') && reaction.message.embeds[0].author.name.includes("Housing Snap") ) {
 
         let numberOptions = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
 

@@ -368,7 +368,7 @@ const printGlamInfo = async function(characterInfo, message) {
 const printCharacterInfo = async function(characterInfo, message) {
 
   let name, race, data_center, server, current_level, current_job, fc, fc_tag, title, avatar, portrait, profileImg = "";
-  let files = [];  
+  let files = [];
 
   try {
     name = characterInfo.name;
@@ -402,7 +402,7 @@ const printCharacterInfo = async function(characterInfo, message) {
     profileImg = await generateUserProfile(characterInfo, message);
     let attachment = new Discord.MessageAttachment(profileImg);
     embed.setImage("attachment://" + profileImg.split("/")[ profileImg.split("/").length -1 ]);
-    files.push(attachment)    
+    files.push(attachment)
     isGenerated = true;
   } else {
     // From DB
@@ -632,7 +632,8 @@ const getUserProfileHTML = function(characterInfo) {
   let bot_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 17)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 17)[0].Level : 0;
   let fsh_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 18)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 18)[0].Level : 0;
 
-  let jobIconBasePath = "https://raw.githubusercontent.com/xivapi/classjob-icons/master/icons/";
+  // let jobIconBasePath = "https://raw.githubusercontent.com/xivapi/classjob-icons/master/icons/";
+  let jobIconBasePath = "https://kwehbot.xyz/icons/";
 
   let html = `
 <html>

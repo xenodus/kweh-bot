@@ -638,7 +638,8 @@ const getUserProfileHTML = function(characterInfo) {
   let bot_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 17)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 17)[0].Level : 0;
   let fsh_level = characterInfo.Character.ClassJobs.filter(j => j.ClassID == 18)[0] ? characterInfo.Character.ClassJobs.filter(j => j.ClassID == 18)[0].Level : 0;
 
-  let jobIconBasePath = "https://raw.githubusercontent.com/xivapi/classjob-icons/master/icons/";
+  // let jobIconBasePath = "https://raw.githubusercontent.com/xivapi/classjob-icons/master/icons/";
+  let jobIconBasePath = "https://kwehbot.xyz/icons/";
 
   let html = `
 <html>

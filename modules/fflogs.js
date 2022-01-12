@@ -14,26 +14,30 @@ const currentTierEncounters = [
   {
     "encounterID": 78,
     "encounterName": "Erichthonios",
+    "difficulties": [100, 101],
   },
   {
     "encounterID": 79,
     "encounterName": "Hippokampos",
+    "difficulties": [100, 101],
   },
   {
     "encounterID": 80,
     "encounterName": "Phoinix",
+    "difficulties": [100, 101],
   },
   {
     "encounterID": 81,
     "encounterName": "Hesperos",
+    "difficulties": [100, 101],
   },
   {
     "encounterID": 1058,
-    "encounterName": "Zodiark",
+    "encounterName": "Zodiark (Extreme)",
   },
   {
     "encounterID": 1059,
-    "encounterName": "Hydaelyn",
+    "encounterName": "Hydaelyn (Extreme)",
   },
   {
     "encounterID": 1062,
