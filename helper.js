@@ -17,13 +17,14 @@ const handleDiscordError = function(err, message) {
   console.log(err)
 
   switch (err.code) {
+    case 50007:
+      message.channel.send("Discord error: " + err.message + "\n" + "Please ensure `Allow direct messages from server members` is enabled in `Settings > Privacy & safety` or in this `server's privacy settings`.");
+      break;
     case 50001:
-      message.author.send("Discord error: " + err.message + "\n" + "Please ensure " + config.appName + " bot has access to the channel")
-      // message.author.send("Please ensure " + config.appName + " bot has access to the channel")
+      message.author.send("Discord error: " + err.message + "\n" + "Please ensure " + config.appName + " bot has access to the channel");
       break;
     case 50013:
-      message.author.send("Discord error: " + err.message + "\n" + "Please ensure " + config.appName + " bot has permissions to send messages, embed links & attach files to the channel")
-      // message.author.send("Please ensure " + config.appName + " bot has permissions to send messages and embeds to the channel")
+      message.author.send("Discord error: " + err.message + "\n" + "Please ensure " + config.appName + " bot has permissions to send messages, embed links & attach files to the channel");
       break;
     default:
       break;
@@ -292,7 +293,9 @@ const sendHelpMsg = function(message, prefix) {
 
   embed.addField("Support Kweh!", "["+config.donationLink+"]("+config.donationLink+")");
 
-  message.author.send({embeds: [embed]});
+  message.author.send({embeds: [embed]}).catch(function(err){
+    handleDiscordError(err, message);
+  });
 }
 
 const sendDonateMsg  = function(message) {
