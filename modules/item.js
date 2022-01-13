@@ -208,12 +208,14 @@ async function displayUsedFor(message, item) {
 
           let craftedItem = await getItemByID( itemIDs[i], "recipe" );
 
-          let newItemTxt = "\n[" + craftedItem.Name + "](" + config.teamcraftBaseURL + "en/item/" + craftedItem.ItemResult.ID + ")";
+          if( craftedItem.ItemResult ) {
+            let newItemTxt = "\n[" + craftedItem.Name + "](" + config.teamcraftBaseURL + "en/item/" + craftedItem.ItemResult.ID + ")";
 
-          if( craftedItem.Name == null ) continue;
+            if( craftedItem.Name == null ) continue;
 
-          if( (usedForTxt.length + usedForTxt.length) < 1024 ) {
-            usedForTxt += newItemTxt;
+            if( (usedForTxt.length + usedForTxt.length) < 1024 ) {
+              usedForTxt += newItemTxt;
+            }
           }
 
           itemsProcessed++;

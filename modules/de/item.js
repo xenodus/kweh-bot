@@ -185,27 +185,33 @@ async function displayUsedFor(message, item) {
 
   for(var key in item.GameContentLinks.Recipe) {
 
-    let itemIDs = item.GameContentLinks.Recipe[key];
-    totalItems += item.GameContentLinks.Recipe[key].length;
+    if( key != "ItemResult" ) {
 
-    if( itemIDs.length && itemsProcessed < limit ) {
+      let itemIDs = item.GameContentLinks.Recipe[key];
+      totalItems += item.GameContentLinks.Recipe[key].length;
 
-      for(var i=0; i<itemIDs.length; i++) {
+      if( itemIDs.length && itemsProcessed < limit ) {
 
-        if( itemsProcessed == limit ){
-          break;
+        for(var i=0; i<itemIDs.length; i++) {
+
+          if( itemsProcessed == limit ){
+            break;
+          }
+
+          let craftedItem = await getItemByID( itemIDs[i], "recipe" );
+
+          if( craftedItem.ItemResult ) {
+            let newItemTxt = "\n[" + craftedItem.Name_de + "](" + config.teamcraftBaseURL + "de/item/" + craftedItem.ItemResult.ID + ")";
+
+            if( craftedItem.Name == null ) continue;
+
+            if( (usedForTxt.length + usedForTxt.length) < 1024 ) {
+              usedForTxt += newItemTxt;
+            }
+          }
+
+          itemsProcessed++;
         }
-
-        let craftedItem = await getItemByID( itemIDs[i], "recipe" );
-        let newItemTxt = "\n[" + craftedItem.Name_de + "](" + config.teamcraftBaseURL + "de/item/" + craftedItem.ItemResult.ID + ")";
-
-        if( craftedItem.Name == null ) continue;
-
-        if( (usedForTxt.length + usedForTxt.length) < 1024 ) {
-          usedForTxt += newItemTxt;
-        }
-
-        itemsProcessed++;
       }
     }
   }
