@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $baseFilePath = '/var/data/www/sites/discord-bot/kweh-bot/web/storage/logs/';
+        $baseFilePath = '/var/data/www/sites/discord-bot/kweh-bot-v13/web/storage/logs/';
 
         // Check for Maintenance from Lodestone
         $schedule->command('get:maint')->everyTenMinutes(); //->appendOutputTo($baseFilePath . 'check_maint.log');

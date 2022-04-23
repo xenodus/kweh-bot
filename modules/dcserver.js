@@ -85,6 +85,8 @@ const getDCregion = function(dc) {
     return "EU";
   else if( config.dcRegions.NA.includes( dc ) )
     return "NA";
+  else if( config.dcRegions.AU.includes( dc ) )
+    return "NA";
   else
     return "";
 }

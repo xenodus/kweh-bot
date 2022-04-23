@@ -166,7 +166,7 @@ const fetchNews = async function(limitPerCat = 3, locale = "na") {
   // Process News
   if( lodash.isEmpty(news) == false ) {
 
-    let interestedCategories = ['topics', 'notices', 'maintenance', 'updates', 'developers', 'test'];
+    let interestedCategories = ['topics', 'notices', 'maintenance', 'updates', 'developers', 'status'];
 
     for(var i=0; i<interestedCategories.length; i++) {
       if( news[interestedCategories[i]] && news[interestedCategories[i]].length > 0 ) {

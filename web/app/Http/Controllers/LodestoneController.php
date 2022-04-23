@@ -135,8 +135,8 @@ class LodestoneController extends Controller
             $character->server = $crawler->filter('p.frame__chara__world')->count() ?
                 explode(" ", str_replace("\xc2\xa0", ' ', $crawler->filter('p.frame__chara__world')->text()))[0] : "";
 
-            $character->datacenter = $crawler->filter('p.frame__chara__world')->count() ?
-                substr(explode("(", $crawler->filter('p.frame__chara__world')->text())[1], 0, -1) : "";
+            $character->datacenter = ( $crawler->filter('p.frame__chara__world')->count() && count(explode("[", $crawler->filter('p.frame__chara__world')->text())) == 2 ) ?
+                substr(explode("[", $crawler->filter('p.frame__chara__world')->text())[1], 0, -1) : "";
 
             // FC
             $character->fc = $crawler->filter('div.character__freecompany__name h4')->count() ? $crawler->filter('div.character__freecompany__name h4')->text() : "";
