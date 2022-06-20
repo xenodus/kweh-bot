@@ -12,6 +12,12 @@ var Hashids = require('hashids');
   Helper Functions
 *******************************/
 
+const doTyping = function(channel) {
+  if( channel.type != "GUILD_VOICE" ) {
+    channel.sendTyping();
+  }
+}
+
 // https://discord.com/developers/docs/topics/opcodes-and-status-codes#json
 const handleDiscordError = function(err, message) {
   console.log(err)
@@ -325,5 +331,6 @@ module.exports = {
   sendInfoMsg,
   sendHelpMsg,
   sendDonateMsg,
-  handleDiscordError
+  handleDiscordError,
+  doTyping
 }

@@ -369,7 +369,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
   else if ( command === "register" || command === "iam" ) {
 
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     // server, firstname, lastname
     if( args.length == 3 ) {
@@ -442,7 +442,7 @@ client.on("messageCreate", async function(message) {
   **** GET CHARACTER
   *************************************************/
   else if ( command === "me" || command === "whoami" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     let userInfo = await character.getUserInfo(message.author.id);
 
@@ -467,7 +467,7 @@ client.on("messageCreate", async function(message) {
   **** GET CHARACTER OF TARGET / MENTIONED
   *************************************************/
   else if ( command === "whois" || command === "profile" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     // Self
     if( args.length == 0 ) {
@@ -570,7 +570,7 @@ client.on("messageCreate", async function(message) {
   **** GET GLAMS OF TARGET / MENTIONED
   *************************************************/
   else if ( command === "glam" || command === "glamour" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     // Self
     if( args.length == 0 ) {
@@ -672,7 +672,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
 
   else if ( command === "logs" || command === "fflogs" || command === "parses" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     // Self
     if( args.length == 0 ) {
@@ -756,7 +756,7 @@ client.on("messageCreate", async function(message) {
   **** Market Board Search
   *************************************************/
   else if ( command === "mb" || command === "market" || command == "marketboard" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     // dc + item name
     if( args.length > 0 ) {
@@ -806,7 +806,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
   else if ( command === "item" ) {
 
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -834,7 +834,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
 
   else if ( command === "mount" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -860,7 +860,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
 
   else if ( command === "minion" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -886,7 +886,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
 
   else if ( command === "title" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -912,7 +912,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
 
   else if ( command === "emote" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -938,7 +938,7 @@ client.on("messageCreate", async function(message) {
   *************************************************/
 
   else if ( command === "barding" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length > 0 ) {
       let searchedItem = args.join(' ');
@@ -963,7 +963,7 @@ client.on("messageCreate", async function(message) {
   **** GET TRIPLE TRIAD FOR CHARACTER
   *************************************************/
   else if ( command === "tt" || command === "ttcollection" || command === "cards" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length == 0 ) {
 
@@ -1145,7 +1145,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      message.channel.sendTyping();
+      helper.doTyping(message.channel);
       await fashion_report.manualPostFR2Channel(message);
     }
   }
@@ -1168,7 +1168,7 @@ client.on("messageCreate", async function(message) {
   **** Eorzea Collection
   *************************************************/
   else if ( command === "eorzeacollection" ||  command === "ec" ) {
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     if( args.length == 0 ) {
       let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("featured");
@@ -1232,7 +1232,7 @@ client.on("messageCreate", async function(message) {
       tag = args.join(' ');
     }
 
-    message.response_channel.sendTyping();
+    helper.doTyping(message.response_channel);
 
     let housing_snap_results = await housing_snap.getHousingSnap(tag);
     housing_snap.printHousingSnap(housing_snap_results, message);
