@@ -50,7 +50,11 @@ const currentTierEncounters = [
   {
     "encounterID": 1060,
     "encounterName": "The Unending Coil of Bahamut",
-  }
+  },
+  {
+    "encounterID": 1065,
+    "encounterName": "Dragonsong's Reprise",
+  },
 ];
 
 const getClientCredentials = oauth.client(axios.create(), {
