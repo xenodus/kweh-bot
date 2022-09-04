@@ -181,7 +181,7 @@ const sendLatestFRPrompt = async function(message){
     .setAuthor({name: "Fashion Report by " + config.fashionReportAuthorName})
     .setThumbnail( config.fashionReportAuthorAvatar );
 
-  let description = "Do you want to display the latest fashion report?\n\nReply with `1` to proceed";
+  let description = "Do you want to display the latest fashion report?\n\nReply with `@kweh 1` to proceed";
 
   embed.setDescription(description);
 

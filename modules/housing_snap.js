@@ -221,7 +221,7 @@ const printHousingSnap = async function(housingSnapResult, message) {
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    channel.send({ embeds: [embed] })
+    await channel.send({ embeds: [embed] })
     .then(async function(m){
       if( housingSnaps.length > 1 ) {
         await resetReactions(m);
@@ -248,32 +248,33 @@ const updateImage = async function(m, nextSlideImg="") {
 }
 
 const resetReactions = async function(message) {
-  await message.react('⬅️');
-  await message.react('➡️');
 
-  if( message.embeds[0].fields.length > 1 ) {
-    let x = 0;
-    while( x <= message.embeds[0].fields.length ) {
+  console.log(message);
 
-      switch(x) {
-        case 1:
-          await message.react('1️⃣');
-          break;
-        case 2:
-          await message.react('2️⃣');
-          break;
-        case 3:
-          await message.react('3️⃣');
-          break;
-        case 4:
-          await message.react('4️⃣');
-          break;
-        case 5:
-          await message.react('5️⃣');
-          break;
+  if ( lodash.isEmpty(message.embeds) == false ) {
+    await message.react('⬅️');
+    await message.react('➡️');
+
+    if( message.embeds[0].fields.length > 1 ) {
+      for( x=0; x <= message.embeds[0].fields.length; x++ ) {
+        switch(x) {
+          case 1:
+            await message.react('1️⃣');
+            break;
+          case 2:
+            await message.react('2️⃣');
+            break;
+          case 3:
+            await message.react('3️⃣');
+            break;
+          case 4:
+            await message.react('4️⃣');
+            break;
+          case 5:
+            await message.react('5️⃣');
+            break;
+        }
       }
-
-      x++;
     }
   }
 }

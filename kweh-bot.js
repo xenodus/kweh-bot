@@ -102,6 +102,8 @@ client.on("ready", async function() {
 
   // Check fashion report periodically
   setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
+
+  // lodestone_news.manualPostByeMessage(client);
 });
 
 /******************************
@@ -1002,6 +1004,12 @@ client.on("messageCreate", async function(message) {
     if( isAdmin ) {
 
       if( args.length > 0 ) {
+
+        if( helper.isSuperAdmin(message.author) ) {
+          if( args[0] == "bye"  ) {
+            lodestone_news.manualPostByeMessage(client);
+          }
+        }
 
         if( args[0] == "latest"  ) {
           await lodestone_news.manualPostNews2Channel(message);

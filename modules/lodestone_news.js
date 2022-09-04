@@ -228,6 +228,60 @@ const setPosted = function(channel_id, news_id) {
 }
 
 /****************************************
+  MANUAL BYE MESSAGE
+*****************************************/
+const manualPostByeMessage = async function(c) {
+
+  console.log("Attemping to get KPSD...");
+
+  let channel = await c.channels.cache.get("740225943330881617");
+
+  console.log(channel);
+
+  if(channel) {
+    let embed = new Discord.MessageEmbed()
+      .setColor( config.defaultEmbedColor )
+      .setTitle("RIP Kweh!")
+      .setURL("https://kwehbot.xyz/");
+
+    embed.setDescription("Hello everyone, Boki Toki here. \n\nKweh! will cease to work after 31st August when Discord removes support for text commands. \n\nI've stopped playing FFXIV and unfortunately do not have the bandwidth to keep the bot updated anymore. I hope Kweh! has been useful during its lifetime. Thank you very much to the couple of patreons for your support. \n\nFor those that are interested in forking the bot, you can obtain it at https://github.com/xenodus/kweh-bot but heads up it's quite a load of spaghetti code. \n\nTake care and have fun adventuring in Eorzea! \n\nPS: Sorry for the duplicate messages!");
+    embed.setImage("https://i.imgur.com/YP7FPXC.jpg");
+
+    channel.send({embeds: [embed]});
+  }
+
+  /*
+  for await ( var guild of c.guilds.cache.values() ) {
+
+    if( guild.available ) {
+
+      let newsChannel = await newsChannelGet(guild.id);
+
+      if( lodash.isEmpty(newsChannel) == false ) {
+
+        let channel = await c.channels.cache.get(newsChannel.channel_id);
+
+        if(channel) {
+          let embed = new Discord.MessageEmbed()
+            .setColor( config.defaultEmbedColor )
+            .setTitle("RIP Kweh!")
+            .setURL("https://kwehbot.xyz/");
+
+          embed.setDescription("Hello everyone, Boki Toki here. \n\nKweh! will cease to work after 31st August when Discord removes support for text commands. \n\nI've stopped playing FFXIV and unfortunately do not have the bandwidth to keep the bot updated anymore. I hope Kweh! has been useful during its lifetime. Thank you very much to the couple of patreons for your support. \n\nFor those that are interested in forking the bot, you can obtain it at https://github.com/xenodus/kweh-bot but heads up it's quite a load of spaghetti code. \n\nTake care and have fun adventuring in Eorzea! \n\nPS: Sorry for the duplicate messages!");
+          embed.setImage("https://i.imgur.com/YP7FPXC.jpg");
+
+          await sleep(1000);
+          channel.send({embeds: [embed]});
+        }
+      }
+    }
+  }
+  */
+}
+
+const sleep = (milliseconds=500) => new Promise(resolve => setTimeout(resolve, milliseconds))
+
+/****************************************
   SEND PROMPT ABOUT GETTING LATEST NEWS
 *****************************************/
 
@@ -307,7 +361,7 @@ const sendLatestNewsPrompt = async function(message){
     .setAuthor({ name: "Lodestone" })
     .setThumbnail( config.lodestoneImg );
 
-  let description = "Do you want to populate this channel with the current news?\n\nReply with `1` to proceed";
+  let description = "Do you want to populate this channel with the current news?\n\nReply with `@kweh 1` to proceed";
 
   embed.setDescription(description);
 
@@ -472,5 +526,6 @@ module.exports = {
   newsChannelRemove,
   updatePostedNewsNewChannel,
   newsChannelAdd,
-  newsChannelGet
+  newsChannelGet,
+  manualPostByeMessage
 }

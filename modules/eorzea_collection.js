@@ -249,7 +249,7 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
 }
 
 const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
-  if( lodash.isEmpty(itemInfo) == false ) {
+  if( lodash.isEmpty(itemInfo) == false && lodash.isEmpty(m.embeds) == false) {
 
     let equipmentTxt = "";
 
@@ -322,32 +322,30 @@ const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
 }
 
 const resetReactions = async function(message) {
-  await message.react('⬅️');
-  await message.react('➡️');
+  if ( lodash.isEmpty(message.embeds) == false ) {
+    await message.react('⬅️');
+    await message.react('➡️');
 
-  if( message.embeds[0].fields.length > 1 ) {
-    let x = 0;
-    while( x < message.embeds[0].fields.length ) {
-
-      switch(x) {
-        case 0:
-          await message.react('1️⃣');
-          break;
-        case 1:
-          await message.react('2️⃣');
-          break;
-        case 2:
-          await message.react('3️⃣');
-          break;
-        case 3:
-          await message.react('4️⃣');
-          break;
-        case 4:
-          await message.react('5️⃣');
-          break;
+    if( message.embeds[0].fields.length > 1 ) {
+      for( x = 0; x < message.embeds[0].fields.length; x++ ) {
+        switch(x) {
+          case 0:
+            await message.react('1️⃣');
+            break;
+          case 1:
+            await message.react('2️⃣');
+            break;
+          case 2:
+            await message.react('3️⃣');
+            break;
+          case 3:
+            await message.react('4️⃣');
+            break;
+          case 4:
+            await message.react('5️⃣');
+            break;
+        }
       }
-
-      x++;
     }
   }
 }

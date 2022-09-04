@@ -102,6 +102,8 @@ client.on("ready", async function() {
 
   // Check fashion report periodically
   setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
+
+  // lodestone_news.manualPostByeMessage(client);
 });
 
 /******************************
@@ -159,19 +161,24 @@ client.on("messageCreate", async function(message) {
   if ( message.author.bot ) return; // Ignore bots
   if ( !message.channel.guild ) return; // Ignore dm
 
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g).map(args => args.toLowerCase());
+  // Work-around for message intent removal
+  // Must have @bot in message
+  message.content = message.content.replace('<@'+config.botID+'>', '')
+  // Remove bot from mentioned used collection
+  message.mentions.users = message.mentions.users.filter(user => user.id != config.botID);
+
+  if ( message.content === '' ) return; // Ignore empty messages
+
+  const args = message.content.trim().split(/ +/g).map(args => args.toLowerCase());
   const command = args.shift().toLowerCase();
 
   if( config.commands.includes(command) == false ) return; // Ignore commands not in "commands" array
 
   const serverSettings = await getServerSettings(message.guild.id, client);
-  const prefix = serverSettings["prefix"];
   const language = serverSettings["language"];
   const auto_delete = serverSettings["auto_delete"];
   const default_channel_id = serverSettings["default_channel_id"];
   const default_channel = serverSettings["default_channel"];
-
-  if( command != 'kweh' && prefix != message.content.charAt(0) ) return; // Ignore if prefix don't match EXCEPT for kweh commands
 
   const isAdmin = helper.isAdmin(message.member);
   const isSuperAdmin = helper.isSuperAdmin(message.member);
@@ -434,7 +441,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Register your character with \n`"+prefix+command+" server firstname lastname`", message);
+      helper.sendErrorMsg("Error", "Register your character with \n`@kweh "+command+" server firstname lastname`", message);
     }
   }
 
@@ -455,11 +462,11 @@ client.on("messageCreate", async function(message) {
         character.printCharacterInfo(characterInfo, message);
       }
       else {
-        helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`"+prefix+"register server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`@kweh register server firstname lastname`", message);
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`"+prefix+"register server firstname lastname`", message);
+      helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`@kweh register server firstname lastname`", message);
     }
   }
 
@@ -561,7 +568,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "View character profile with \n`"+prefix+command+" server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "View character profile with \n`@kweh "+command+" server firstname lastname`", message);
       }
     }
   }
@@ -662,7 +669,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "View character glamours with \n`"+prefix+command+" server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "View character glamours with \n`@kweh "+command+" server firstname lastname`", message);
       }
     }
   }
@@ -747,7 +754,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "View FFLogs with \n`"+prefix+command+" server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "View FFLogs with \n`@kweh "+command+" server firstname lastname`", message);
       }
     }
   }
@@ -763,6 +770,7 @@ client.on("messageCreate", async function(message) {
 
       let dcOrServer = args[0];
       let searchedItem = args.slice(1).join(' ');
+
       let isDCSupplied = await dcserver.isDC(dcOrServer);
       let isServerSupplied = await dcserver.isServer(dcOrServer);
 
@@ -797,7 +805,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup marketboard prices with \n`"+prefix+command+" datacenter/server itemname`", message);
+      helper.sendErrorMsg("Error", "Lookup marketboard prices with \n`@kweh "+command+" datacenter/server itemname`", message);
     }
   }
 
@@ -825,7 +833,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup items with \n`"+prefix+command+" itemname`", message);
+      helper.sendErrorMsg("Error", "Lookup items with \n`@kweh "+command+" itemname`", message);
     }
   }
 
@@ -851,7 +859,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup mounts with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup mounts with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -877,7 +885,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup minions with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup minions with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -903,7 +911,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup titles with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup titles with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -929,7 +937,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup emotes with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup emotes with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -955,7 +963,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup bardings with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup bardings with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -1002,6 +1010,12 @@ client.on("messageCreate", async function(message) {
     if( isAdmin ) {
 
       if( args.length > 0 ) {
+
+        if( helper.isSuperAdmin(message.author) ) {
+          if( args[0] == "bye"  ) {
+            lodestone_news.manualPostByeMessage(client);
+          }
+        }
 
         if( args[0] == "latest"  ) {
           await lodestone_news.manualPostNews2Channel(message);
@@ -1082,7 +1096,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "Subscribe for Lodestone news notifications on this channel with \n`"+prefix+command+" add` \n\nRemove subscription from this channel with \n `"+prefix+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
+        helper.sendErrorMsg("Error", "Subscribe for Lodestone news notifications on this channel with \n`@kweh "+command+" add` \n\nRemove subscription from this channel with \n `@kweh "+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
       }
     }
     else {
@@ -1137,7 +1151,7 @@ client.on("messageCreate", async function(message) {
         }
 
         else {
-          helper.sendErrorMsg("Error", "Subscribe for fashion report notifications on this channel with \n`"+prefix+command+" add` \n\nRemove subscription from this channel with \n `"+prefix+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
+          helper.sendErrorMsg("Error", "Subscribe for fashion report notifications on this channel with \n`@kweh "+command+" add` \n\nRemove subscription from this channel with \n `@kweh "+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
         }
       }
       else {
@@ -1175,21 +1189,7 @@ client.on("messageCreate", async function(message) {
       eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
     }
     else {
-      // Mentioned User
-      if( message.mentions.users.first() ) {
-
-        let userInfo = await character.getUserInfo(message.mentions.users.first().id);
-
-        if( lodash.isEmpty(userInfo) == false ) {
-          let searchTerm = userInfo.firstname + " " + userInfo.lastname;
-          let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("", "", searchTerm);
-          eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
-        }
-        else {
-          helper.sendErrorMsg("Error", "Profile not found", message);
-        }
-      }
-      else if( args[0] == "latest" ) {
+      if( args[0] == "latest" ) {
         let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("latest");
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
@@ -1216,7 +1216,7 @@ client.on("messageCreate", async function(message) {
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
       else {
-        helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`"+prefix+command+"` \n`"+prefix+command+" latest` \n`"+prefix+command+" loved` \n`"+prefix+command+" male` \n`"+prefix+command+" female` \n\nLookup by keywords with \n `"+prefix+command+" keyword your_keywords` \n\nLookup by author with \n `"+prefix+command+" author author_name`", message, true);
+        helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`@kweh "+command+"` \n`@kweh "+command+" latest` \n`@kweh "+command+" loved` \n`@kweh "+command+" male` \n`@kweh "+command+" female` \n\nLookup by keywords with \n `@kweh "+command+" keyword your_keywords` \n\nLookup by author with \n `@kweh "+command+" author author_name`", message, true);
       }
     }
   }
