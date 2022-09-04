@@ -110,7 +110,7 @@ const isSuperAdmin = function(member) {
     return false;
 }
 
-// Print to console with timestamp prefix
+// Print to console with timestamp
 const printStatus = function(text) {
   console.log( "[" + moment().format() + "] " + text );
 }
@@ -304,6 +304,156 @@ const sendHelpMsg = function(message, prefix) {
   });
 }
 
+const sendNewHelpMsg = function(message) {
+  // Embed
+  let embed = new Discord.MessageEmbed()
+    .setDescription("You can also edit your server settings on the official website.")
+    .setColor( config.defaultEmbedColor )
+    .setAuthor({name: "Kweh! - Help"})
+    .setThumbnail( config.appErrorImg );
+
+  embed.addField("Website", "["+config.websiteLink+"]("+config.websiteLink+")");
+  embed.addField("Full Command List", "["+config.websiteCommandLink+"]("+config.websiteCommandLink+")");
+
+  embed.addField("Commands", "--------------------");
+
+  let i = 1;
+
+  // !register
+  let registerCommands = [
+    "`@kweh register server firstname lastname`"
+  ];
+  embed.addField((i++)+". Link FFXIV Character", registerCommands.join("\n"));
+
+  // !me
+  let selfProfileCommands = [
+    "`@kweh me`",
+  ];
+  embed.addField((i++)+". View Character Profile (Self)", selfProfileCommands.join("\n"));
+
+  // !profile @xenodus
+  let otherProfileCommands = [
+    "`@kweh profile server firstname lastname`",
+    "`@kweh profile @user`",
+    "`@kweh profile`",
+  ];
+  embed.addField((i++)+". View Character Profile (Others)", otherProfileCommands.join("\n"));
+
+  // !glam
+  let glamCommands = [
+    "`@kweh glam server firstname lastname`",
+    "`@kweh glam @user`",
+    "`@kweh profile`",
+  ];
+  embed.addField((i++)+". View Glamour Report", glamCommands.join("\n"));
+
+  // !ec
+  let ecCommands = [
+    "`@kweh ec`",
+    "`@kweh ec latest/loved/male/female`",
+    "`@kweh ec author author_name`",
+    "`@kweh ec search search_string`",
+  ];
+  embed.addField((i++)+". Eorzea Collection", ecCommands.join("\n"));
+
+  // !hs
+  let hsCommands = [
+    "`@kweh hs`",
+    "`@kweh hs search_string`",
+  ];
+  embed.addField((i++)+". Housing Snap", hsCommands.join("\n"));
+
+  // !logs @xenodus
+  let logsCommands = [
+    "`@kweh fflogs server firstname lastname`",
+    "`@kweh fflogs @user`",
+    "`@kweh fflogs`",
+  ];
+  embed.addField((i++)+". FF Logs", logsCommands.join("\n"));
+
+  // !mb
+  let mbCommands = [
+    "`@kweh mb datacenter/server item_name`",
+  ];
+  embed.addField((i++)+". Marketboard", mbCommands.join("\n"));
+
+  // !item / mount / minion / emote / title / barding
+  let itemCommands = [
+    "`@kweh item item_name`",
+  ];
+  embed.addField((i++)+". Item Search", itemCommands.join("\n"));
+
+  // !mount / minion / emote / title / barding
+  let xivCollectCommands = [
+    "`@kweh mount search_string`",
+    "`@kweh minion search_string`",
+    "`@kweh emote search_string`",
+    "`@kweh title search_string`",
+    "`@kweh barding search_string`",
+  ];
+  embed.addField((i++)+". FFXIV Collect Search", xivCollectCommands.join("\n"));
+
+  // !timers
+  let timersCommands = [
+    "`@kweh timers`",
+  ];
+  embed.addField((i++)+". Timers", timersCommands.join("\n"));
+
+  // !maint
+  let maintCommands = [
+    "`@kweh maint`",
+  ];
+  embed.addField((i++)+". Maintenance", maintCommands.join("\n"));
+
+  // !tt
+  let ttCommands = [
+    "`@kweh tt`",
+    "`@kweh tt @user`",
+  ];
+  embed.addField((i++)+". Triple Triad", ttCommands.join("\n"));
+
+  // !news
+  let newsCommands = [
+    "`@kweh news add`",
+    "`@kweh news add na/eu/jp/de/fr`",
+    "`@kweh news remove`",
+  ];
+  embed.addField((i++)+". Subscribe To Receive Lodestone News - Admin Only", newsCommands.join("\n"));
+
+  // !fashion
+  let frCommands = [
+    "`@kweh fashion add`",
+    "`@kweh fashion remove`",
+  ];
+  embed.addField((i++)+". Subscribe To Receive Fashion Report - Admin Only", frCommands.join("\n"));
+
+  // !kweh language
+  let langCommands = [
+    "`@kweh kweh language jp/en/fr/de`",
+  ];
+  embed.addField((i++)+". Change Server Language - Admin Only", langCommands.join("\n"));
+
+  // !kweh channel
+  let defaultChannelCommands = [
+    "`@kweh kweh channel #your-channel-name`",
+    "`@kweh kweh channel remove`",
+  ];
+  embed.addField((i++)+". Set Default Channel - Admin Only", defaultChannelCommands.join("\n"));
+
+  // !kweh autodelete
+  let autoDeleteCommands = [
+    "`@kweh kweh autodelete on`",
+    "`@kweh kweh autodelete off`",
+  ];
+  embed.addField((i++)+". Auto Deletion of Commands - Admin Only", autoDeleteCommands.join("\n"));
+
+  embed.addField("Support Kweh!", "["+config.donationLink+"]("+config.donationLink+")");
+
+  message.author.send({embeds: [embed]}).catch(function(err){
+    handleDiscordError(err, message);
+  });
+}
+
 const sendDonateMsg  = function(message) {
 
   let embed = new Discord.MessageEmbed()
@@ -330,6 +480,7 @@ module.exports = {
   sendSuccessMsg,
   sendInfoMsg,
   sendHelpMsg,
+  sendNewHelpMsg,
   sendDonateMsg,
   handleDiscordError,
   doTyping
