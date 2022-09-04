@@ -1,6 +1,18 @@
 @extends('layouts.template')
 
 @section('body')
+<div style="background: rgba(0,0,0,.5);" class="p-3 mb-3 text-warning">
+  Hello everyone, Boki Toki here.
+  <br/><br/>Kweh! will cease to work after <span class="font-weight-bold">31st August 2022</span> when Discord removes support for text commands.
+  <br/><br/>I've stopped playing FFXIV and unfortunately do not have the bandwidth to keep the bot updated anymore. I hope Kweh! has been useful during its lifetime. Thank you to the couple of patreons for your support.
+  <br/><br/>For those that are interested in forking the bot, you can obtain it at <a href="https://github.com/xenodus/kweh-bot" target="_blank" class="text-primary font-weight-bold">https://github.com/xenodus/kweh-bot</a> but heads up it's quite a load of spaghetti code.
+  <br/><br/>Take care and have fun adventuring in Eorzea!
+
+  <div class="mt-3">
+    <img src="https://i.imgur.com/YP7FPXC.jpg" style="max-width: 240px;"/>
+  </div>
+</div>
+
 <div>
   <p><strong>Kweh!</strong> is yet another Final Fantasy 14 (FFXIV) Discord Bot that fetches data from <a href="https://na.finalfantasyxiv.com/lodestone/" target="_blank">Lodestone</a>, various community APIs and websites.</p>
 
