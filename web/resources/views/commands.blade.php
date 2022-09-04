@@ -6,9 +6,8 @@
 </h1>
 
 <div>
-  <!--p><strong>&bull; Notice: Lodestone news module is currently down for maintenance! (13 Feb 2021)</strong></p-->
   <p>Most commands have alternate aliases or shortforms.</p>
-  <!--p>Notice: <span class="px-2" style="background: rgba(0,0,0,.8);">@kweh glam</span> is partially broken due to throttling by Square Enix on xivapi. A fix is being work on. Sorry for the inconvience! - Boki Toki (7th Nov 2021)</p-->
+  <p>Do note after 1st September 2022, it's mandatory to @mention Kweh for all commands instead of using prefixes.</p>
 </div>
 
 @php

@@ -2,15 +2,7 @@
 
 @section('body')
 <div style="background: rgba(0,0,0,.5);" class="p-3 mb-3 text-warning">
-  Hello everyone, Boki Toki here.
-  <br/><br/>Good news! After numerous requests to keep the bot alive, I’ve done a quick fix to keep our friendly Kwehhh alive.
-  <br/><br/>Prefixes have been removed and you would have to mention @kweh instead. e.g. @kweh profile
-  <br/><br/>Please note for market board, during selection of options, you will need to mention @kweh too when entering the selected number. e.g. @kweh 2
-  <br/><br/>For more information about commands, refer to the <a href="/commands" class="text-white">command page</a>.
-
-  <div class="mt-3">
-    <img src="https://i.imgur.com/YP7FPXC.jpg" style="max-width: 240px;"/>
-  </div>
+  Do note after 1st September 2022, it's mandatory to @mention Kweh for all commands instead of using prefixes.
 </div>
 
 <div>
