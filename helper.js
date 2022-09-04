@@ -429,21 +429,21 @@ const sendNewHelpMsg = function(message) {
 
   // !kweh language
   let langCommands = [
-    "`@kweh kweh language jp/en/fr/de`",
+    "`@kweh language jp/en/fr/de`",
   ];
   embed.addField((i++)+". Change Server Language - Admin Only", langCommands.join("\n"));
 
   // !kweh channel
   let defaultChannelCommands = [
-    "`@kweh kweh channel #your-channel-name`",
-    "`@kweh kweh channel remove`",
+    "`@kweh channel #your-channel-name`",
+    "`@kweh channel remove`",
   ];
   embed.addField((i++)+". Set Default Channel - Admin Only", defaultChannelCommands.join("\n"));
 
   // !kweh autodelete
   let autoDeleteCommands = [
-    "`@kweh kweh autodelete on`",
-    "`@kweh kweh autodelete off`",
+    "`@kweh autodelete on`",
+    "`@kweh autodelete off`",
   ];
   embed.addField((i++)+". Auto Deletion of Commands - Admin Only", autoDeleteCommands.join("\n"));
 

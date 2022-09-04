@@ -48,6 +48,7 @@ const redis = config.getRedis();
 
 let fashionCheckIntervals = 600 * 1000;
 let lodestoneCheckIntervals = 600 * 1000;
+let kwehNewsCheckIntervals = 600 * 1000;
 
 /******************************
   Bot Auth
@@ -72,6 +73,7 @@ const dcserver = require("./modules/dcserver.js");
 const tripletriad = require("./modules/tripletriad.js");
 const fflogs = require("./modules/fflogs.js");
 const lodestone_news = require("./modules/lodestone_news.js");
+const kweh_news = require("./modules/kweh_news.js");
 const fashion_report = require("./modules/fashion_report.js");
 const eorzea_time = require("./modules/eorzea_time.js");
 const eorzea_collection = require("./modules/eorzea_collection.js");
@@ -92,18 +94,14 @@ client.on("ready", async function() {
 
   client.user.setPresence({ activities: [{ name: '!kweh help', type: "PLAYING"}], status: 'online'});
 
-  // random status message every 10s
-  setInterval(function(){
-    client.user.setPresence({ activities: [{ name: config.statuses[Math.floor(Math.random() * config.statuses.length)], type: "PLAYING"}], status: 'online'});
-  }, 10000);
-
   // Check Lodestone periodically
   setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
 
   // Check fashion report periodically
   setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
 
-  // lodestone_news.manualPostByeMessage(client);
+  // Check kweh news periodically
+  setInterval(kweh_news.autoCheckPostNews, kwehNewsCheckIntervals, client);
 });
 
 /******************************
@@ -161,19 +159,24 @@ client.on("messageCreate", async function(message) {
   if ( message.author.bot ) return; // Ignore bots
   if ( !message.channel.guild ) return; // Ignore dm
 
-  const args = message.content.slice(config.prefix.length).trim().split(/ +/g).map(args => args.toLowerCase());
+  // Work-around for message intent removal
+  // Must have @bot in message
+  message.content = message.content.replace('<@'+config.botID+'>', '')
+  // Remove bot from mentioned used collection
+  message.mentions.users = message.mentions.users.filter(user => user.id != config.botID);
+
+  if ( message.content === '' ) return; // Ignore empty messages
+
+  const args = message.content.trim().split(/ +/g).map(args => args.toLowerCase());
   const command = args.shift().toLowerCase();
 
   if( config.commands.includes(command) == false ) return; // Ignore commands not in "commands" array
 
   const serverSettings = await getServerSettings(message.guild.id, client);
-  const prefix = serverSettings["prefix"];
   const language = serverSettings["language"];
-  const auto_delete = serverSettings["auto_delete"];
   const default_channel_id = serverSettings["default_channel_id"];
   const default_channel = serverSettings["default_channel"];
-
-  if( command != 'kweh' && prefix != message.content.charAt(0) ) return; // Ignore if prefix don't match EXCEPT for kweh commands
+  let auto_delete = serverSettings["auto_delete"];
 
   const isAdmin = helper.isAdmin(message.member);
   const isSuperAdmin = helper.isSuperAdmin(message.member);
@@ -220,132 +223,102 @@ client.on("messageCreate", async function(message) {
 
   /*******************************************
   ****  SERVER SETTINGS
-  ****  PREFIX / LANGUAGE / DEFAULT CHANNEL
+  ****  LANGUAGE / AUTODELETE / DEFAULT CHANNEL
   ********************************************/
-  if ( command === "kweh" && args.length > 0 ) {
-
-    if( args[0] == 'prefix' ) {
-      if( args.length == 1 ) {
-        helper.sendInfoMsg("Info", "The server prefix for "+config.appName+" bot is: `" + prefix+"`", message);
-      }
-      else {
-
-        if( isAdmin ) {
-          if( args[1].length == 1 ) {
-            setServerPrefix(message.guild.id, args[1]);
-            helper.sendSuccessMsg("Success", "The server's prefix for "+config.appName+" bot is now: `" + args[1]+"`", message);
-          }
-          else {
-            helper.sendErrorMsg("Error", "Changing server's prefix to `" + args[1] + "` failed. You can only set the server's prefix to a single character. Example: !, @, #, $", message);
-          }
+  if ( command === "language" ) {
+    if( args.length == 0 ) {
+      helper.sendInfoMsg("Info", "The server's language is `" + language + "`", message);
+    }
+    else {
+      if( isAdmin ) {
+        if( config.languageOptions.includes(args[0]) ) {
+          setServerLanguage(message.guild.id, args[0]);
+          helper.sendSuccessMsg("Success", "The server's language is now: `" + args[0]+"`", message);
         }
         else {
-          helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
+          helper.sendErrorMsg("Error", "Changing server's language to `" + args[0] + "` failed. \nValid options are `" + config.languageOptions.join(", ") + "`", message);
         }
+      }
+      else {
+        helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
       }
     }
+  }
 
-    else if( args[0] == 'language' ) {
+  else if( command === 'autodelete' ) {
 
-      if( args.length == 1 ) {
-        helper.sendInfoMsg("Info", "The server's language is `" + language + "`", message);
+    if( args.length == 0 ) {
+      if( auto_delete ) {
+        helper.sendInfoMsg("Info", "Auto deletion of commands is enabled. \n\nDisable it with `@kweh autodelete off`", message);
       }
       else {
-        if( isAdmin ) {
-          if( config.languageOptions.includes(args[1]) ) {
-            setServerLanguage(message.guild.id, args[1]);
-            helper.sendSuccessMsg("Success", "The server's language is now: `" + args[1]+"`", message);
-          }
-          else {
-            helper.sendErrorMsg("Error", "Changing server's language to `" + args[1] + "` failed. \nValid options are `" + config.languageOptions.join(", ") + "`", message);
-          }
-        }
-        else {
-          helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
-        }
+        helper.sendInfoMsg("Info", "Auto deletion of commands is disabled. \n\nEnable it with `@kweh autodelete on`", message);
       }
     }
-
-    else if( args[0] == 'autodelete' ) {
-
-      if( args.length == 1 ) {
-        if( auto_delete ) {
-          helper.sendInfoMsg("Info", "Auto deletion of commands is enabled. \n\nDisable it with `" + prefix + "kweh autodelete off`", message);
+    else {
+      if( isAdmin ) {
+        if( args[0] == 'on' ) {
+          enableAutoDelete(message.guild.id);
+          auto_delete = true;
+          helper.sendSuccessMsg("Success", "Auto deletion is enabled.", message);
+        }
+        else if( args[0] == 'off' ) {
+          disableAutoDelete(message.guild.id);
+          auto_delete = false;
+          helper.sendSuccessMsg("Success", "Auto deletion is disabled.", message);
         }
         else {
-          helper.sendInfoMsg("Info", "Auto deletion of commands is disabled. \n\nEnable it with `" + prefix + "kweh autodelete on`", message);
+          if( auto_delete ) {
+            helper.sendInfoMsg("Info", "Auto deletion of commands is enabled. \n\nDisable it with `@kweh autodelete off`", message);
+          }
+          else {
+            helper.sendInfoMsg("Info", "Auto deletion of commands is disabled. \n\nEnable it with `@kweh autodelete on`", message);
+          }
         }
       }
       else {
-        if( isAdmin ) {
-          if( args[1] == 'on' ) {
-            enableAutoDelete(message.guild.id);
-            helper.sendSuccessMsg("Success", "Auto deletion is enabled.", message);
+        helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
+      }
+    }
+  }
 
-            // Delete Msg
-            message.delete().catch(function(err){
-              if( err.code == 50013 ) {
-                console.log(err.message);
-              }
-            });
-          }
-          else if( args[1] == 'off' ) {
-            disableAutoDelete(message.guild.id);
-            helper.sendSuccessMsg("Success", "Auto deletion is disabled.", message);
-          }
-          else {
-            if( auto_delete ) {
-              helper.sendInfoMsg("Info", "Auto deletion of commands is enabled. \n\nDisable it with `" + prefix + "kweh autodelete off`", message);
+  else if( command == 'channel' ) {
+
+    if( args.length == 0 ) {
+      if( default_channel ) {
+        helper.sendInfoMsg("Info", "The default channel for " + config.appName + " is #" + default_channel.name, message);
+      }
+      else {
+        helper.sendInfoMsg("Info", "No default bot response channel has been set. \n\nForce all bot messages to be sent to a specific channel with \n`@kweh channel #your-channel-name`", message);
+      }
+    }
+    else {
+      if( isAdmin ) {
+        // Set channel
+        let targetChannel = message.mentions.channels.first();
+
+        if( targetChannel && args[0] != 'remove' && args[0] != 'rm' ) {
+          await setDefaultChannel(message.guild.id, targetChannel.id);
+          helper.sendSuccessMsg("Success", "The default response channel for " + config.appName + " bot has been set to #" + targetChannel.name, message);
+        }
+        else {
+          // Remove channel
+          if( args[0] == 'remove' || args[0] == 'rm' ) {
+            if( default_channel ) {
+              removeDefaultChannel(message.guild.id);
+              helper.sendInfoMsg("Info", "The default response channel #" + default_channel.name + " has been removed.", message, true);
             }
             else {
-              helper.sendInfoMsg("Info", "Auto deletion of commands is disabled. \n\nEnable it with `" + prefix + "kweh autodelete on`", message);
+              helper.sendInfoMsg("Info", "No default bot response channel has been set. \n\nForce all bot messages to be sent to a specific channel with \n`@kweh channel #your-channel-name`", message);
             }
           }
-        }
-        else {
-          helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
-        }
-      }
-    }
-
-    else if( args[0] == 'channel' ) {
-
-      if( args.length == 1 ) {
-        if( default_channel ) {
-          helper.sendInfoMsg("Info", "The default channel for " + config.appName + " is #" + default_channel.name, message);
-        }
-        else {
-          helper.sendInfoMsg("Info", "No default bot response channel has been set. \n\nForce all bot messages to be sent to a specific channel with \n`" +prefix+"kweh channel #your-channel-name`", message);
+          else {
+            helper.sendInfoMsg("Info", "No default bot response channel has been set. \n\nForce all bot messages to be sent to a specific channel with \n`@kweh channel #your-channel-name`", message);
+          }
         }
       }
       else {
-        if( isAdmin ) {
-          // Set channel
-          let targetChannel = message.mentions.channels.first();
-
-          if( targetChannel && args[1] != 'remove' && args[1] != 'rm' ) {
-            await setDefaultChannel(message.guild.id, targetChannel.id);
-            helper.sendSuccessMsg("Success", "The default response channel for " + config.appName + " bot has been set to #" + targetChannel.name, message);
-          }
-          else {
-            // Remove channel
-            if( args[1] == 'remove' || args[1] == 'rm' ) {
-              if( default_channel ) {
-                removeDefaultChannel(message.guild.id);
-                helper.sendInfoMsg("Info", "The default response channel #" + default_channel.name + " has been removed.", message, true);
-              }
-              else {
-                helper.sendInfoMsg("Info", "No default bot response channel has been set. \n\nForce all bot messages to be sent to a specific channel with \n`" +prefix+"kweh channel #your-channel-name`", message);
-              }
-            }
-            else {
-              helper.sendInfoMsg("Info", "No default bot response channel has been set. \n\nForce all bot messages to be sent to a specific channel with \n`" +prefix+"kweh channel #your-channel-name`", message);
-            }
-          }
-        }
-        else {
-          helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
-        }
+        helper.sendErrorMsg("Error", "Only admins are allowed to change server settings", message);
       }
     }
   }
@@ -436,7 +409,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Register your character with \n`"+prefix+command+" server firstname lastname`", message);
+      helper.sendErrorMsg("Error", "Register your character with \n`@kweh "+command+" server firstname lastname`", message);
     }
   }
 
@@ -457,11 +430,11 @@ client.on("messageCreate", async function(message) {
         character.printCharacterInfo(characterInfo, message);
       }
       else {
-        helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`"+prefix+"register server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`@kweh register server firstname lastname`", message);
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`"+prefix+"register server firstname lastname`", message);
+      helper.sendErrorMsg("Error", "Profile not found. \n\nRegister your character with \n`@kweh register server firstname lastname`", message);
     }
   }
 
@@ -563,7 +536,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "View character profile with \n`"+prefix+command+" server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "View character profile with \n`@kweh "+command+" server firstname lastname`", message);
       }
     }
   }
@@ -571,6 +544,7 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** GET GLAMS OF TARGET / MENTIONED
   *************************************************/
+
   else if ( command === "glam" || command === "glamour" ) {
     helper.doTyping(message.response_channel);
 
@@ -664,7 +638,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "View character glamours with \n`"+prefix+command+" server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "View character glamours with \n`@kweh "+command+" server firstname lastname`", message);
       }
     }
   }
@@ -749,7 +723,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "View FFLogs with \n`"+prefix+command+" server firstname lastname`", message);
+        helper.sendErrorMsg("Error", "View FFLogs with \n`@kweh "+command+" server firstname lastname`", message);
       }
     }
   }
@@ -757,6 +731,7 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** Market Board Search
   *************************************************/
+
   else if ( command === "mb" || command === "market" || command == "marketboard" ) {
     helper.doTyping(message.response_channel);
 
@@ -765,6 +740,7 @@ client.on("messageCreate", async function(message) {
 
       let dcOrServer = args[0];
       let searchedItem = args.slice(1).join(' ');
+
       let isDCSupplied = await dcserver.isDC(dcOrServer);
       let isServerSupplied = await dcserver.isServer(dcOrServer);
 
@@ -799,13 +775,14 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup marketboard prices with \n`"+prefix+command+" datacenter/server itemname`", message);
+      helper.sendErrorMsg("Error", "Lookup marketboard prices with \n`@kweh "+command+" datacenter/server itemname`", message);
     }
   }
 
   /*************************************************
   **** ITEM SEARCH
   *************************************************/
+
   else if ( command === "item" ) {
 
     helper.doTyping(message.response_channel);
@@ -827,7 +804,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup items with \n`"+prefix+command+" itemname`", message);
+      helper.sendErrorMsg("Error", "Lookup items with \n`@kweh "+command+" itemname`", message);
     }
   }
 
@@ -853,7 +830,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup mounts with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup mounts with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -879,7 +856,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup minions with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup minions with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -905,7 +882,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup titles with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup titles with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -931,7 +908,7 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup emotes with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup emotes with \n`@kweh "+command+" search_string`", message);
     }
   }
 
@@ -957,13 +934,14 @@ client.on("messageCreate", async function(message) {
       }
     }
     else {
-      helper.sendErrorMsg("Error", "Lookup bardings with \n`"+prefix+command+" search_string`", message);
+      helper.sendErrorMsg("Error", "Lookup bardings with \n`@kweh "+command+" search_string`", message);
     }
   }
 
   /*************************************************
   **** GET TRIPLE TRIAD FOR CHARACTER
   *************************************************/
+
   else if ( command === "tt" || command === "ttcollection" || command === "cards" ) {
     helper.doTyping(message.response_channel);
 
@@ -996,6 +974,18 @@ client.on("messageCreate", async function(message) {
   }
 
   /*************************************************
+  **** KWEH NEWS NOTIFICATIONS
+  *************************************************/
+
+  else if ( command === "kweh_news" ) {
+    if( isAdmin ) {
+      if( helper.isSuperAdmin(message.author) ) {
+        kweh_news.autoCheckPostNews(client);
+      }
+    }
+  }
+
+  /*************************************************
   **** SUBSCRIBE TO LODESTONE NEWS NOTIFICATIONS
   *************************************************/
 
@@ -1004,12 +994,6 @@ client.on("messageCreate", async function(message) {
     if( isAdmin ) {
 
       if( args.length > 0 ) {
-
-        if( helper.isSuperAdmin(message.author) ) {
-          if( args[0] == "bye"  ) {
-            lodestone_news.manualPostByeMessage(client);
-          }
-        }
 
         if( args[0] == "latest"  ) {
           await lodestone_news.manualPostNews2Channel(message);
@@ -1090,7 +1074,7 @@ client.on("messageCreate", async function(message) {
         }
       }
       else {
-        helper.sendErrorMsg("Error", "Subscribe for Lodestone news notifications on this channel with \n`"+prefix+command+" add` \n\nRemove subscription from this channel with \n `"+prefix+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
+        helper.sendErrorMsg("Error", "Subscribe for Lodestone news notifications on this channel with \n`@kweh "+command+" add` \n\nRemove subscription from this channel with \n `@kweh "+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
       }
     }
     else {
@@ -1145,7 +1129,7 @@ client.on("messageCreate", async function(message) {
         }
 
         else {
-          helper.sendErrorMsg("Error", "Subscribe for fashion report notifications on this channel with \n`"+prefix+command+" add` \n\nRemove subscription from this channel with \n `"+prefix+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
+          helper.sendErrorMsg("Error", "Subscribe for fashion report notifications on this channel with \n`@kweh "+command+" add` \n\nRemove subscription from this channel with \n `@kweh "+command+" remove` \n\nOnly server admins are permitted to execute these commands", message, true);
         }
       }
       else {
@@ -1161,6 +1145,7 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** Timers
   *************************************************/
+
   else if ( command === "timer" || command === "reset" || command === "timers" ) {
     eorzea_time.printTimers(message);
   }
@@ -1168,6 +1153,7 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** Maint
   *************************************************/
+
   else if ( command === "maint" || command === "maintenance" ) {
     eorzea_time.printMaint(message);
   }
@@ -1175,6 +1161,7 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** Eorzea Collection
   *************************************************/
+
   else if ( command === "eorzeacollection" ||  command === "ec" ) {
     helper.doTyping(message.response_channel);
 
@@ -1183,21 +1170,7 @@ client.on("messageCreate", async function(message) {
       eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
     }
     else {
-      // Mentioned User
-      if( message.mentions.users.first() ) {
-
-        let userInfo = await character.getUserInfo(message.mentions.users.first().id);
-
-        if( lodash.isEmpty(userInfo) == false ) {
-          let searchTerm = userInfo.firstname + " " + userInfo.lastname;
-          let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("", "", searchTerm);
-          eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
-        }
-        else {
-          helper.sendErrorMsg("Error", "Profile not found", message);
-        }
-      }
-      else if( args[0] == "latest" ) {
+      if( args[0] == "latest" ) {
         let eorzea_collection_results = await eorzea_collection.getEorzeaCollection("latest");
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
@@ -1224,7 +1197,7 @@ client.on("messageCreate", async function(message) {
         eorzea_collection.printEorzeaCollection(eorzea_collection_results, message);
       }
       else {
-        helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`"+prefix+command+"` \n`"+prefix+command+" latest` \n`"+prefix+command+" loved` \n`"+prefix+command+" male` \n`"+prefix+command+" female` \n\nLookup by keywords with \n `"+prefix+command+" keyword your_keywords` \n\nLookup by author with \n `"+prefix+command+" author author_name`", message, true);
+        helper.sendErrorMsg("Error", "Lookup Eorzea Collection with \n`@kweh "+command+"` \n`@kweh "+command+" latest` \n`@kweh "+command+" loved` \n`@kweh "+command+" male` \n`@kweh "+command+" female` \n\nLookup by keywords with \n `@kweh "+command+" keyword your_keywords` \n\nLookup by author with \n `@kweh "+command+" author author_name`", message, true);
       }
     }
   }
@@ -1232,6 +1205,7 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** Eorzea Collection
   *************************************************/
+
   else if ( command === "housingsnap" ||  command === "hs" ) {
 
     let tag = "";
@@ -1249,36 +1223,23 @@ client.on("messageCreate", async function(message) {
   /*************************************************
   **** DONATE
   *************************************************/
+
   else if ( command === "donate" ) {
     helper.sendDonateMsg(message);
-
-    message.delete().catch(function(err){
-      if( err.code == 50013 ) {
-        console.log(err.message);
-      }
-    });
-
-    return;
   }
 
   /*************************************************
   **** HELPPPPPP
   *************************************************/
+
   else if ( command === "help" ) {
-    helper.sendHelpMsg(message, prefix);
-
-    message.delete().catch(function(err){
-      if( err.code == 50013 ) {
-        console.log(err.message);
-      }
-    });
-
-    return;
+    helper.sendNewHelpMsg(message);
   }
 
   /*************************************************
   **** AUTO DELETION
   *************************************************/
+
   if( auto_delete ) {
     message.delete().catch(function(err){
       if( err.code == 50013 ) {
@@ -1294,11 +1255,6 @@ client.on("messageCreate", async function(message) {
 
 function updateServerInfo(serverID, name) {
   pool.query("INSERT INTO servers (server_id, name, date_added, last_active) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE name = VALUES(name), last_active = VALUES(last_active)", [serverID, name, moment().format('YYYY-M-D HH:mm:ss'), moment().format('YYYY-M-D HH:mm:ss')]);
-}
-
-function setServerPrefix(serverID, prefix) {
-  pool.query("UPDATE servers SET prefix = ? WHERE server_id = ?", [prefix, serverID]);
-  resetServerRedisKey(serverID);
 }
 
 async function setDefaultChannel(serverID, channelID) {
@@ -1329,7 +1285,6 @@ function resetServerRedisKey(serverID) {
 async function getServerSettings(serverID) {
 
   let settings = {
-    'prefix': config.prefix,
     'language': config.language,
     'default_channel_id': '',
     'default_channel': null,
@@ -1348,7 +1303,6 @@ async function getServerSettings(serverID) {
   else {
     await readPool.query("SELECT * FROM servers LEFT JOIN server_default_channel ON servers.server_id = server_default_channel.server_id WHERE servers.server_id = ?", [serverID]).then(function(res){
       if( res.length > 0 ) {
-        settings['prefix'] = res[0].prefix.length > 0 ? res[0].prefix : settings['prefix'];
         settings['language'] = res[0].language ? res[0].language : settings['language'];
         settings['default_channel_id'] = res[0].channel_id ? res[0].channel_id : '';
         settings['auto_delete'] = res[0].auto_delete == 1 ? true : false;
