@@ -8,4 +8,4 @@ Kweh! before this update has been tagged under release version 1.0.
 
 Happy gaming fellow Eorzeans ~
 
-PS: Didn't expect so get so many dms about Kweh! xD
+PS: Didn't expect to get so many dms about Kweh! xD
