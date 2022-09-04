@@ -147,163 +147,6 @@ const logCommands = async function(message, isAdmin, post2logs=false) {
   return insertId;
 }
 
-const sendHelpMsg = function(message, prefix) {
-  // Embed
-  let embed = new Discord.MessageEmbed()
-    .setDescription("You can also edit your server settings on the official website.")
-    .setColor( config.defaultEmbedColor )
-    .setAuthor({name: "Kweh! - Help"})
-    .setThumbnail( config.appErrorImg );
-
-  embed.addField("Prefix for " + message.guild.name, prefix);
-  embed.addField("Website", "["+config.websiteLink+"]("+config.websiteLink+")");
-  embed.addField("Full Command List", "["+config.websiteCommandLink+"]("+config.websiteCommandLink+")");
-
-  embed.addField("Commands", "--------------------");
-
-  let i = 1;
-
-  // !register
-  let registerCommands = [
-    "`" + prefix + "register server firstname lastname`"
-  ];
-  embed.addField((i++)+". Link FFXIV Character", registerCommands.join("\n"));
-
-  // !me
-  let selfProfileCommands = [
-    "`" + prefix + "me`",
-  ];
-  embed.addField((i++)+". View Character Profile (Self)", selfProfileCommands.join("\n"));
-
-  // !profile @xenodus
-  let otherProfileCommands = [
-    "`" + prefix + "profile server firstname lastname`",
-    "`" + prefix + "profile @user`",
-    "`" + prefix + "profile`",
-  ];
-  embed.addField((i++)+". View Character Profile (Others)", otherProfileCommands.join("\n"));
-
-  // !glam
-  let glamCommands = [
-    "`" + prefix + "glam server firstname lastname`",
-    "`" + prefix + "glam @user`",
-    "`" + prefix + "profile`",
-  ];
-  embed.addField((i++)+". View Glamour Report", glamCommands.join("\n"));
-
-  // !ec
-  let ecCommands = [
-    "`" + prefix + "ec`",
-    "`" + prefix + "ec latest/loved/male/female`",
-    "`" + prefix + "ec author author_name`",
-    "`" + prefix + "ec search search_string`",
-  ];
-  embed.addField((i++)+". Eorzea Collection", ecCommands.join("\n"));
-
-  // !hs
-  let hsCommands = [
-    "`" + prefix + "hs`",
-    "`" + prefix + "hs search_string`",
-  ];
-  embed.addField((i++)+". Housing Snap", hsCommands.join("\n"));
-
-  // !logs @xenodus
-  let logsCommands = [
-    "`" + prefix + "fflogs server firstname lastname`",
-    "`" + prefix + "fflogs @user`",
-    "`" + prefix + "fflogs`",
-  ];
-  embed.addField((i++)+". FF Logs", logsCommands.join("\n"));
-
-  // !mb
-  let mbCommands = [
-    "`" + prefix + "mb datacenter/server item_name`",
-  ];
-  embed.addField((i++)+". Marketboard", mbCommands.join("\n"));
-
-  // !item / mount / minion / emote / title / barding
-  let itemCommands = [
-    "`" + prefix + "item item_name`",
-  ];
-  embed.addField((i++)+". Item Search", itemCommands.join("\n"));
-
-  // !mount / minion / emote / title / barding
-  let xivCollectCommands = [
-    "`" + prefix + "mount search_string`",
-    "`" + prefix + "minion search_string`",
-    "`" + prefix + "emote search_string`",
-    "`" + prefix + "title search_string`",
-    "`" + prefix + "barding search_string`",
-  ];
-  embed.addField((i++)+". FFXIV Collect Search", xivCollectCommands.join("\n"));
-
-  // !timers
-  let timersCommands = [
-    "`" + prefix + "timers`",
-  ];
-  embed.addField((i++)+". Timers", timersCommands.join("\n"));
-
-  // !maint
-  let maintCommands = [
-    "`" + prefix + "maint`",
-  ];
-  embed.addField((i++)+". Maintenance", maintCommands.join("\n"));
-
-  // !tt
-  let ttCommands = [
-    "`" + prefix + "tt`",
-    "`" + prefix + "tt @user`",
-  ];
-  embed.addField((i++)+". Triple Triad", ttCommands.join("\n"));
-
-  // !news
-  let newsCommands = [
-    "`" + prefix + "news add`",
-    "`" + prefix + "news add na/eu/jp/de/fr`",
-    "`" + prefix + "news remove`",
-  ];
-  embed.addField((i++)+". Subscribe To Receive Lodestone News - Admin Only", newsCommands.join("\n"));
-
-  // !fashion
-  let frCommands = [
-    "`" + prefix + "fashion add`",
-    "`" + prefix + "fashion remove`",
-  ];
-  embed.addField((i++)+". Subscribe To Receive Fashion Report - Admin Only", frCommands.join("\n"));
-
-  // !kweh language
-  let langCommands = [
-    "`" + prefix + "kweh language jp/en/fr/de`",
-  ];
-  embed.addField((i++)+". Change Server Language - Admin Only", langCommands.join("\n"));
-
-  // !kweh channel
-  let defaultChannelCommands = [
-    "`" + prefix + "kweh channel #your-channel-name`",
-    "`" + prefix + "kweh channel remove`",
-  ];
-  embed.addField((i++)+". Set Default Channel - Admin Only", defaultChannelCommands.join("\n"));
-
-  // !kweh autodelete
-  let autoDeleteCommands = [
-    "`" + prefix + "kweh autodelete on`",
-    "`" + prefix + "kweh autodelete off`",
-  ];
-  embed.addField((i++)+". Auto Deletion of Commands - Admin Only", autoDeleteCommands.join("\n"));
-
-  // !kweh prefix
-  let prefixCommands = [
-    "`" + prefix + "kweh prefix ?`",
-  ];
-  embed.addField((i++)+". Change Server Prefix - Admin Only", prefixCommands.join("\n"));
-
-  embed.addField("Support Kweh!", "["+config.donationLink+"]("+config.donationLink+")");
-
-  message.author.send({embeds: [embed]}).catch(function(err){
-    handleDiscordError(err, message);
-  });
-}
-
 const sendNewHelpMsg = function(message) {
   // Embed
   let embed = new Discord.MessageEmbed()
@@ -314,7 +157,6 @@ const sendNewHelpMsg = function(message) {
 
   embed.addField("Website", "["+config.websiteLink+"]("+config.websiteLink+")");
   embed.addField("Full Command List", "["+config.websiteCommandLink+"]("+config.websiteCommandLink+")");
-
   embed.addField("Commands", "--------------------");
 
   let i = 1;
@@ -479,7 +321,6 @@ module.exports = {
   sendErrorMsg,
   sendSuccessMsg,
   sendInfoMsg,
-  sendHelpMsg,
   sendNewHelpMsg,
   sendDonateMsg,
   handleDiscordError,
