@@ -738,24 +738,35 @@ client.on("messageCreate", async function(message) {
     // dc + item name
     if( args.length > 0 ) {
 
-      let dcOrServer = args[0];
+      let dcOrServerOrRegion = args[0];
       let searchedItem = args.slice(1).join(' ');
 
-      let isDCSupplied = await dcserver.isDC(dcOrServer);
-      let isServerSupplied = await dcserver.isServer(dcOrServer);
+      let isDCSupplied = await dcserver.isDC(dcOrServerOrRegion);
+      let isServerSupplied = await dcserver.isServer(dcOrServerOrRegion);
+      let isRegionSupplied = dcserver.isRegion(dcOrServerOrRegion);
 
       // Try to get DC from user profile if not specified
-      if( !isServerSupplied && !isDCSupplied ) {
+      if( !isRegionSupplied && !isServerSupplied && !isDCSupplied ) {
         let userInfo = await character.getUserInfo(message.author.id);
 
         if( lodash.isEmpty(userInfo) == false ) {
-          dcOrServer = userInfo.dc;
+          dcOrServerOrRegion = userInfo.dc;
           isDCSupplied = true;
+
+          // overwrite with region
+          /*
+          if( dcserver.isRegion(userInfo.region) ) {
+            dcOrServerOrRegion = userInfo.region;
+            isDCSupplied = false;
+            isRegionSupplied = true;
+          }
+          */
+
           searchedItem = args.join(' ');
         }
       }
 
-      if( isDCSupplied || isServerSupplied ) {
+      if( isRegionSupplied || isDCSupplied || isServerSupplied ) {
 
         let itemMatchResult = await item.searchItemByName(searchedItem);
 
@@ -764,14 +775,14 @@ client.on("messageCreate", async function(message) {
         }
         else if( itemMatchResult.length == 1 ) {
           let itemInfo = itemMatchResult[0];
-          await marketboard.printMarketboardResult(itemInfo, dcOrServer, isDCSupplied, message);
+          await marketboard.printMarketboardResult(itemInfo, dcOrServerOrRegion, isDCSupplied, isRegionSupplied, message);
         }
         else if( itemMatchResult.length > 1 ) {
-          await marketboard.handleMultipleItems(itemMatchResult, searchedItem, dcOrServer, isDCSupplied, message);
+          await marketboard.handleMultipleItems(itemMatchResult, searchedItem, dcOrServerOrRegion, isDCSupplied, isRegionSupplied, message);
         }
       }
       else {
-        helper.sendErrorMsg("Error", "Invalid datacenter or server", message);
+        helper.sendErrorMsg("Error", "Invalid region, datacenter or server", message);
       }
     }
     else {

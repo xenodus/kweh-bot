@@ -14,10 +14,10 @@ const moment = require("moment");
   Marketboard Functions
 *******************************/
 
-const getMarketboardListings = async function(itemID, dcOrServer) {
+const getMarketboardListings = async function(itemID, dcOrServerOrRegion) {
 
   let mbListings = {};
-  let apiUrl = config.universalisApiBaseURL + dcOrServer.charAt(0).toUpperCase() + dcOrServer.slice(1) + "/" + itemID;
+  let apiUrl = config.universalisApiBaseURL + dcOrServerOrRegion.charAt(0).toUpperCase() + dcOrServerOrRegion.slice(1) + "/" + itemID;
 
   helper.printStatus("Marketboard API: " + apiUrl);
 
@@ -43,7 +43,7 @@ const getMarketboardListings = async function(itemID, dcOrServer) {
   Multiple Matched Item
 *******************************/
 
-const handleMultipleItems = async function(itemMatchResult, searchedItem, dcOrServer, isDCSupplied, message) {
+const handleMultipleItems = async function(itemMatchResult, searchedItem, dcOrServerOrRegion, isDCSupplied, isRegionSupplied, message) {
   // multiple matching results
   let options = await sendMultipleItemsMatchedMsg(itemMatchResult, searchedItem, message);
 
@@ -55,7 +55,7 @@ const handleMultipleItems = async function(itemMatchResult, searchedItem, dcOrSe
   // Await Reply
   message.response_channel.awaitMessages({ multipleItemsfilter, max: 1, time: config.userPromptsTimeout }).then(async function(collected){
     let itemInfo = itemMatchResult[ collected.first().content - 1 ];
-    await printMarketboardResult(itemInfo, dcOrServer, isDCSupplied, message);
+    await printMarketboardResult(itemInfo, dcOrServerOrRegion, isDCSupplied, isRegionSupplied, message);
 
     // Auto Delete
     if( message.serverSettings["auto_delete"] ) {
@@ -102,7 +102,7 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
     // Send Message
-    await channel.send({ embeds: [embed]}).catch(function(err){
+    await channel.send({embeds: [embed]}).catch(function(err){
       console.log(err);
     });
   }
@@ -111,55 +111,215 @@ const sendMultipleItemsMatchedMsg = async function(items, searchedKeyword, messa
 }
 
 /******************************
+  XIVAPI to Universallis Region Map
+*******************************/
+
+function mapToUniversallisRegion(dcOrServerOrRegion) {
+    switch (dcOrServerOrRegion.toLowerCase()) {
+      case "jp":
+        dcOrServerOrRegion = "Japan";
+        break;
+      case "eu":
+        dcOrServerOrRegion = "Europe";
+        break;
+      case "na":
+        dcOrServerOrRegion = "North-America";
+        break;
+      case "oc":
+        dcOrServerOrRegion = "Oceanic";
+        break;
+      default:
+        break;
+    }
+  return dcOrServerOrRegion;
+}
+
+/******************************
+  Universallis to XIVAPI Region Map
+*******************************/
+
+function mapToXIVAPIRegion(region) {
+    switch (region) {
+      case "Japan":
+        region = "JP";
+        break;
+      case "Europe":
+        region = "EU";
+        break;
+      case "North-America":
+        region = "NA";
+        break;
+      case "Oceanic":
+        region = "OC";
+        break;
+      default:
+        break;
+    }
+  return region;
+}
+
+/******************************
+  Get Embed
+*******************************/
+
+function getEmbed(mbData) {
+  var embed = new Discord.MessageEmbed()
+    .setColor(config.defaultEmbedColor)
+    .setTitle( mbData.item.Name )
+    .setAuthor({name: "Universalis", iconURL: config.universalisLogo, url: config.universalisMarketBaseURL + mbData.item.ID})
+    .setThumbnail( config.xivApiBaseURL + mbData.item.Icon );
+
+  // Last Upload Time
+  let datetimeUploaded = moment(mbData.lastUploadTime).format("DD MMM YYYY h:mm A");
+  embed.setFooter({text: "Data from " + datetimeUploaded});
+
+  return embed;
+}
+
+/******************************
   Marketboard Result
 *******************************/
 
-const printMarketboardResult = async function(item, dcOrServer, isDCSupplied, message) {
+const printMarketboardResult = async function(item, dcOrServerOrRegion, isDCSupplied, isRegionSupplied, message) {
 
-  let mbListings = await getMarketboardListings( item.ID, dcOrServer );
+  if( isRegionSupplied ) {
+    dcOrServerOrRegion = mapToUniversallisRegion(dcOrServerOrRegion);
+  }
 
-  if( mbListings && mbListings.listings && mbListings.listings.length > 0 ) {
+  let mbListings = await getMarketboardListings( item.ID, dcOrServerOrRegion );
+
+  if( lodash.isEmpty(mbListings) == false && mbListings.listings && mbListings.listings.length > 0 ) {
 
     mbListings.item = item;
-    mbListings.server = isDCSupplied ? "" : dcOrServer;
-    mbListings.datacenter = isDCSupplied ? dcOrServer : "";
+    mbListings.server = isDCSupplied ? "" : dcOrServerOrRegion;
+    mbListings.datacenter = isDCSupplied ? dcOrServerOrRegion : "";
 
-    if( isDCSupplied ) {
-      sendMarketboardResult(mbListings, message, true);
+    if( isRegionSupplied ) {
+      sendMarketboardResult(mbListings, message, false, true);
+    }
+    else if( isDCSupplied ) {
+      sendMarketboardResult(mbListings, message, true, false);
     }
     else {
-      sendMarketboardResult(mbListings, message, false);
+      sendMarketboardResult(mbListings, message, false, false);
     }
   }
   else {
-    // No results
-    helper.sendErrorMsg(item.Name, "結果が見つかりません", message);
+    if( lodash.isEmpty(mbListings) == false && mbListings.status && mbListings.status >= 500 ) {
+      // 500 Error
+      helper.sendErrorMsg(item.Name, "結果が見つかりません\nhttps://universalis.app/ seems to be down right now :(", message);
+    }
+    else {
+      // No results
+      helper.sendErrorMsg(item.Name, "結果が見つかりません", message);
+    }
   }
 }
 
-const sendMarketboardResult = async function(mbData, message, isDC=true) {
+const sendMarketboardResult = async function(mbData, message, isDC=true, isRegion=false) {
 
   if( mbData.listings ) {
 
-    // Embed
-    let embed = new Discord.MessageEmbed()
-      .setColor(config.defaultEmbedColor)
-      .setTitle( mbData.item.Name )
-      .setAuthor({name: "Universalis", iconURL: config.universalisLogo, url: config.universalisMarketBaseURL + mbData.item.ID})
-      .setThumbnail( config.xivApiBaseURL + mbData.item.Icon );
-
-    // Last Upload Time
-    let datetimeUploaded = moment(mbData.lastUploadTime).format("DD MMM YYYY h:mm A");
-    embed.setFooter({text: "Data from " + datetimeUploaded});
-
     // Display data center specific results
-    if( isDC ) {
+    if( isRegion ) {
+      console.log("Showing region result");
+      let region = mapToXIVAPIRegion( mbData.server );
+      let dcsOfRegion = config.dcRegions[ region ];
+
+      // Get servers of all dcs in the region
+      let dcServers = await dcserver.getDCServers();
+      let serversOfRegion = [];
+
+      for(var i=0; i<dcsOfRegion.length; i++) {
+        if( dcServers[ dcsOfRegion[i] ] ) {
+          serversOfRegion = serversOfRegion.concat(dcServers[ dcsOfRegion[i] ])
+        }
+      }
+
+      serversOfRegion.sort();
+
+      let embeds = [];
+
+      if( serversOfRegion.length > 0 ) {
+
+          let lowestNQAllServer = [];
+          let lowestHQAllServer = [];
+          let inline = serversOfRegion.length > 8 ? true : false;
+
+          const fieldsLimit = 25;
+
+          for(var i=0; i<serversOfRegion.length; i++) {
+
+            if( i==0 || i%fieldsLimit==0 ) {
+              // Embed
+              var embed = getEmbed(mbData)
+              embeds.push(embed);
+            }
+
+            let currentServerListings = mbData.listings.filter(l => (l.worldName == serversOfRegion[i] && l.onMannequin == false));
+
+            if( currentServerListings.length > 0 ) {
+              let lowestNQPrice = getLowestListing(currentServerListings, false);
+              let lowestHQPrice = getLowestListing(currentServerListings, true);
+
+              let priceListings = (lodash.isEmpty(lowestNQPrice)?"":lowestNQPrice.pricePerUnit.toLocaleString() + "g [NQ] x "+lowestNQPrice.quantity);
+              priceListings += "\n" + (lodash.isEmpty(lowestHQPrice)?"" : lowestHQPrice.pricePerUnit.toLocaleString() + "g [HQ] x "+lowestHQPrice.quantity);
+
+              embed.addField(serversOfRegion[i], String(priceListings), inline);
+
+              if( lodash.isEmpty(lowestNQPrice) == false ) {
+                lowestNQAllServer.push(lowestNQPrice);
+              }
+
+              if( lodash.isEmpty(lowestHQPrice) == false ) {
+                lowestHQAllServer.push(lowestHQPrice);
+              }
+            }
+            else {
+              embed.addField(serversOfRegion[i], "利用不可", inline);
+            }
+          }
+
+          // Get Lowest / Highest
+          let description = "";
+
+          if( lowestNQAllServer.length > 0 ) {
+            lowestNQAllServer = lodash.sortBy(lowestNQAllServer, ['pricePerUnit']);
+            description += "最も安い [NQ] on **" + lowestNQAllServer[0].worldName + "** " + lowestNQAllServer[0].pricePerUnit.toLocaleString() + "g " + " x " + lowestNQAllServer[0].quantity;
+          }
+
+          if( lowestHQAllServer.length > 0 ) {
+            lowestHQAllServer = lodash.sortBy(lowestHQAllServer, ['pricePerUnit']);
+            description += "\n最も安い [HQ] on **" + lowestHQAllServer[0].worldName + "** " + lowestHQAllServer[0].pricePerUnit.toLocaleString() + "g " + " x " + lowestHQAllServer[0].quantity;
+          }
+
+          description += "\nShowing data from " + serversOfRegion.length + " servers from the " + mbData.server + " region";
+
+          for(var i=0; i<embeds.length; i++) {
+            embeds[i].setDescription(description);
+          }
+      }
+
+      // Channel
+      let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
+
+      for(var i=0; i<embeds.length; i++) {
+        // Send Message
+        channel.send({embeds: [embeds[i]]}).catch(function(err){
+          console.log(err);
+        });
+      }
+    }
+    else if( isDC ) {
+      console.log("Showing dc result");
+      var embed = getEmbed(mbData)
 
       let dcServers = await dcserver.getDCServers();
 
       if( dcServers[ mbData.datacenter.charAt(0).toUpperCase() + mbData.datacenter.slice(1) ] ) {
 
-        let servers = dcServers[ mbData.datacenter.charAt(0).toUpperCase() + mbData.datacenter.slice(1) ];
+        let dc = mbData.datacenter.charAt(0).toUpperCase() + mbData.datacenter.slice(1);
+        let servers = dcServers[ dc ];
 
         if( servers.length > 0 ) {
 
@@ -187,7 +347,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
               }
             }
             else {
-              embed.addField(servers[i], "利用不可");
+              embed.addField(servers[i], "Not available");
             }
           }
 
@@ -196,13 +356,15 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
 
           if( lowestNQAllServer.length > 0 ) {
             lowestNQAllServer = lodash.sortBy(lowestNQAllServer, ['pricePerUnit']);
-            description += "最も安い [NQ] **" + lowestNQAllServer[0].worldName + "** " + lowestNQAllServer[0].pricePerUnit.toLocaleString() + "g " + " x " + lowestNQAllServer[0].quantity;
+            description += "最も安い [NQ] on **" + lowestNQAllServer[0].worldName + "** " + lowestNQAllServer[0].pricePerUnit.toLocaleString() + "g " + " x " + lowestNQAllServer[0].quantity;
           }
 
           if( lowestHQAllServer.length > 0 ) {
             lowestHQAllServer = lodash.sortBy(lowestHQAllServer, ['pricePerUnit']);
-            description += "\n最も安い [HQ] **" + lowestHQAllServer[0].worldName + "** " + lowestHQAllServer[0].pricePerUnit.toLocaleString() + "g " + " x " + lowestHQAllServer[0].quantity;
+            description += "\n最も安い [HQ] on **" + lowestHQAllServer[0].worldName + "** " + lowestHQAllServer[0].pricePerUnit.toLocaleString() + "g " + " x " + lowestHQAllServer[0].quantity;
           }
+
+          description += "\nShowing data from " + servers.length + " servers from the " + dc + " datacenter";
 
           embed.setDescription(description);
         }
@@ -212,12 +374,15 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
       // Send Message
-      channel.send({ embeds: [embed]}).catch(function(err){
+      channel.send({embeds: [embed]}).catch(function(err){
         console.log(err);
       });
     }
     // Display server specific results
     else {
+      console.log("Showing server result");
+      var embed = getEmbed(mbData)
+
       // Sort ascending
       let listings = mbData.listings.filter(l => l.onMannequin == false);
       listings = lodash.sortBy(listings, ['pricePerUnit']);
@@ -225,8 +390,8 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
       let lowestNQPrice = getLowestListing(listings, false);
       let lowestHQPrice = getLowestListing(listings, true);
 
-      let description = "最も安い [NQ]: " + ( lodash.isEmpty(lowestNQPrice) ? 'Not available' : lowestNQPrice.pricePerUnit.toLocaleString() + "g x "+lowestNQPrice.quantity );
-      description += "\n最も安い [HQ]: " + ( lodash.isEmpty(lowestHQPrice) ? 'Not available' : lowestHQPrice.pricePerUnit.toLocaleString() + "g x "+lowestHQPrice.quantity );
+      let description = "最も安い NQ: " + ( lodash.isEmpty(lowestNQPrice) ? 'Not available' : lowestNQPrice.pricePerUnit.toLocaleString() + "g x "+lowestNQPrice.quantity );
+      description += "\n最も安い HQ: " + ( lodash.isEmpty(lowestHQPrice) ? 'Not available' : lowestHQPrice.pricePerUnit.toLocaleString() + "g x "+lowestHQPrice.quantity );
 
       embed.setDescription(description);
 
@@ -237,17 +402,17 @@ const sendMarketboardResult = async function(mbData, message, isDC=true) {
         if( i == listLimit )
           break;
 
-        priceListings += "\n" + listings[i].pricePerUnit.toLocaleString() + "g "+(listings[i].hq?"[HQ]":"[NQ]")+" x" + listings[i].quantity;
+        priceListings += "\n" + listings[i].pricePerUnit.toLocaleString() + "g "+(listings[i].hq?"[HQ]":"[NQ]")+" x " + listings[i].quantity;
       }
 
       // Listings
-      embed.addField(mbData.server.charAt(0).toUpperCase() + mbData.server.slice(1), String(priceListings));
+      embed.addField(mbData.server.charAt(0).toUpperCase() + mbData.server.slice(1), priceListings);
 
       // Channel
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
 
       // Send Message
-      channel.send({ embeds: [embed]}).catch(function(err){
+      channel.send({embeds: [embed]}).catch(function(err){
         console.log(err);
       });
     }
