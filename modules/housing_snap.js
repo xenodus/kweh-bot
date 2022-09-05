@@ -224,6 +224,12 @@ const printHousingSnap = async function(housingSnapResult, message) {
     await channel.send({ embeds: [embed] })
     .then(async function(m){
       if( housingSnaps.length > 1 ) {
+        // Missing embed
+        if( lodash.isEmpty(m.embeds) || m.embeds.length == 0 ) {
+          console.log("Recovering missing embed");
+          m.embeds = [embed];
+        }
+
         await resetReactions(m);
       }
     })
@@ -248,9 +254,6 @@ const updateImage = async function(m, nextSlideImg="") {
 }
 
 const resetReactions = async function(message) {
-
-  console.log(message);
-
   if ( lodash.isEmpty(message.embeds) == false ) {
     await message.react('⬅️');
     await message.react('➡️');

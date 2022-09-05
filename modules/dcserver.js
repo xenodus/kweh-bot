@@ -78,6 +78,13 @@ const isServer = async function(dcOrServer){
   return false;
 }
 
+const isRegion = function(dcOrServer){
+  if( Object.keys(config.dcRegions).includes(dcOrServer.toUpperCase()) ) {
+    return true;
+  }
+  return false;
+}
+
 const getDCregion = function(dc) {
   if( config.dcRegions.JP.includes( dc ) )
     return "JP";
@@ -99,5 +106,6 @@ module.exports = {
   getDCServers,
   isDC,
   isServer,
-  getDCregion
+  getDCregion,
+  isRegion
 }

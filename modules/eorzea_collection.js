@@ -149,6 +149,7 @@ const getGlamDetails = async function(url, message) {
 }
 
 const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
+
   if( eorzeaCollectionResult.results.length > 0 ) {
 
     let limit = 5;
@@ -231,6 +232,13 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
     .then(async function(m){
       // Equipment Listing
       if( randomItem ) {
+
+        // Missing embed
+        if( lodash.isEmpty(m.embeds) || m.embeds.length == 0 ) {
+          console.log("Recovering missing embed");
+          m.embeds = [embed];
+        }
+
         let itemInfo = await getGlamDetails(randomItem.link, m);
         await updateEquipmentInfo(itemInfo, m);
       }
@@ -249,50 +257,31 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
 }
 
 const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
-  if( lodash.isEmpty(itemInfo) == false && lodash.isEmpty(m.embeds) == false) {
 
-    let equipmentTxt = "";
+  if( lodash.isEmpty(itemInfo) || lodash.isEmpty(m.embeds) ) {
+    console.log("Missing itemInfo or embed");
+    console.log("Item Info", itemInfo);
+    console.log("Message", m);
+    return;
+  }
 
-    for(let slot in itemInfo.equipment) {
+  let equipmentTxt = "";
 
-      if( slot == "rings" ) {
-        for(let i=0; i <itemInfo.equipment[slot].length; i++) {
-          if( itemInfo.equipment[slot][i] ) {
+  for(let slot in itemInfo.equipment) {
 
-            let newEquipmentTxt = "";
-
-            if( itemInfo.link[slot][i] ) {
-              // Custom redirect to reduce character count
-              itemInfo.link[slot][i] = itemInfo.link[slot][i].replace('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/', 'https://kwehbot.xyz/ls/');
-              newEquipmentTxt += "\nRing " + (i+1) + ": ["+itemInfo.equipment[slot][i]+"](" + itemInfo.link[slot][i] + ")";
-            }
-            else {
-              newEquipmentTxt += "\nRing " + (i+1) + ": " + itemInfo.equipment[slot][i];
-            }
-
-            // Field length limit
-            if( (equipmentTxt.length + newEquipmentTxt.length) <= 1024 ) {
-              equipmentTxt += newEquipmentTxt;
-            }
-          }
-        }
-      }
-      else {
-        if( itemInfo.equipment[slot] ) {
+    if( slot == "rings" ) {
+      for(let i=0; i <itemInfo.equipment[slot].length; i++) {
+        if( itemInfo.equipment[slot][i] ) {
 
           let newEquipmentTxt = "";
 
-          if( itemInfo.link[slot] ) {
+          if( itemInfo.link[slot][i] ) {
             // Custom redirect to reduce character count
-            itemInfo.link[slot] = itemInfo.link[slot].replace('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/', 'https://kwehbot.xyz/ls/');
-            equipmentTxt += "\n" + lodash.capitalize(slot) + ": ["+itemInfo.equipment[slot]+"](" + itemInfo.link[slot] + ")";
+            itemInfo.link[slot][i] = itemInfo.link[slot][i].replace('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/', 'https://kwehbot.xyz/ls/');
+            newEquipmentTxt += "\nRing " + (i+1) + ": ["+itemInfo.equipment[slot][i]+"](" + itemInfo.link[slot][i] + ")";
           }
           else {
-            equipmentTxt += "\n" + lodash.capitalize(slot) + ": " + itemInfo.equipment[slot];
-          }
-
-          if( itemInfo.dye[slot] && itemInfo.dye[slot]!= 'Undyed' ) {
-            equipmentTxt += " :paintbrush: " + itemInfo.dye[slot] + " Dye"; // »
+            newEquipmentTxt += "\nRing " + (i+1) + ": " + itemInfo.equipment[slot][i];
           }
 
           // Field length limit
@@ -302,23 +291,47 @@ const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
         }
       }
     }
-
-    // Output
-    if( equipmentTxt ) {
-      m.embeds[0].fields[ m.embeds[0].fields.length-1 ].value = equipmentTxt;
-    }
     else {
-      m.embeds[0].fields.pop();
+      if( itemInfo.equipment[slot] ) {
+
+        let newEquipmentTxt = "";
+
+        if( itemInfo.link[slot] ) {
+          // Custom redirect to reduce character count
+          itemInfo.link[slot] = itemInfo.link[slot].replace('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/', 'https://kwehbot.xyz/ls/');
+          equipmentTxt += "\n" + lodash.capitalize(slot) + ": ["+itemInfo.equipment[slot]+"](" + itemInfo.link[slot] + ")";
+        }
+        else {
+          equipmentTxt += "\n" + lodash.capitalize(slot) + ": " + itemInfo.equipment[slot];
+        }
+
+        if( itemInfo.dye[slot] && itemInfo.dye[slot]!= 'Undyed' ) {
+          equipmentTxt += " :paintbrush: " + itemInfo.dye[slot] + " Dye"; // »
+        }
+
+        // Field length limit
+        if( (equipmentTxt.length + newEquipmentTxt.length) <= 1024 ) {
+          equipmentTxt += newEquipmentTxt;
+        }
+      }
     }
-
-    let messageEmbed = m.embeds[0];
-
-    if( nextSlideImg ) {
-      messageEmbed.setImage(nextSlideImg);
-    }
-
-    m.edit({ embeds: [messageEmbed] });
   }
+
+  // Output
+  if( equipmentTxt ) {
+    m.embeds[0].fields[ m.embeds[0].fields.length-1 ].value = equipmentTxt;
+  }
+  else {
+    m.embeds[0].fields.pop();
+  }
+
+  let messageEmbed = m.embeds[0];
+
+  if( nextSlideImg ) {
+    messageEmbed.setImage(nextSlideImg);
+  }
+
+  m.edit({ embeds: [messageEmbed] });
 }
 
 const resetReactions = async function(message) {

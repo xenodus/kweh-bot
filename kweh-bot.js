@@ -92,7 +92,7 @@ client.on("ready", async function() {
 
   helper.printStatus(config.appName + " bot is ready!");
 
-  client.user.setPresence({ activities: [{ name: '!kweh help', type: "PLAYING"}], status: 'online'});
+  client.user.setPresence({ activities: [{ name: '@kweh help', type: "PLAYING"}], status: 'online'});
 
   // Check Lodestone periodically
   setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
