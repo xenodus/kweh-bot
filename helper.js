@@ -215,7 +215,7 @@ const sendNewHelpMsg = function(message) {
 
   // !mb
   let mbCommands = [
-    "`@kweh mb datacenter/server item_name`",
+    "`@kweh mb region/datacenter/server item_name`",
   ];
   embed.addField((i++)+". Marketboard", mbCommands.join("\n"));
 
