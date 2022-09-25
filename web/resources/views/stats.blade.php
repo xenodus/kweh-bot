@@ -18,6 +18,7 @@ axios.get('/api/stats').then(function(response){
     var color = Chart.helpers.color;
 
     // SERVER PREFIX
+    /*
 
     var prefixes = data.prefix_breakdown.map(function(p){ return p.prefix });
     var prefixes_count = data.prefix_breakdown.map(function(p){ return p.no });
@@ -75,6 +76,7 @@ axios.get('/api/stats').then(function(response){
         }
       }
     });
+    */
 
     // COMMANDS
 
@@ -333,10 +335,10 @@ function randomColor(){
     <canvas id="server-settings-commands"></canvas>
   </div>
 
-  <div class="mb-3 col-12 text-center">
+  <!--div class="mb-3 col-12 text-center">
     <a name="prefixes"></a>
     <canvas id="prefixes"></canvas>
-  </div>
+  </div-->
 
   <div class="mb-3 col-12 text-center">
     <a name="servers-added"></a>

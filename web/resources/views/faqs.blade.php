@@ -137,8 +137,8 @@
     <div class="faq-header">{{ $i++ }}. How do I receive Lodestone news notification?</div>
 
     <div class="mt-3 faq-description">
-      <p>Issue the command <span class="command">!news add</span> inside a channel to make it receive automated Lodestone news notifications. You'll receive a prompt as shown below asking if you'll like to fetch and display the latest news.</p>
-      <p>You can issue the command <span class="command">!news remove</span> inside a channel to make it stop receiving notifications.</p>
+      <p>Issue the command <span class="command">@kweh news add</span> inside a channel to make it receive automated Lodestone news notifications. You'll receive a prompt as shown below asking if you'll like to fetch and display the latest news.</p>
+      <p>You can issue the command <span class="command">@kweh news remove</span> inside a channel to make it stop receiving notifications.</p>
       <a href="https://i.imgur.com/LOYIdH1.png" data-lightbox="screenshots-news" data-title="Lodestone News">
         <img src="https://i.imgur.com/LOYIdH1.png" alt="Lodestone news notification example" class="img-fluid screenshot">
       </a>
@@ -152,8 +152,8 @@
     <div class="faq-header">{{ $i++ }}. How do I receive Fashion Report result notification?</div>
 
     <div class="mt-3 faq-description">
-      <p>Issue the command <span class="command">!fashion add</span> inside a channel to make it receive automated Fashion Report result notifications. You'll receive a prompt as shown below asking if you'll like to fetch and display the Fashion Report.</p>
-      <p>You can issue the command <span class="command">!fashion remove</span> inside a channel to make it stop receiving notifications.</p>
+      <p>Issue the command <span class="command">@kweh fashion add</span> inside a channel to make it receive automated Fashion Report result notifications. You'll receive a prompt as shown below asking if you'll like to fetch and display the Fashion Report.</p>
+      <p>You can issue the command <span class="command">@kweh fashion remove</span> inside a channel to make it stop receiving notifications.</p>
       <a href="https://i.imgur.com/yC2zhDE.png" data-lightbox="screenshots-fashion" data-title="Fashion Report">
         <img src="https://i.imgur.com/yC2zhDE.png" alt="Fashion Report notification example" class="img-fluid screenshot">
       </a>

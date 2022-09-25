@@ -11,6 +11,7 @@ const moment = require("moment");
 const { GraphQLClient, gql }  = require('graphql-request');
 
 const currentTierEncounters = [
+/*
   {
     "encounterID": 78,
     "encounterName": "Erichthonios",
@@ -29,6 +30,32 @@ const currentTierEncounters = [
   {
     "encounterID": 81,
     "encounterName": "Hesperos",
+    "difficulties": [100, 101],
+  },
+  */
+   {
+    "encounterID": 83,
+    "encounterName": "Proto-Carbuncle",
+    "difficulties": [100, 101],
+  },
+  {
+    "encounterID": 84,
+    "encounterName": "Hegemone",
+    "difficulties": [100, 101],
+  },
+  {
+    "encounterID": 85,
+    "encounterName": "Agdistis",
+    "difficulties": [100, 101],
+  },
+  {
+    "encounterID": 86,
+    "encounterName": "Hephaistos",
+    "difficulties": [100, 101],
+  },
+  {
+    "encounterID": 87,
+    "encounterName": "Hephaistos II",
     "difficulties": [100, 101],
   },
   {

@@ -41,7 +41,7 @@
   <div class="text-center command-no">{{ $i++ }}</div>
   <div class="command-content ml-3 mb-2">
     <div class="bot-command">Me</div>
-    <div class="command-structure">!me</div>
+    <div class="command-structure">@kweh me</div>
 
     <div class="mt-3 command-description">
       <p>View your Lodestone profile after you've linked your account with <span class="command">@kweh register</span>.</p>
