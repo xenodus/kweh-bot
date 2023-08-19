@@ -344,17 +344,17 @@ const printGlamInfo = async function(characterInfo, message) {
     }
 
     if( lodash.isEmpty(glam) ) {
-      embed.addField(glam_name_map[glam_slots[i]], "-", true);
+      embed.addFields({ name: glam_name_map[glam_slots[i]], value: "-", inline: true });
     }
     else {
       let glamName = "[" + glam.Name_fr + "](" + config.teamcraftBaseURL + "fr/item/" + glam.ID + ")";
-      embed.addField(glam_name_map[glam_slots[i]], glamName + dyeName, true);
+      embed.addFields({ name: glam_name_map[glam_slots[i]], value: glamName + dyeName, inline: true });
     }
   }
 
   // Links
   let links = "[Lodestone]("+config.lodestoneURL_FR+characterInfo.Character.ID+")";
-  embed.addField("Links", links);
+  embed.addFields({ name: "Links", value: links });
 
   // Channel
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
@@ -424,19 +424,19 @@ const printCharacterInfo = async function(characterInfo, message) {
   }
 
   // Body
-  embed.addField("Job", "Niveau " + current_level + " " + race + " " + current_job);
+  embed.addFields({ name: "Job", value: "Niveau " + current_level + " " + race + " " + current_job });
 
   if( fc ) {
-    embed.addField("Compagnie libre", fc + " «"+fc_tag+ "»");
+    embed.addFields({ name: "Compagnie libre", value: fc + " «"+fc_tag+ "»" });
   }
 
   // Minions, Mounts, Achievements
   if( characterInfo.minions ) {
-    embed.addField("Mascottes", characterInfo.minions + " / " + config.totalMinions + " ("+Math.round(characterInfo.minions/config.totalMinions*100)+"%)", true );
+    embed.addFields({ name: "Mascottes", value: characterInfo.minions + " / " + config.totalMinions + " ("+Math.round(characterInfo.minions/config.totalMinions*100)+"%)", inline: true });
   }
 
   if( characterInfo.mounts ) {
-    embed.addField("Montures", characterInfo.mounts + " / " + config.totalMounts + " ("+Math.round(characterInfo.mounts/config.totalMounts*100)+"%)", true );
+    embed.addFields({ name: "Montures", value: characterInfo.mounts + " / " + config.totalMounts + " ("+Math.round(characterInfo.mounts/config.totalMounts*100)+"%)", inline: true });
   }
 
   // Links
@@ -457,7 +457,7 @@ const printCharacterInfo = async function(characterInfo, message) {
     links+= "\n[Triple Triad Tracker](https://triad.raelys.com/users/"+characterInfo.discordID+")";
   }
 
-  embed.addField("Liens", links);
+  embed.addFields({ name: "Liens", value: links });
 
   // Channel
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
