@@ -265,7 +265,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true, isRegio
               let priceListings = (lodash.isEmpty(lowestNQPrice)?"":lowestNQPrice.pricePerUnit.toLocaleString() + "g [NQ] x "+lowestNQPrice.quantity);
               priceListings += "\n" + (lodash.isEmpty(lowestHQPrice)?"" : lowestHQPrice.pricePerUnit.toLocaleString() + "g [HQ] x "+lowestHQPrice.quantity);
 
-              embed.addField(serversOfRegion[i], String(priceListings), inline);
+              embed.addFields({ name: serversOfRegion[i], value: String(priceListings), inline: inline });
 
               if( lodash.isEmpty(lowestNQPrice) == false ) {
                 lowestNQAllServer.push(lowestNQPrice);
@@ -276,7 +276,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true, isRegio
               }
             }
             else {
-              embed.addField(serversOfRegion[i], "利用不可", inline);
+              embed.addFields({ name: serversOfRegion[i], value: "利用不可", inline: inline });
             }
           }
 
@@ -336,7 +336,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true, isRegio
               let priceListings = (lodash.isEmpty(lowestNQPrice)?"":lowestNQPrice.pricePerUnit.toLocaleString() + "g [NQ] x "+lowestNQPrice.quantity);
               priceListings += "\n" + (lodash.isEmpty(lowestHQPrice)?"" : lowestHQPrice.pricePerUnit.toLocaleString() + "g [HQ] x "+lowestHQPrice.quantity);
 
-              embed.addField(servers[i], String(priceListings));
+              embed.addFields({ name: servers[i], value: String(priceListings) });
 
               if( lodash.isEmpty(lowestNQPrice) == false ) {
                 lowestNQAllServer.push(lowestNQPrice);
@@ -347,7 +347,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true, isRegio
               }
             }
             else {
-              embed.addField(servers[i], "Not available");
+              embed.addFields({name: servers[i], value: "Not available" });
             }
           }
 
@@ -406,7 +406,7 @@ const sendMarketboardResult = async function(mbData, message, isDC=true, isRegio
       }
 
       // Listings
-      embed.addField(mbData.server.charAt(0).toUpperCase() + mbData.server.slice(1), priceListings);
+      embed.addFields({ name: mbData.server.charAt(0).toUpperCase() + mbData.server.slice(1), value: priceListings });
 
       // Channel
       let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;

@@ -47,7 +47,7 @@ const readPool = config.getReadPool()
 const redis = config.getRedis();
 
 let fashionCheckIntervals = 600 * 1000;
-let lodestoneCheckIntervals = 600 * 1000;
+let lodestoneCheckIntervals = 10 * 1000;
 let kwehNewsCheckIntervals = 600 * 1000;
 
 /******************************
@@ -95,13 +95,13 @@ client.on("ready", async function() {
   client.user.setPresence({ activities: [{ name: '@kweh help', type: "PLAYING"}], status: 'online'});
 
   // Check Lodestone periodically
-  // setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
+  setIntervalAsync(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
 
   // Check fashion report periodically
-  // setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
+  setIntervalAsync(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
 
   // Check kweh news periodically
-  // setInterval(kweh_news.autoCheckPostNews, kwehNewsCheckIntervals, client);
+  setIntervalAsync(kweh_news.autoCheckPostNews, kwehNewsCheckIntervals, client);
 });
 
 /******************************
