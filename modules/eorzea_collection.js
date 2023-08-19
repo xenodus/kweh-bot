@@ -213,16 +213,22 @@ const printEorzeaCollection = async function(eorzeaCollectionResult, message) {
 
       let fieldDescription = eorzeaCollectionGlams[i].author + " «" + eorzeaCollectionGlams[i].server + "»";
 
-      fieldDescription += "\n["+eorzeaCollectionGlams[i].link+"]("+eorzeaCollectionGlams[i].link+")"
+      fieldDescription += "\n["+eorzeaCollectionGlams[i].link.replace("https://", "")+"]("+eorzeaCollectionGlams[i].link+")"
 
       // Invisible link to image
-      fieldDescription += "[\u200B]("+eorzeaCollectionGlams[i].img+")";
+      fieldDescription += "[.]("+eorzeaCollectionGlams[i].img+")";
 
-      embed.addField(fieldTitle, fieldDescription);
+      embed.addFields({
+        name: fieldTitle,
+        value: fieldDescription
+      });
     }
 
     // Equipment Placeholder
-    embed.addField("Details", "...");
+    embed.addFields({
+      name: "Details",
+      value: "..."
+    });
 
     // Channel
     let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;
@@ -270,23 +276,25 @@ const updateEquipmentInfo = async function(itemInfo, m, nextSlideImg="") {
   for(let slot in itemInfo.equipment) {
 
     if( slot == "rings" ) {
-      for(let i=0; i <itemInfo.equipment[slot].length; i++) {
-        if( itemInfo.equipment[slot][i] ) {
+      if( itemInfo.equipment[slot].length > 0 ) {
+        for(let i=0; i <itemInfo.equipment[slot].length; i++) {
+          if( itemInfo.equipment[slot][i] ) {
 
-          let newEquipmentTxt = "";
+            let newEquipmentTxt = "";
 
-          if( itemInfo.link[slot][i] ) {
-            // Custom redirect to reduce character count
-            itemInfo.link[slot][i] = itemInfo.link[slot][i].replace('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/', 'https://kwehbot.xyz/ls/');
-            newEquipmentTxt += "\nRing " + (i+1) + ": ["+itemInfo.equipment[slot][i]+"](" + itemInfo.link[slot][i] + ")";
-          }
-          else {
-            newEquipmentTxt += "\nRing " + (i+1) + ": " + itemInfo.equipment[slot][i];
-          }
+            if( itemInfo.link[slot][i] ) {
+              // Custom redirect to reduce character count
+              itemInfo.link[slot][i] = itemInfo.link[slot][i].replace('https://na.finalfantasyxiv.com/lodestone/playguide/db/item/', 'https://kwehbot.xyz/ls/');
+              newEquipmentTxt += "\nRing " + (i+1) + ": ["+itemInfo.equipment[slot][i]+"](" + itemInfo.link[slot][i] + ")";
+            }
+            else {
+              newEquipmentTxt += "\nRing " + (i+1) + ": " + itemInfo.equipment[slot][i];
+            }
 
-          // Field length limit
-          if( (equipmentTxt.length + newEquipmentTxt.length) <= 1024 ) {
-            equipmentTxt += newEquipmentTxt;
+            // Field length limit
+            if( (equipmentTxt.length + newEquipmentTxt.length) <= 1024 ) {
+              equipmentTxt += newEquipmentTxt;
+            }
           }
         }
       }

@@ -42,12 +42,12 @@ const client = new Discord.Client({
   }
 });
 
-const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
-const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
+const pool = config.getPool();
+const readPool = config.getReadPool()
 const redis = config.getRedis();
 
 let fashionCheckIntervals = 600 * 1000;
-let lodestoneCheckIntervals = 600 * 1000;
+let lodestoneCheckIntervals = 3600 * 1000;
 let kwehNewsCheckIntervals = 600 * 1000;
 
 /******************************

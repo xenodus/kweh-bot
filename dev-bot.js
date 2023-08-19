@@ -42,8 +42,8 @@ const client = new Discord.Client({
   }
 });
 
-const pool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getPool();
-const readPool = ( scriptName == 'dev-bot.js' ) ? config.getStagingPool() : config.getReadPool();
+const pool = config.getPool();
+const readPool = config.getReadPool()
 const redis = config.getRedis();
 
 let fashionCheckIntervals = 600 * 1000;
@@ -95,13 +95,13 @@ client.on("ready", async function() {
   client.user.setPresence({ activities: [{ name: '@kweh help', type: "PLAYING"}], status: 'online'});
 
   // Check Lodestone periodically
-  setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
+  // setInterval(lodestone_news.autoCheckPostNews, lodestoneCheckIntervals, client);
 
   // Check fashion report periodically
-  setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
+  // setInterval(fashion_report.autoCheckPostFR, fashionCheckIntervals, client);
 
   // Check kweh news periodically
-  setInterval(kweh_news.autoCheckPostNews, kwehNewsCheckIntervals, client);
+  // setInterval(kweh_news.autoCheckPostNews, kwehNewsCheckIntervals, client);
 });
 
 /******************************

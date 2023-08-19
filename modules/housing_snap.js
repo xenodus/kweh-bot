@@ -209,12 +209,15 @@ const printHousingSnap = async function(housingSnapResult, message) {
 
       let fieldDescription = housingSnaps[i].author.replace("(", "[").replace(")", "]");
 
-      fieldDescription += "\n["+housingSnaps[i].link+"]("+housingSnaps[i].link+")";
+      fieldDescription += "\n["+housingSnaps[i].link.replace("https://", "")+"]("+housingSnaps[i].link+")";
 
       // Invisible link to image
-      fieldDescription += "[\u200B]("+housingSnaps[i].img+")";
+      fieldDescription += "[.]("+housingSnaps[i].img+")";
 
-      embed.addField(fieldTitle, fieldDescription);
+      embed.addFields({
+        name: fieldTitle,
+        value: fieldDescription
+      });
     }
 
     // Channel

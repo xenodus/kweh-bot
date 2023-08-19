@@ -155,9 +155,11 @@ const sendNewHelpMsg = function(message) {
     .setAuthor({name: "Kweh! - Help"})
     .setThumbnail( config.appErrorImg );
 
-  embed.addField("Website", "["+config.websiteLink+"]("+config.websiteLink+")");
-  embed.addField("Full Command List", "["+config.websiteCommandLink+"]("+config.websiteCommandLink+")");
-  embed.addField("Commands", "--------------------");
+  embed.addFields(
+    { name: "Website", value: "["+config.websiteLink.replace("https://", "")+"]("+config.websiteLink+")" },
+    { name: "Full Command List", value: "["+config.websiteCommandLink.replace("https://", "")+"]("+config.websiteCommandLink+")" },
+    { name: "Commands", value: "--------------------" }
+  );
 
   let i = 1;
 
@@ -165,13 +167,13 @@ const sendNewHelpMsg = function(message) {
   let registerCommands = [
     "`@kweh register server firstname lastname`"
   ];
-  embed.addField((i++)+". Link FFXIV Character", registerCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Link FFXIV Character", value: registerCommands.join("\n") });
 
   // !me
   let selfProfileCommands = [
     "`@kweh me`",
   ];
-  embed.addField((i++)+". View Character Profile (Self)", selfProfileCommands.join("\n"));
+  embed.addFields({ name: (i++)+". View Character Profile (Self)", value: selfProfileCommands.join("\n") });
 
   // !profile @xenodus
   let otherProfileCommands = [
@@ -179,7 +181,7 @@ const sendNewHelpMsg = function(message) {
     "`@kweh profile @user`",
     "`@kweh profile`",
   ];
-  embed.addField((i++)+". View Character Profile (Others)", otherProfileCommands.join("\n"));
+  embed.addFields({ name: (i++)+". View Character Profile (Others)", value: otherProfileCommands.join("\n") });
 
   // !glam
   let glamCommands = [
@@ -187,7 +189,7 @@ const sendNewHelpMsg = function(message) {
     "`@kweh glam @user`",
     "`@kweh profile`",
   ];
-  embed.addField((i++)+". View Glamour Report", glamCommands.join("\n"));
+  embed.addFields({ name: (i++)+". View Glamour Report", value: glamCommands.join("\n") });
 
   // !ec
   let ecCommands = [
@@ -196,14 +198,14 @@ const sendNewHelpMsg = function(message) {
     "`@kweh ec author author_name`",
     "`@kweh ec search search_string`",
   ];
-  embed.addField((i++)+". Eorzea Collection", ecCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Eorzea Collection", value: ecCommands.join("\n") });
 
   // !hs
   let hsCommands = [
     "`@kweh hs`",
     "`@kweh hs search_string`",
   ];
-  embed.addField((i++)+". Housing Snap", hsCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Housing Snap", value: hsCommands.join("\n") });
 
   // !logs @xenodus
   let logsCommands = [
@@ -211,19 +213,19 @@ const sendNewHelpMsg = function(message) {
     "`@kweh fflogs @user`",
     "`@kweh fflogs`",
   ];
-  embed.addField((i++)+". FF Logs", logsCommands.join("\n"));
+  embed.addFields({ name: (i++)+". FF Logs", value: logsCommands.join("\n") });
 
   // !mb
   let mbCommands = [
     "`@kweh mb region/datacenter/server item_name`",
   ];
-  embed.addField((i++)+". Marketboard", mbCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Marketboard", value: mbCommands.join("\n") });
 
   // !item / mount / minion / emote / title / barding
   let itemCommands = [
     "`@kweh item item_name`",
   ];
-  embed.addField((i++)+". Item Search", itemCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Item Search", value: itemCommands.join("\n") });
 
   // !mount / minion / emote / title / barding
   let xivCollectCommands = [
@@ -233,26 +235,26 @@ const sendNewHelpMsg = function(message) {
     "`@kweh title search_string`",
     "`@kweh barding search_string`",
   ];
-  embed.addField((i++)+". FFXIV Collect Search", xivCollectCommands.join("\n"));
+  embed.addFields({ name: (i++)+". FFXIV Collect Search", value: xivCollectCommands.join("\n") });
 
   // !timers
   let timersCommands = [
     "`@kweh timers`",
   ];
-  embed.addField((i++)+". Timers", timersCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Timers", value: timersCommands.join("\n") });
 
   // !maint
   let maintCommands = [
     "`@kweh maint`",
   ];
-  embed.addField((i++)+". Maintenance", maintCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Maintenance", value: maintCommands.join("\n") });
 
   // !tt
   let ttCommands = [
     "`@kweh tt`",
     "`@kweh tt @user`",
   ];
-  embed.addField((i++)+". Triple Triad", ttCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Triple Triad", value: ttCommands.join("\n") });
 
   // !news
   let newsCommands = [
@@ -260,36 +262,36 @@ const sendNewHelpMsg = function(message) {
     "`@kweh news add na/eu/jp/de/fr`",
     "`@kweh news remove`",
   ];
-  embed.addField((i++)+". Subscribe To Receive Lodestone News - Admin Only", newsCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Subscribe To Receive Lodestone News - Admin Only", value: newsCommands.join("\n") });
 
   // !fashion
   let frCommands = [
     "`@kweh fashion add`",
     "`@kweh fashion remove`",
   ];
-  embed.addField((i++)+". Subscribe To Receive Fashion Report - Admin Only", frCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Subscribe To Receive Fashion Report - Admin Only", value: frCommands.join("\n") });
 
   // !kweh language
   let langCommands = [
     "`@kweh language jp/en/fr/de`",
   ];
-  embed.addField((i++)+". Change Server Language - Admin Only", langCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Change Server Language - Admin Only", value: langCommands.join("\n") });
 
   // !kweh channel
   let defaultChannelCommands = [
     "`@kweh channel #your-channel-name`",
     "`@kweh channel remove`",
   ];
-  embed.addField((i++)+". Set Default Channel - Admin Only", defaultChannelCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Set Default Channel - Admin Only", value: defaultChannelCommands.join("\n") });
 
   // !kweh autodelete
   let autoDeleteCommands = [
     "`@kweh autodelete on`",
     "`@kweh autodelete off`",
   ];
-  embed.addField((i++)+". Auto Deletion of Commands - Admin Only", autoDeleteCommands.join("\n"));
+  embed.addFields({ name: (i++)+". Auto Deletion of Commands - Admin Only", value: autoDeleteCommands.join("\n") });
 
-  embed.addField("Support Kweh!", "["+config.donationLink+"]("+config.donationLink+")");
+  embed.addFields({ name: "Support Kweh!", value: "["+config.donationLink.replace("https://", "")+"]("+config.donationLink+")" });
 
   message.author.send({embeds: [embed]}).catch(function(err){
     handleDiscordError(err, message);

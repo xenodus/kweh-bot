@@ -31,7 +31,7 @@ class StatsController extends Controller
 
     public function getStats() {
 
-        $cache_time_seconds = 60*15;
+        $cache_time_seconds = 60*60*24;
         $data = [];
 
         $data = Cache::remember('kweh_stats', $cache_time_seconds, function() use(&$data){
