@@ -102,14 +102,14 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("ilvl", String(item.LevelItem));
+      embed.addFields({ name: "ilvl", value: String(item.LevelItem) });
     }
 
     if( item.LevelEquip ) {
-      embed.addField("Niveau", String(item.LevelEquip));
+      embed.addFields({ name: "Niveau", value: String(item.LevelEquip) });
     }
 
-    embed.addField("Teintable", item.IsDyeable == 0 ? 'Non' : 'Oui');
+    embed.addFields({ name: "Teintable", value: item.IsDyeable == 0 ? 'Non' : 'Oui' });
   }
 
   if( item.Recipes && item.Recipes.length > 0 ) {
@@ -134,15 +134,15 @@ async function displayItem(item, message) {
       }
 
       if( recipe.ClassJob && recipe.ClassJob.Name_fr ) {
-        embed.addField("Job", recipe.ClassJob.Name_fr);
+        embed.addFields({ name: "Job", value: recipe.ClassJob.Name_fr });
       }
 
       if( ingredientsTxt ) {
-        embed.addField("Recettes", ingredientsTxt);
+        embed.addFields({ name: "Recettes", value: ingredientsTxt });
       }
 
       if( recipe["SecretRecipeBook"] ) {
-        embed.addField("Livre de recettes", recipe["SecretRecipeBook"].Name_fr );
+        embed.addFields({ name: "Livre de recettes", value: recipe["SecretRecipeBook"].Name_fr });
       }
     }
   }
@@ -154,11 +154,11 @@ async function displayItem(item, message) {
 
   if( item.GameContentLinks && item.GameContentLinks.Recipe && lodash.isEmpty(item.GameContentLinks.Recipe) == false ) {
     let usedForTxt = ":hourglass_flowing_sand:";
-    embed.addField("Fabrication", usedForTxt);
+    embed.addFields({ name: "Fabrication", value: usedForTxt });
   }
 
   if( linksTxt ) {
-    embed.addField("Liens", linksTxt);
+    embed.addFields({ name: "Liens", value: linksTxt });
   }
 
   // Channel

@@ -224,7 +224,7 @@ const printFFLogsGQL = function(logsResults, message) {
         recentLogsTxt+= "\n[" + recentLogs[i].encounterName + " ("+Math.round(recentLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+recentLogs[i].report.code+"#fight="+recentLogs[i].report.fightID+") - " + logDate;
       }
 
-      embed.addField("Recent", recentLogsTxt, true);
+      embed.addFields({ name: "Recent", value: recentLogsTxt, inline: true });
     }
 
     if( topLogs.length ) {
@@ -235,7 +235,7 @@ const printFFLogsGQL = function(logsResults, message) {
         topLogsTxt+= "\n[" + topLogs[i].encounterName + " ("+Math.round(topLogs[i].rankPercent)+"%)]("+config.fflogsBaseURL+"reports/"+topLogs[i].report.code+"#fight="+topLogs[i].report.fightID+") - " + logDate;
       }
 
-      embed.addField("Top", topLogsTxt, true);
+      embed.addFields({ name: "Top", value: topLogsTxt, inline: true });
     }
 
     for(var i=0; i<currentTierEncounters.length; i++) {
@@ -257,13 +257,13 @@ const printFFLogsGQL = function(logsResults, message) {
           encounterTxt += "\n" + encounterLogs[0].spec + ": [[" + Math.round(encounterLogs[0].aDPS).toLocaleString() + " aDPS] ["+Math.round(encounterLogs[0].rankPercent)+"%] ["+duration+"]]("+config.fflogsBaseURL+"reports/"+encounterLogs[0].report.code+"#fight="+encounterLogs[0].report.fightID+")";
         }
 
-        embed.addField(currentTierEncounters[i].encounterName + " - " + noKills + " kills", encounterTxt);
+        embed.addFields({ name: currentTierEncounters[i].encounterName + " - " + noKills + " kills", value: encounterTxt });
       }
     }
 
   }
   else {
-    embed.addField("Recent", "No data available");
+    embed.addFields({ name: "Recent", value: "No data available" });
   }
 
   // Channel

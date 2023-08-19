@@ -308,7 +308,7 @@ const printItemInfo = async function(item, message) {
   }
 
   if( item.seats ) {
-    embed.addField("Riders", String(item.seats));
+    embed.addFields({ name: "Riders", value: String(item.seats) });
   }
 
   if( item.sources && item.sources.length > 0 ) {
@@ -331,37 +331,37 @@ const printItemInfo = async function(item, message) {
     }
 
     if( sources ) {
-      embed.addField( item.sources.length == 1 ? "Source" : "Sources", String(sources));
+      embed.addFields({ name: item.sources.length == 1 ? "Source" : "Sources", value: String(sources) });
     }
   }
 
   // Emote
   if( item.command ) {
-    embed.addField("Command", String(item.command));
+    embed.addFields({ name: "Command", value: String(item.command) });
 
     if( item.category && item.category.name ) {
-      embed.addField("Category", String(item.category.name));
+      embed.addFields({ name: "Category", value: String(item.category.name) });
     }
   }
 
   // Title
   if( item.female_name && item.female_name != item.name ) {
-    embed.addField("Male", String(item.name));
-    embed.addField("Female", String(item.female_name));
+    embed.addFields({ name: "Male", value: String(item.name) });
+    embed.addFields({ name: "Female", value: String(item.female_name) });
   }
 
   if( item.achievement ) {
     let source = item.achievement.description ? "Achievement: " + item.achievement.description : "";
 
     if( source ) {
-      embed.addField( "Source", String(source));
+      embed.addFields({ name: "Source", value: String(source) });
     }
 
     embed.setThumbnail("");
   }
 
   if( item.owned ) {
-    embed.addField("Owned", String(item.owned));
+    embed.addFields({ name: "Owned", value: String(item.owned) });
   }
 
   if( item.image ) {

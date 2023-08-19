@@ -102,14 +102,14 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("アイテムレベル", String(item.LevelItem));
+      embed.addFields({ name: "アイテムレベル", value: String(item.LevelItem) });
     }
 
     if( item.LevelEquip ) {
-      embed.addField("レベル", String(item.LevelEquip));
+      embed.addFields({ name: "レベル", value: String(item.LevelEquip) });
     }
 
-    embed.addField("染色可能", item.IsDyeable == 0 ? 'いいえ' : 'はい');
+    embed.addFields({ name: "染色可能", value: item.IsDyeable == 0 ? 'いいえ' : 'はい' });
   }
 
   if( item.Recipes && item.Recipes.length > 0 ) {
@@ -134,15 +134,15 @@ async function displayItem(item, message) {
       }
 
       if( recipe.ClassJob && recipe.ClassJob.Name_ja ) {
-        embed.addField("ジョブ", recipe.ClassJob.Name_ja);
+        embed.addFields({ name: "ジョブ", value: recipe.ClassJob.Name_ja });
       }
 
       if( ingredientsTxt ) {
-        embed.addField("レシピ", ingredientsTxt);
+        embed.addFields({ name: "レシピ", value: ingredientsTxt });
       }
 
       if( recipe["SecretRecipeBook"] ) {
-        embed.addField("レシピ本", recipe["SecretRecipeBook"].Name_ja );
+        embed.addFields({ name: "レシピ本", value: recipe["SecretRecipeBook"].Name_ja });
       }
     }
   }
@@ -154,11 +154,11 @@ async function displayItem(item, message) {
 
   if( item.GameContentLinks && item.GameContentLinks.Recipe && lodash.isEmpty(item.GameContentLinks.Recipe) == false ) {
     let usedForTxt = ":hourglass_flowing_sand:";
-    embed.addField("制作", usedForTxt);
+    embed.addFields({ name: "制作", value: usedForTxt });
   }
 
   if( linksTxt ) {
-    embed.addField("リンク", linksTxt);
+    embed.addFields({ name: "リンク", value: linksTxt });
   }
 
   // Channel

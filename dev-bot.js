@@ -47,7 +47,7 @@ const readPool = config.getReadPool()
 const redis = config.getRedis();
 
 let fashionCheckIntervals = 600 * 1000;
-let lodestoneCheckIntervals = 10 * 1000;
+let lodestoneCheckIntervals = 600 * 1000;
 let kwehNewsCheckIntervals = 600 * 1000;
 
 /******************************

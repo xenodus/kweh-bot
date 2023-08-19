@@ -37,9 +37,11 @@ const printTripleTriadData = function(ffTripleTriadData, message, user) {
     .setColor(config.defaultEmbedColor)
     .setAuthor({name: user.username + " - Triple Triad Collection", iconURL: config.ffttLogo, url: config.ffttBaseURL + "character/" + user.id});
 
-  embed.addField("Collected", ffTripleTriadData.cards.owned + " / " + ffTripleTriadData.cards.total + " ("+Math.round(ffTripleTriadData.cards.owned/ffTripleTriadData.cards.total*100)+"%)");
-  embed.addField("Missing", ffTripleTriadData.cards.missing + " / " + ffTripleTriadData.cards.total + " ("+Math.round(ffTripleTriadData.cards.missing/ffTripleTriadData.cards.total*100)+"%)");
-  embed.addField("Web Profile", "[Triple Triad Tracker](https://triad.raelys.com/users/"+user.id+")");
+  embed.addFields(
+    { name: "Collected", value: ffTripleTriadData.cards.owned + " / " + ffTripleTriadData.cards.total + " ("+Math.round(ffTripleTriadData.cards.owned/ffTripleTriadData.cards.total*100)+"%)" },
+    { name: "Missing", value: ffTripleTriadData.cards.missing + " / " + ffTripleTriadData.cards.total + " ("+Math.round(ffTripleTriadData.cards.missing/ffTripleTriadData.cards.total*100)+"%)" },
+    { name: "Web Profile", value: "[Triple Triad Tracker](https://triad.raelys.com/users/"+user.id+")" }
+  );
 
   // Channel
   let channel = message.serverSettings["default_channel"] ? message.serverSettings["default_channel"] : message.channel;

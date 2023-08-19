@@ -103,14 +103,14 @@ async function displayItem(item, message) {
   if( item.EquipSlotCategoryTargetID > 0 ) {
 
     if( item.LevelItem ) {
-      embed.addField("Item Level", String(item.LevelItem));
+      embed.addFields({ name: "Item Level", value: String(item.LevelItem) });
     }
 
     if( item.LevelEquip ) {
-      embed.addField("Min. Level", String(item.LevelEquip));
+      embed.addFields({ name: "Min. Level", value: String(item.LevelEquip) });
     }
 
-    embed.addField("Dyeable", item.IsDyeable == 0 ? 'No' : 'Yes');
+    embed.addFields({ name: "Dyeable", value: item.IsDyeable == 0 ? 'No' : 'Yes' });
   }
 
   if( item.Recipes && item.Recipes.length > 0 ) {
@@ -135,15 +135,15 @@ async function displayItem(item, message) {
       }
 
       if( recipe.ClassJob && recipe.ClassJob.NameEnglish_en ) {
-        embed.addField("Crafter", recipe.ClassJob.NameEnglish_en);
+        embed.addFields({ name: "Crafter", value: recipe.ClassJob.NameEnglish_en });
       }
 
       if( ingredientsTxt ) {
-        embed.addField("Ingredients", ingredientsTxt);
+        embed.addFields({ name: "Ingredients", value: ingredientsTxt });
       }
 
       if( recipe["SecretRecipeBook"] ) {
-        embed.addField("Recipe Book", recipe["SecretRecipeBook"].Name );
+        embed.addFields({ name: "Recipe Book", value: recipe["SecretRecipeBook"].Name });
       }
     }
   }
@@ -162,11 +162,11 @@ async function displayItem(item, message) {
     }
 
     let usedForTxt = "Fetching " +itemCount+ " item" + (itemCount>1?"s":"") + " :hourglass_flowing_sand:";
-    embed.addField("Ingredient For", usedForTxt);
+    embed.addFields({ name: "Ingredient For", value: usedForTxt });
   }
 
   if( linksTxt ) {
-    embed.addField("Links", linksTxt);
+    embed.addFields({ name: "Links", value: linksTxt });
   }
 
   // Channel

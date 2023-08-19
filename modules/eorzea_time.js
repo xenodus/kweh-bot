@@ -46,9 +46,11 @@ const printTimers = async function(message) {
     .setColor( config.defaultEmbedColor )
     .setAuthor({name: "Timers", iconURL: config.timerImg});
 
-  embed.addField("Eorzea Time", eorzeaTimeString);
-  embed.addField("Daily Reset", dailyResetString);
-  embed.addField("Weekly Reset", weeklyResetString);
+  embed.addFields(
+    { name: "Eorzea Time", value: eorzeaTimeString },
+    { name: "Daily Reset", value: dailyResetString },
+    { name: "Weekly Reset", value: weeklyResetString }
+  );
 
   // Maintenance
   let next_maint = await getNextMaintenance();
@@ -83,9 +85,9 @@ const printTimers = async function(message) {
 
   if( nextMaintString ) {
     if( isOngoing )
-      embed.addField("Maintenance (Ongoing)", nextMaintString);
+      embed.addFields({ name: "Maintenance (Ongoing)", value: nextMaintString });
     else
-      embed.addField("Next Maintenance", nextMaintString);
+      embed.addFields({ name: "Next Maintenance", value: nextMaintString });
   }
 
   // Channel
@@ -139,7 +141,7 @@ const printMaint = async function(message) {
       label = "Finishing In";
     }
 
-    embed.addField(label, timeToMaintString);
+    embed.addFields({ name: label, value: timeToMaintString });
   }
   else {
     embed.setDescription("No upcoming maintenance");
@@ -164,7 +166,7 @@ const printMaint = async function(message) {
 
       lastMaintString += "\n" + timeToMaintString + " ago";
 
-      embed.addField("Last Completed", lastMaintString);
+      embed.addFields({ name: "Last Completed", value: lastMaintString });
     }
   }
 
