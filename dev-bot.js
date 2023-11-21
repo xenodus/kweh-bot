@@ -60,9 +60,6 @@ if( scriptName == 'dev-bot.js' ) {
   console.log("----- DEVELOPMENT BOT -----");
 }
 else {
-  // New Relic
-  require('newrelic');
-
   client.login(config.discordBotToken);
   console.log("----- PRODUCTION BOT -----");
 }
