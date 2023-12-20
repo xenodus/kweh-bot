@@ -355,7 +355,9 @@ client.on("messageCreate", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = {}
+        // todo: uncomment when fixed
+        // characterSearchResult = await character.searchCharacter(server, firstname, lastname);
 
         if( lodash.isEmpty(characterSearchResult) ) {
           characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
@@ -472,7 +474,9 @@ client.on("messageCreate", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = {}
+        // todo: uncomment when fixed
+        // characterSearchResult = await character.searchCharacter(server, firstname, lastname);
 
         if( lodash.isEmpty(characterSearchResult) ) {
           characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
@@ -575,7 +579,9 @@ client.on("messageCreate", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = {}
+        // todo: uncomment when fixed
+        // characterSearchResult = await character.searchCharacter(server, firstname, lastname);
 
         if( lodash.isEmpty(characterSearchResult) ) {
           characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);
@@ -674,7 +680,9 @@ client.on("messageCreate", async function(message) {
         helper.sendErrorMsg("Error", "Invalid server `"+server+"`", message);
       }
       else {
-        let characterSearchResult = await character.searchCharacter(server, firstname, lastname);
+        let characterSearchResult = {}
+        // uncomment when fixed
+        // characterSearchResult = await character.searchCharacter(server, firstname, lastname);
 
         if( lodash.isEmpty(characterSearchResult) ) {
           characterSearchResult = await character.searchCharacterOwnServer(server, firstname, lastname);

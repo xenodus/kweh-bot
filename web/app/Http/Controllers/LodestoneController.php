@@ -58,11 +58,13 @@ class LodestoneController extends Controller
                                         }
                                     }
 
+                                    /*
                                     if ( $node->filter('p.entry__world')->count() ) {
                                         // dc
                                         $data["dc"] = $node->filter('p.entry__world')->count() > 0 ?
-                                            substr(explode("(", $node->filter('p.entry__world')->text())[1], 0, -1) : "";
+                                            substr(explode("(", $node->filter('p.entry__world')->text())[1], 0, -1) : "";                                        
                                     }
+                                    */
 
                                     $isFound = true;
                                     return;
